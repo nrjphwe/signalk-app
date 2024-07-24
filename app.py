@@ -1,29 +1,20 @@
-from flask import Flask, send_from_directory, request, jsonify
-import requests
+from flask import Flask, request, jsonify
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__)
 
 @app.route('/')
-def root():
-    return send_from_directory('', 'index.html')
+def index():
+    return app.send_static_file('index.html')
 
-@app.route('/api/autopilot/turn-left', methods=['POST'])
-def turn_left():
-    # Relay the request to the autopilot plugin
-    response = requests.post('http://localhost:YOUR_PLUGIN_PORT/turn-left')
-    return jsonify(response.json())
+@app.route('/public/<path:path>')
+def send_public(path):
+    return app.send_static_file('public/' + path)
 
-@app.route('/api/autopilot/turn-right', methods=['POST'])
-def turn_right():
-    # Relay the request to the autopilot plugin
-    response = requests.post('http://localhost:YOUR_PLUGIN_PORT/turn-right')
-    return jsonify(response.json())
-
-@app.route('/api/autopilot/set-course', methods=['POST'])
-def set_course():
+@app.route('/signalk/v1/api/vessels/self/<path:path>', methods=['PUT'])
+def handle_put(path):
     data = request.json
-    response = requests.post('http://localhost:YOUR_PLUGIN_PORT/set-course', json=data)
-    return jsonify(response.json())
+    print(f"Received PUT request for {path} with data: {data}")
+    return jsonify({"status": "success"}), 200
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=8000)
