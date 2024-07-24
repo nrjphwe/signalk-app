@@ -1,13 +1,17 @@
 # signalk-app
-App or web-page to use another GUI to control autopilot, as well as showing data on the page. 
 
-It consists of:
-- one web-page: index.html 
-- and "app.py" that executes a python web-server for the web-page.
+I created another web-page (index.html) to make a new GUI to control the autopilot, as well as showing data on the page. 
 
-To make a permanent and robust solution for the "app.py", make systemd service to manage the application. 
+This WEB-page is running on a web server on the Raspberry Pi to serve this new interface. This is done through a lightweight server like Flask (Python).
+
+To use Flask:
+
+Install Flask: pip install flask
+
+To run the flask app you could run python3 app.py but to make a permanent and robust solution for the "app.py", make systemd service to manage the application. 
 
 sudo nano /etc/systemd/system/myapp.service
+
 
 sudo systemctl daemon-reload
 sudo systemctl enable myapp.service
