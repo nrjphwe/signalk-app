@@ -2,6 +2,8 @@
 
 The existing signalk-autopilot plugin is running and the web-page below is using functionality (signalk-autopilot.min.js) in that plugin as well as some other functionality in signalk. 
 
+Connect to your Raspberry Pi via SSH Clone this repo: git clone https://github.com/nrjphwe/signalk-app
+
 All files are added copied to:
 cp xxx  ~/.signalk/node_modules/@signalk/signalk-autopilot
 
