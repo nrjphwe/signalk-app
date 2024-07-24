@@ -24,9 +24,9 @@ A new service is created **myapp.service**:
 copy the myappservice code to:
 sudo cp myapp.service /etc/systemd/system/myapp.service
 
-sudo systemctl daemon-reload
-sudo systemctl enable myapp.service
-sudo systemctl start myapp.service
+- sudo systemctl daemon-reload
+- sudo systemctl enable myapp.service
+- sudo systemctl start myapp.service
 
 **To access the New GUI:**
 Open the web browser on your iPad/Iphone and navigate to the Raspberry Pi's IP address followed by the port number, e.g., http://hostname:8000.
