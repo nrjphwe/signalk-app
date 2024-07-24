@@ -1,10 +1,10 @@
 # signalk-app
 
-The existing signalk-autopilot plugin is running and the web-page below is using functionality (signalk-autopilot.min.js) in that plugin as well as some other functionality in signalk. 
+The standard signalk-autopilot plugin is used as it is, but a separate web-page has been made is using functionality (signalk-autopilot.min.js) in the signalkl-autopilot plugin as well as some other functionality in signalk. 
 
-Connect to your Raspberry Pi via SSH Clone this repo: git clone https://github.com/nrjphwe/signalk-app
+To use this: Connect to your Raspberry Pi via SSH Clone this repo: git clone https://github.com/nrjphwe/signalk-app
 
-AThe index.html and app.py are to be copied to:
+Then the "index.html" and "app.py" files are to be copied to:
   ~/.signalk/node_modules/@signalk/signalk-autopilot
 
 **Three things:**
@@ -16,7 +16,7 @@ This WEB-page is running on a web server on the Raspberry Pi to serve this new i
 - you could Run:  python3 -m http.server 8000
 - Another way is to run it through a lightweight server like Flask (Python).
 - To use Flask, Install Flask: pip install flask
-- then make an **app.py** that will be runnung
+- then let the **app.py** be running
 
 3. To make this a permanent and robust solution for the "app.py", make systemd service to manage the application. 
 
