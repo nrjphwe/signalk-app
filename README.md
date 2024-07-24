@@ -4,8 +4,8 @@ The existing signalk-autopilot plugin is running and the web-page below is using
 
 Connect to your Raspberry Pi via SSH Clone this repo: git clone https://github.com/nrjphwe/signalk-app
 
-All files are added copied to:
-cp xxx  ~/.signalk/node_modules/@signalk/signalk-autopilot
+AThe index.html and app.py are to be copied to:
+  ~/.signalk/node_modules/@signalk/signalk-autopilot
 
 **Three things:**
 1. A new web-page (**index.html**) to make a new GUI to control the autopilot, as well as showing data on the page. 
