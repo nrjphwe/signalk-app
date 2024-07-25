@@ -112,7 +112,6 @@
                 justify-content: center;
             }
         }
-
         /* iPhone 14 (Landscape Mode) */
         @media only screen and (max-width: 844px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
             .btnCircleRed, .btnCircleBlue {
@@ -131,31 +130,6 @@
                 display: flex;
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
                 justify-content: center;
-            }
-        }
-
-        /* Responsive styles for iPad Air 2 and similar tablets in landscape mode*/
-        @media only screen and (min-device-width: 768px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
-            .btnCircleRed, .btnCircleBlue {
-                font-size: 7vw; /* Reduced font size */
-                padding: 1vw 3vw; /* Reduced padding */
-            }
-            .btnBlack {
-                font-size: 6vw; /* Reduced font size */
-                padding: 1vw 2vw; /* Reduced padding */
-            }
-            .infoField {
-                font-size: 1.5vw; /* Reduced font size */
-                padding: 0.5vw 1vw; /* Reduced padding */
-                margin: 1vw;
-            }
-            .btnContainer, .infoContainer {
-                display: flex;
-                flex-wrap: nowrap; /* No wrapping in landscape mode */
-                justify-content: center;
-            }
-            #main {
-                padding-top: 5px; /* Adjust padding to fit content */
             }
         }
         /* Responsive styles for iPad Air 2 and similar tablets in portrait mode*/
@@ -182,24 +156,28 @@
                 padding-top: 5px; /* Adjust padding to fit content */
             }
         }
-        /* Portrait mode for smaller screens including iPad */
-        @media only screen and (max-device-width: 767px) and (-webkit-device-pixel-ratio: 2) {
+        /* iPad Air 2 and similar tablets (Landscape Mode)*/
+        @media only screen and (min-device-width: 768px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
             .btnCircleRed, .btnCircleBlue {
-                font-size: 4vw; /* Adjust font size */
-                padding: 2vw 3vw; /* Adjust padding */
+                font-size: 7vw; /* Reduced font size */
+                padding: 1vw 3vw; /* Reduced padding */
             }
             .btnBlack {
-                font-size: 6vw; /* Adjust font size */
-                padding: 2vw 3vw; /* Adjust padding */
+                font-size: 6vw; /* Reduced font size */
+                padding: 1vw 2vw; /* Reduced padding */
             }
             .infoField {
-                font-size: 3vw; /* Adjust font size */
-                padding: 1vw 2vw; /* Adjust padding */
+                font-size: 1.5vw; /* Reduced font size */
+                padding: 0.5vw 1vw; /* Reduced padding */
+                margin: 1vw;
             }
             .btnContainer, .infoContainer {
                 display: flex;
-                flex-wrap: wrap; /* Allow wrapping in portrait mode */
+                flex-wrap: nowrap; /* No wrapping in landscape mode */
                 justify-content: center;
+            }
+            #main {
+                padding-top: 5px; /* Adjust padding to fit content */
             }
         }
         /* General styles for larger screens */
