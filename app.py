@@ -1,14 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, send_from_directory, jsonify, request
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='.')
 
 @app.route('/')
 def index():
-    return app.send_static_file('index.html')
+    return send_from_directory('.', 'index.html')
 
 @app.route('/public/<path:path>')
 def send_public(path):
-    return app.send_static_file('public/' + path)
+    return send_from_directory('public', path)
 
 @app.route('/signalk/v1/api/vessels/self/<path:path>', methods=['PUT'])
 def handle_put(path):
