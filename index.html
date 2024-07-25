@@ -135,7 +135,7 @@
             }
         }
         /* Responsive styles for iPad Air 2 and similar tablets in portrait mode*/
-        @media only screen and (min-device-width: 768px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
+        @media only screen and (min-device-width: 768px) and (max-device-width: 1023px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
             .btnCircleRed, .btnCircleBlue {
                 font-size: 10vw; /* Reduced font size */
                 padding: 1vw 3vw; /* Reduced padding */
@@ -159,9 +159,7 @@
             }
         }
         /* iPad Air 2 and similar tablets (Landscape Mode)*/
-        @media only screen and (min-device-width: 1536px) and (max-device-width: 2048px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
-
-        /*@media only screen and (min-device-width: 768px) and (max-device-width: 1023px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {*/
+        @media only screen and (min-device-width: 768px) and (max-device-width: 1023px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
             .btnCircleRed, .btnCircleBlue {
                 font-size: 8vw; /* Reduced font size */
                 padding: 1vw 2vw; /* Reduced padding */
