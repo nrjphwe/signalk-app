@@ -36,6 +36,20 @@
             flex-direction: column;
             align-items: center;
         }
+        .infoContainer {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap; /* Allow wrapping */
+            justify-content: center;
+            margin-bottom: 2px; /* Add some margin to separate button groups */
+        }
+        .infoField {
+            margin-top: 5px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+        }
         .btnContainer {
             display: flex;
             flex-direction: row;
@@ -64,6 +78,12 @@
         .btnCircleBlue {
             background-color: blue;
         }
+        .largeInfoField {
+            background-color: rgba(57, 47, 19, 0.48);
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+        }
         #notificationArea {
             position: fixed;
             bottom: 0;
@@ -75,20 +95,6 @@
             padding: 10px;
             display: none;
             z-index: 1000;
-        }
-        .infoContainer {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap; /* Allow wrapping */
-            justify-content: center;
-            margin-bottom: 2px; /* Add some margin to separate button groups */
-        }
-        .infoField {
-            margin-top: 5px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            text-align: center;
-            border-radius: 10px;
         }
         /* iPhone 14 (Portrait Mode) */
         @media only screen and (min-device-width: 390px) and (max-device-width: 390px) and (-webkit-device-pixel-ratio: 3) {
@@ -112,6 +118,11 @@
                 flex-wrap: wrap; /* Allow wrapping in portrait mode */
                 justify-content: center;
             }
+            .LargeInfoField {
+                font-size: 8vw; /* Adjust font size */
+                padding: 3vw 2vw; /* Adjust padding */
+                margin: 1vw;
+            }
         }
         /* iPhone 14 (Landscape Mode) */
         @media only screen and (max-width: 844px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
@@ -133,6 +144,10 @@
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
                 justify-content: center;
             }
+            .LargeInfoField {
+                font-size: 4vw; /* Adjust font size */
+                padding: 1vw 2vw; /* Adjust padding */
+                margin: 1vw;
         }
         /* Responsive styles for iPad Air 2 and similar tablets in portrait mode*/
         @media only screen and (min-device-width: 768px) and (max-device-width: 1023px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
