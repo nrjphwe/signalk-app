@@ -228,6 +228,9 @@
                 <div class="btnCircleBlue" id="btnCircleTrack">TRACK</div>
                 <div class="btnCircleBlue" id="btnCircleAuto"> AUTO </div>
             </div>
+            <div class="infoContainer">
+                <div class="infoField">DPTH: <span id="depth_belowKeel">N/A</span> m </div>
+            </div>
         </div>
     </div>
     <div id="notificationArea"></div>
@@ -276,6 +279,9 @@
                             }
                             if (value.path === 'steering.autopilot.state') {
                                 document.getElementById('autopilotState').innerText = value.value || 'N/A';
+                            }
+                            if (value.path === 'environment.depth.belowKeel') {
+                                document.getElementById('depth_belowKeel').innerText = (typeof value.value === 'number') ? value.value.toFixed(1) : 'N/A';
                             }
                         });
                     });
@@ -400,6 +406,9 @@
             });
             document.getElementById('btnCircleTrack').addEventListener('click', () => {
                 sendPutRequest('steering.autopilot.state', 'route');
+            });
+            document.getElementById('depth_belowKeel').addEventListener('click', () => {
+                sendPutRequest('environment.depth.belowKeel', 'route');
             });
         });
     </script>
