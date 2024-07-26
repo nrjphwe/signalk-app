@@ -118,7 +118,7 @@
                 flex-wrap: wrap; /* Allow wrapping in portrait mode */
                 justify-content: center;
             }
-            .LargeInfoField {
+            .largeInfoField {
                 font-size: 8vw; /* Adjust font size */
                 padding: 3vw 2vw; /* Adjust padding */
                 margin: 1vw;
@@ -144,10 +144,11 @@
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
                 justify-content: center;
             }
-            .LargeInfoField {
+            .largeInfoField {
                 font-size: 4vw; /* Adjust font size */
                 padding: 1vw 2vw; /* Adjust padding */
                 margin: 1vw;
+            }
         }
         /* Responsive styles for iPad Air 2 and similar tablets in portrait mode*/
         @media only screen and (min-device-width: 768px) and (max-device-width: 1023px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
@@ -168,6 +169,11 @@
                 display: flex;
                 flex-wrap: wrap; /* wrapping in portrait mode */
                 justify-content: center;
+            }
+            .largeInfoField {
+                font-size: 8vw; /* Adjust font size */
+                padding: 1vw 3vw; /* Adjust padding */
+                margin: 1vw;
             }
             #main {
                 padding-top: 5px; /* Adjust padding to fit content */
@@ -193,6 +199,11 @@
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
                 justify-content: center;
             }
+            .largeInfoField {
+                font-size: 8vw; /* Adjust font size */
+                padding: 1vw 2vw; /* Adjust padding */
+                margin: 1vw;
+            }
             #main {
                 padding-top: 5px; /* Adjust padding to fit content */
             }
@@ -210,6 +221,11 @@
             .infoField {
                 font-size: 2vw; /* Responsive font size */
                 padding: 1.5vw 2vw; /* Responsive padding */
+            }
+            .largeInfoField {
+                font-size: 4vw; /* Adjust font size */
+                padding: 1vw 3vw; /* Adjust padding */
+                margin: 1vw;
             }
         }
     </style>
@@ -244,7 +260,7 @@
                 <div class="btnCircleBlue" id="btnCircleAuto"> AUTO </div>
             </div>
             <div class="infoContainer">
-                <div class="infoField">DPTH: <span id="depth_belowKeel">N/A</span> m </div>
+                <div class="largeInfoField">DPTH: <span id="depth_belowKeel">N/A</span> m </div>
             </div>
         </div>
     </div>
