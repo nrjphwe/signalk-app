@@ -270,9 +270,38 @@
                 const updates = message.updates || [];
 
                 if (message.updates) {
-                    updates.forEach(update => {
+                    message.updates.forEach(update => {
                         update.values.forEach(value => {
-                            handleUpdate(value);
+                            if (value.path && value.path.startsWith('notifications.autopilot')) {
+                                displayNotification(`${value.value.message}`);
+                            }
+                            if (value.path === 'navigation.courseOverGroundTrue') {
+                                document.getElementById('currentCourse').innerText = (typeof value.value === 'number') ? radToDeg(value.value).toFixed(0) : 'N/A';
+                            }
+                            if (value.path === 'steering.autopilot.target.headingMagnetic') {
+                                document.getElementById('targetHeading').innerText = (typeof value.value === 'number') ? radToDeg(value.value).toFixed(0) : 'N/A';
+                            }
+                            if (value.path === 'environment.wind.speedTrue') {
+                                document.getElementById('currentTWS').innerText = (typeof value.value === 'number') ? value.value.toFixed(1) : 'N/A';
+                            }
+                            if (value.path === 'navigation.speedThroughWater') {
+                                document.getElementById('speedThroughWater').innerText = (typeof value.value === 'number') ? ((value.value)*1.852).toFixed(1) : 'N/A';
+                            }
+                            if (value.path === 'performance.targetSpeed') {
+                                document.getElementById('targetSpeed').innerText = (typeof value.value === 'number') ? ((value.value)*1.852).toFixed(1) : 'N/A';
+                            }
+                            if (value.path === 'environment.wind.angleApparent') {
+                                document.getElementById('windAngle').innerText = (typeof value.value === 'number') ? Math.abs(radToDeg(value.value).toFixed(0)) : 'N/A';
+                            }
+                            if (value.path === 'performance.targetAngle') {
+                                document.getElementById('targetAWA').innerText = (typeof value.value === 'number') ? Math.abs(radToDeg(value.value).toFixed(0)) : 'N/A';
+                            }
+                            if (value.path === 'steering.autopilot.state') {
+                                document.getElementById('autopilotState').innerText = value.value || 'N/A';
+                            }
+                            if (value.path === 'environment.depth.belowKeel') {
+                                document.getElementById('depth_belowKeel').innerText = (typeof value.value === 'number') ? value.value.toFixed(1) : 'N/A';
+                            }
                         });
                     });
                 }
