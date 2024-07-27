@@ -263,6 +263,11 @@
     </div>
     <div id="notificationArea"></div>
     <script>
+        function toggleSelection(element) {
+            element.classList.toggle('btnSelected');
+        }
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', (event) => {
             console.log('DOM fully loaded and parsed');
             const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzIxMjIwNjA3LCJleHAiOjE3NTI3NzgyMDd9.QCOUf94JO2M2wdYved1p4uN6A9JeL0thuVvhK0jxCjg';
