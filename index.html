@@ -55,7 +55,7 @@
             flex-direction: row;
             justify-content: center;
         }
-        .btnCircle {
+        .btnCircleRed, .btnCircleBlue, .btnBlack, .btnActive, .btnInactive {
             display: inline-block;
             cursor: pointer;
             border-radius: 20px;
@@ -76,11 +76,6 @@
             opacity: 0.5; /* Inactive opacity */
         }
         .btnBlack {
-            display: inline-block;
-            cursor: pointer;
-            border-radius: 20px;
-            color: white;
-            text-align: center;
             border-radius: 10px;
             background-color: black;
             margin: 1vw;
@@ -106,7 +101,7 @@
         }
         /* iPhone 14 (Portrait Mode) */
         @media only screen and (min-device-width: 390px) and (max-device-width: 390px) and (-webkit-device-pixel-ratio: 3) {
-            .btnCircle, .btnCircleRed, .btnCircleBlue, .btnActive, .btnInActive {
+            .btnCircle, .btnCircleRed, .btnCircleBlue, .btnActive, .btnInactive {
                 font-size: 10vw; /* Much bigger font size */
                 padding: 3vw 6vw; /* Increased padding top right bottom left*/
                 margin: 2vw;
