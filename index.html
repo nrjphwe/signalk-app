@@ -29,7 +29,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-start; /* Align items at the start of the container */
-            padding-top: 10px; /* Add some padding at the top */
+            padding-top: 5px; /* Add some padding at the top */
         }
         #remoteMain {
             display: flex;
@@ -41,7 +41,7 @@
             flex-direction: row;
             flex-wrap: wrap; /* Allow wrapping */
             justify-content: center;
-            margin-bottom: 2px; /* Add some margin to separate button groups */
+            margin-bottom: 0px; /* Add some margin to separate button groups */
         }
         .infoField {
             margin-top: 5px;
@@ -61,7 +61,7 @@
             border-radius: 20px;
             color: white;
             text-align: center;
-            margin: 2vw;
+            margin: 1vw;
         }
         .btnBlack {
             border-radius: 10px;
@@ -74,7 +74,7 @@
             background-color: blue;
         }
         .largeInfoField {
-            background-color: rgba(57, 47, 19, 0.48);
+            background-color: rgba(54, 49, 35, 0.48);
             color: white;
             text-align: center;
             border-radius: 10px;
@@ -96,6 +96,7 @@
             .btnCircleRed, .btnCircleBlue {
                 font-size: 10vw; /* Much bigger font size */
                 padding: 3vw 6vw; /* Increased padding top right bottom left*/
+                margin: 2vw;
             }
             .btnBlack {
                 font-size: 8vw; /* Slightly bigger font size */
@@ -111,7 +112,7 @@
                 flex-wrap: wrap; /* Allow wrapping in portrait mode */
             }
             .largeInfoField {
-                font-size: 8vw; /* Adjust font size */
+                font-size: 7vw; /* Adjust font size */
                 padding: 3vw 2vw; /* Adjust padding */
                 margin: 1vw;
             }
@@ -128,7 +129,7 @@
             }
             .infoField {
                 font-size: 2vw; /* Adjust font size */
-                padding: 1vw 1.5vw; /* Adjust padding */
+                padding: 1vw 1vw; /* Adjust padding */
             }
             .btnContainer, .infoContainer {
                 display: flex;
@@ -208,7 +209,8 @@
             }
             .infoField {
                 font-size: 2vw; /* Responsive font size */
-                padding: 1.5vw 2vw; /* Responsive padding */
+                padding: 1.5vw 1vw; /* Responsive padding */
+                margin: 0.5vw
             }
             .largeInfoField {
                 font-size: 4vw; /* Adjust font size */
@@ -227,12 +229,11 @@
                 <div class="infoField">TWS: <span id="currentTWS">N/A</span> m/s </div>
                 <div class="infoField">Speed: <span id="speedThroughWater">N/A</span> kt </div>
                 <div class="infoField">TargetSpeed: <span id="targetSpeed">N/A</span> kt </div>
-                <div class="infoField">AWA: <span id="windAngle">N/A</span> ° </div>
-                <div class="infoField">TAWA: <span id="targetAWA">N/A</span> ° </div>
+                <div class="infoField">Trip: <span id="tripLog">N/A</span> kt </div>
             </div>
             <div class="btnContainer">
                 <div class="btnBlack" id="btnLeftTack"><<</div>
-                <div class="infoField" id="autopilotState">N/A</div>
+                <div class="btnBlack" id="autopilotState">" N/A "</div>
                 <div class="btnBlack" id="btnRightTack">>></div>
             </div>
             <div class="btnContainer">
@@ -249,6 +250,8 @@
             </div>
             <div class="infoContainer">
                 <div class="largeInfoField">DPTH: <span id="depth_belowKeel">N/A</span> m </div>
+                <div class="largeInfoField">AWA: <span id="windAngle">N/A</span> ° </div>
+                <div class="largeInfoField">TAWA: <span id="targetAWA">N/A</span> ° </div>
             </div>
         </div>
     </div>
@@ -349,11 +352,12 @@
                 fetchData('navigation/courseOverGroundTrue', 'currentCourse');
                 fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
                 fetchData('environment/wind/speedTrue', 'currentTWS');
-                fetchData('environment/wind/angleApparent', 'windAngle');
-                fetchData('environment/wind/speedTrue', 'currentTWS');
-                fetchData('performance/targetAngle', 'targetAWA');
-                fetchData('performance/targetSpeed', 'targetSpeed');
                 fetchData('navigation/speedThroughWater', 'speedThroughWater');
+                fetchData('performance/targetSpeed', 'targetSpeed');
+                fetchData('navigation/trip/log', 'tripLog');
+                fetchData('environment.depth.belowKeel', 'sdepth_belowKeel');
+                fetchData('environment/wind/angleApparent', 'windAngle');
+                fetchData('performance/targetAngle', 'targetAWA');
             }
             function fetchData(path, elementId) {
                 fetch(`http://fidelibe.local:3000/signalk/v1/api/vessels/self/${path}`, {
@@ -425,9 +429,6 @@
             });
             document.getElementById('btnCircleTrack').addEventListener('click', () => {
                 sendPutRequest('steering.autopilot.state', 'route');
-            });
-            document.getElementById('depth_belowKeel').addEventListener('click', () => {
-                sendPutRequest('environment.depth.belowKeel', 'route');
             });
         });
     </script>
