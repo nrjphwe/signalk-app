@@ -55,15 +55,36 @@
             flex-direction: row;
             justify-content: center;
         }
-        .btnCircleRed, .btnCircleBlue, .btnBlack {
+        .btnCircleRed {
+            display: inline-block;
+            cursor: pointer;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            margin: 2vw;
+        }
+        .btnCircleBlue {
+            display: inline-block;
+            cursor: pointer;
+            border-radius: 20px;
+            color: white;
+            text-align: center;
+            margin: 2vw;
+            background-color: blue;
+        }
+        .btnActive {
+            background-color: red !important;
+        }
+        .btnInactive {
+            background-color: grey !important;
+        }
+        .btnBlack {
             display: inline-block;
             cursor: pointer;
             border-radius: 20px;
             color: white;
             text-align: center;
             margin: 1vw;
-        }
-        .btnBlack {
             border-radius: 10px;
             background-color: black;
         }
