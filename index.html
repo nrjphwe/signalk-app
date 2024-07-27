@@ -55,7 +55,7 @@
             flex-direction: row;
             justify-content: center;
         }
-        .btnCircleRed {
+        .btnCircle {
             display: inline-block;
             cursor: pointer;
             border-radius: 20px;
@@ -63,20 +63,17 @@
             text-align: center;
             margin: 2vw;
         }
+        .btnCircleRed {
+            background-color: red;
+        }
         .btnCircleBlue {
-            display: inline-block;
-            cursor: pointer;
-            border-radius: 20px;
-            color: white;
-            text-align: center;
-            margin: 2vw;
             background-color: blue;
         }
         .btnActive {
-            background-color: red !important;
+            background-color: green !important; /* Active color */
         }
         .btnInactive {
-            background-color: grey !important;
+            opacity: 0.5; /* Inactive opacity */
         }
         .btnBlack {
             display: inline-block;
@@ -84,15 +81,9 @@
             border-radius: 20px;
             color: white;
             text-align: center;
-            margin: 1vw;
             border-radius: 10px;
             background-color: black;
-        }
-        .btnCircleRed {
-            background-color: red;
-        }
-        .btnCircleBlue {
-            background-color: blue;
+            margin: 1vw;
         }
         .largeInfoField {
             background-color: rgba(54, 49, 35, 0.48);
