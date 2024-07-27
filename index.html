@@ -269,7 +269,6 @@
     </div>
     <div id="notificationArea"></div>
     <script>
-        
         document.addEventListener('DOMContentLoaded', (event) => {
             console.log('DOM fully loaded and parsed');
             const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzIxMjIwNjA3LCJleHAiOjE3NTI3NzgyMDd9.QCOUf94JO2M2wdYved1p4uN6A9JeL0thuVvhK0jxCjg';
@@ -279,7 +278,6 @@
                 console.log('WebSocket connection opened');
                 getCurrentData(); // Get initial data
             };
-
             socket.onmessage = function(event) {
                 console.log('WebSocket message received:', event.data);
                 const message = JSON.parse(event.data);
@@ -295,7 +293,6 @@
                     });
                 }
             };
-
             socket.onclose = function() {
                 console.log('WebSocket connection closed');
             };
