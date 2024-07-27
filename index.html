@@ -269,9 +269,161 @@
     </div>
     <div id="notificationArea"></div>
     <script>
+        const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzIxMjIwNjA3LCJleHAiOjE3NTI3NzgyMDd9.QCOUf94JO2M2wdYved1p4uN6A9JeL0thuVvhK0jxCjg';
+
+        function radToDeg(rad) {
+            return rad * (180 / Math.PI);
+        }
+
+        function updateButtonStates(activeButtonId) {
+            // Get all buttons
+            const buttons = {
+                standby: document.getElementById('btnCircleStandby'),
+                auto: document.getElementById('btnCircleAuto'),
+                wind: document.getElementById('btnCircleWind'),
+                track: document.getElementById('btnCircleTrack')
+            };
+
+            // Reset all buttons to inactive
+            Object.values(buttons).forEach(button => {
+                button.classList.remove('btnActive');
+                button.classList.add('btnInactive');
+            });
+
+            // Set the active button based on the provided ID
+            const activeButton = buttons[activeButtonId.replace('btnCircle', '').toLowerCase()];
+            if (activeButton) {
+                activeButton.classList.remove('btnInactive');
+                activeButton.classList.add('btnActive');
+            }
+        }
+
+        function sendPutRequest(path, value) {
+            fetch('http://fidelibe.local:3000/signalk/v1/api/vessels/self/' + path, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + authToken // Include the token in the Authorization header
+                },
+                body: JSON.stringify({
+                    value: value
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log('PUT request successful');
+                displayNotification('Course change accepted.');
+            })
+            .catch(error => {
+                console.error('Error during PUT request:', error);
+                displayNotification('Error: Unable to change course.');
+            });
+        }
+
+        function toggleSelection(button) {
+            const selectedId = button.id; // Get the ID of the clicked button
+            // Map button IDs to their corresponding autopilot states
+            const stateMap = {
+                'btnCircleStandby': 'standby',
+                'btnCircleWind': 'wind',
+                'btnCircleTrack': 'route',
+                'btnCircleAuto': 'auto'
+            };
+            const selectedState = stateMap[selectedId]; // Determine the state based on the button ID
+            // Send the selected state to the autopilot
+            sendPutRequest('steering.autopilot.state', selectedState);
+            updateButtonStates(selectedId); // Update button appearances
+        }
+
+        function updateButtonStates(activeButtonId) {
+            const buttons = {
+                standby: document.getElementById('btnCircleStandby'),
+                auto: document.getElementById('btnCircleAuto'),
+                wind: document.getElementById('btnCircleWind'),
+                track: document.getElementById('btnCircleTrack')
+            };
+
+            Object.values(buttons).forEach(button => {
+                button.classList.remove('btnActive');
+                button.classList.add('btnInactive');
+            });
+
+            const activeButton = buttons[activeButtonId.replace('btnCircle', '').toLowerCase()];
+            if (activeButton) {
+                activeButton.classList.remove('btnInactive');
+                activeButton.classList.add('btnActive');
+            }
+        }
+
+        async function updateAutopilotState() {
+            const data = await fetchData('/signalk/v1/api/vessels/self/navigation/autopilot/state');
+            if (data && data.value) {
+                currentValues.autopilotState = data.value;
+                updateField('autopilotState', currentValues.autopilotState);
+            }
+        }
+
+        function getCurrentData() {
+            fetchData('navigation/courseOverGroundTrue', 'currentCourse');
+            fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
+            fetchData('environment/wind/speedTrue', 'currentTWS');
+            fetchData('navigation/speedThroughWater', 'speedThroughWater');
+            fetchData('performance/targetSpeed', 'targetSpeed');
+            fetchData('navigation/trip/log', 'tripLog');
+            fetchData('environment.depth.belowKeel', 'sdepth_belowKeel');
+            fetchData('environment/wind/angleApparent', 'windAngle');
+            fetchData('performance/targetAngle', 'targetAWA');
+            fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButtons); // Fetch initial state and update buttons
+
+        }
+
+        function fetchData(path, elementId) {
+            fetch(`http://fidelibe.local:3000/signalk/v1/api/vessels/self/${path}`, {
+                headers: {
+                    'Authorization': 'Bearer ' + authToken
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                let value = 'N/A';
+                if (path === 'environment/wind/angleApparent') {
+                    // Convert radians to degrees for wind angle apparent
+                    value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0) : 'N/A';
+                } else {
+                    // For other values, just use toFixed if the value is a number
+                    value = (typeof data.value === 'number') ? data.value.toFixed(2) : 'N/A';
+                }
+                document.getElementById(elementId).innerText = value;
+            })
+            .catch(error => {
+                console.error(`Error during GET request for ${path}:`, error);
+                document.getElementById(elementId).innerText = 'N/A';
+            });
+        }
+
+        function displayNotification(text) {
+            const notificationArea = document.getElementById('notificationArea');
+            if (notificationArea) {
+                notificationArea.innerText = text;
+                notificationArea.style.display = 'block';
+                setTimeout(() => {
+                    notificationArea.style.display = 'none';
+                }, 5000); // Hide the notification after 5 seconds
+            } else {
+                console.error('Notification area element not found');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', (event) => {
             console.log('DOM fully loaded and parsed');
-            const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzIxMjIwNjA3LCJleHAiOjE3NTI3NzgyMDd9.QCOUf94JO2M2wdYved1p4uN6A9JeL0thuVvhK0jxCjg';
+
             const socket = new WebSocket('ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all');
 
             socket.onopen = function() {
@@ -300,164 +452,6 @@
                 console.error('WebSocket error:', error);
             };
 
-            function radToDeg(rad) {
-                return rad * (180 / Math.PI);
-            }
-
-            function updateButtonStates(activeButtonId) {
-                // Get all buttons
-                const buttons = {
-                    standby: document.getElementById('btnCircleStandby'),
-                    auto: document.getElementById('btnCircleAuto'),
-                    wind: document.getElementById('btnCircleWind'),
-                    track: document.getElementById('btnCircleTrack')
-                };
-
-                // Reset all buttons to inactive
-                Object.values(buttons).forEach(button => {
-                    button.classList.remove('btnActive');
-                    button.classList.add('btnInactive');
-                });
-
-                // Set the active button based on the provided ID
-                const activeButton = buttons[activeButtonId.replace('btnCircle', '').toLowerCase()];
-                if (activeButton) {
-                    activeButton.classList.remove('btnInactive');
-                    activeButton.classList.add('btnActive');
-                }
-            }
-
-            function sendPutRequest(path, value) {
-                fetch('http://fidelibe.local:3000/signalk/v1/api/vessels/self/' + path, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + authToken // Include the token in the Authorization header
-                    },
-                    body: JSON.stringify({
-                        value: value
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    console.log('PUT request successful');
-                    displayNotification('Course change accepted.');
-                })
-                .catch(error => {
-                    console.error('Error during PUT request:', error);
-                    displayNotification('Error: Unable to change course.');
-                });
-            }
-
-
-            function toggleSelection(button) {
-                // Get the ID of the clicked button
-                const selectedId = button.id;
-
-                // Map button IDs to their corresponding autopilot states
-                const stateMap = {
-                    'btnCircleStandby': 'standby',
-                    'btnCircleWind': 'wind',
-                    'btnCircleTrack': 'route',
-                    'btnCircleAuto': 'auto'
-                };
-                const selectedState = stateMap[selectedId]; // Determine the state based on the button ID
-
-                // Send the selected state to the autopilot
-                sendPutRequest('steering.autopilot.state', selectedState);
-                updateButtonStates(selectedId); // Update button appearances
-            }
- 
-            function updateAutopilotButtons(state) {
-                const buttons = {
-                    standby: document.getElementById('btnCircleStandby'),
-                    auto: document.getElementById('btnCircleAuto'),
-                    wind: document.getElementById('btnCircleWind'),
-                    track: document.getElementById('btnCircleTrack')
-                };
-
-                // Reset all buttons to inactive
-                Object.values(buttons).forEach(button => {
-                    button.classList.remove('btnActive');
-                    button.classList.add('btnInactive');
-                });
-
-                // Set the active button based on the current state
-                if (state === 'standby') {
-                    buttons.standby.classList.add('btnActive');
-                } else if (state === 'auto') {
-                    buttons.auto.classList.add('btnActive');
-                } else if (state === 'wind') {
-                    buttons.wind.classList.add('btnActive');
-                } else if (state === 'route') {
-                    buttons.track.classList.add('btnActive');
-                }
-            }
-
-            async function updateAutopilotState() {
-                const data = await fetchData('/signalk/v1/api/vessels/self/navigation/autopilot/state');
-                if (data && data.value) {
-                    currentValues.autopilotState = data.value;
-                    updateField('autopilotState', currentValues.autopilotState);
-                }
-            }
-            function getCurrentData() {
-                fetchData('navigation/courseOverGroundTrue', 'currentCourse');
-                fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
-                fetchData('environment/wind/speedTrue', 'currentTWS');
-                fetchData('navigation/speedThroughWater', 'speedThroughWater');
-                fetchData('performance/targetSpeed', 'targetSpeed');
-                fetchData('navigation/trip/log', 'tripLog');
-                fetchData('environment.depth.belowKeel', 'sdepth_belowKeel');
-                fetchData('environment/wind/angleApparent', 'windAngle');
-                fetchData('performance/targetAngle', 'targetAWA');
-                fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButtons); // Fetch initial state and update buttons
-
-            }
-
-            function fetchData(path, elementId) {
-                fetch(`http://fidelibe.local:3000/signalk/v1/api/vessels/self/${path}`, {
-                    headers: {
-                        'Authorization': 'Bearer ' + authToken
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    let value = 'N/A';
-                    if (path === 'environment/wind/angleApparent') {
-                        // Convert radians to degrees for wind angle apparent
-                        value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0) : 'N/A';
-                    } else {
-                        // For other values, just use toFixed if the value is a number
-                        value = (typeof data.value === 'number') ? data.value.toFixed(2) : 'N/A';
-                    }
-                    document.getElementById(elementId).innerText = value;
-                })
-                .catch(error => {
-                    console.error(`Error during GET request for ${path}:`, error);
-                    document.getElementById(elementId).innerText = 'N/A';
-                });
-            }
-
-            function displayNotification(text) {
-                const notificationArea = document.getElementById('notificationArea');
-                if (notificationArea) {
-                    notificationArea.innerText = text;
-                    notificationArea.style.display = 'block';
-                    setTimeout(() => {
-                        notificationArea.style.display = 'none';
-                    }, 5000); // Hide the notification after 5 seconds
-                } else {
-                    console.error('Notification area element not found');
-                }
-            }
 
             // Event listeners for your buttons
             document.getElementById('btnLeftTack').addEventListener('click', () => {
@@ -489,6 +483,9 @@
             });
             document.getElementById('btnCircleTrack').addEventListener('click', () => {
                 sendPutRequest('steering.autopilot.state', 'route');
+            });
+            document.querySelectorAll('.btnCircle').forEach(button => {
+                button.addEventListener('click', () => toggleSelection(button));
             });
         });
     </script>
