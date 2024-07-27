@@ -55,27 +55,29 @@
             flex-direction: row;
             justify-content: center;
         }
-        .btnCircle, .btnCircleRed, .btnCircleBlue, .btnBlack, .btnActive, .btnInactive {
+        .btnCircle {
+                display: inline-block;
+                cursor: pointer;
+                border-radius: 50%;
+                color: white;
+                text-align: center;
+                margin: 2vw;
+                width: 20vw;
+                height: 20vw;
+                line-height: 20vw;
+                background-color: grey; /* Default background color */
+            }
+            .btnSelected {
+                background-color: green; /* Background color when selected */
+            }
+            .btnInactive {
+                opacity: 0.5;
+            }
+        .btnBlack {
             display: inline-block;
             cursor: pointer;
-            border-radius: 20px;
             color: white;
             text-align: center;
-            margin: 2vw;
-        }
-        .btnCircleRed {
-            background-color: red;
-        }
-        .btnCircleBlue {
-            background-color: blue;
-        }
-        .btnActive {
-            background-color: green !important; /* Active color */
-        }
-        .btnInactive {
-            opacity: 0.5; /* Inactive opacity */
-        }
-        .btnBlack {
             border-radius: 10px;
             background-color: black;
             margin: 1vw;
@@ -251,10 +253,10 @@
                 <div class="btnBlack" id="btn+1"> +1 </div>
             </div>
             <div class="btnContainer">
-                <div class="btnCircle" id="btnCircleStandby">STBY</div>
-                <div class="btnCircle" id="btnCircleWind">WIND</div>
-                <div class="btnCircle" id="btnCircleTrack">TRACK</div>
-                <div class="btnCircle" id="btnCircleAuto"> AUTO </div>
+                <div class="btnCircle" id="btnCircleStandby" onclick="toggleSelection(this)">STBY</div>
+                <div class="btnCircle" id="btnCircleWind" onclick="toggleSelection(this)">WIND</div>
+                <div class="btnCircle" id="btnCircleTrack" onclick="toggleSelection(this)">TRACK</div>
+                <div class="btnCircle" id="btnCircleAuto" onclick="toggleSelection(this)">AUTO</div>
             </div>
             <div class="infoContainer">
                 <div class="largeInfoField">DPTH: <span id="depth_belowKeel">N/A</span> m </div>
