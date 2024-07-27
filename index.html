@@ -319,9 +319,8 @@
 
                 // Send the selected state to the autopilot
                 sendPutRequest('steering.autopilot.state', selectedState);
-
                 updateButtonStates(selectedId); // Update button appearances
-            };
+            }
 
             function updateButtonStates(activeButtonId) {
                 // Get all buttons
@@ -369,6 +368,7 @@
                     displayNotification('Error: Unable to change course.');
                 });
             }
+
             function updateAutopilotButtons(state) {
                 const buttons = {
                     standby: document.getElementById('btnCircleStandby'),
@@ -415,6 +415,7 @@
                 fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButtons); // Fetch initial state and update buttons
 
             }
+
             function fetchData(path, elementId) {
                 fetch(`http://fidelibe.local:3000/signalk/v1/api/vessels/self/${path}`, {
                     headers: {
@@ -443,6 +444,7 @@
                     document.getElementById(elementId).innerText = 'N/A';
                 });
             }
+
             function displayNotification(text) {
                 const notificationArea = document.getElementById('notificationArea');
                 if (notificationArea) {
@@ -455,6 +457,7 @@
                     console.error('Notification area element not found');
                 }
             }
+
             // Event listeners for your buttons
             document.getElementById('btnLeftTack').addEventListener('click', () => {
                 sendPutRequest('steering.autopilot.actions.tack', 'port');
