@@ -62,13 +62,20 @@
                 color: white;
                 text-align: center;
                 background-color: grey; /* Default background color */
-            }
-            .btnSelected {
-                background-color: green; /* Background color when selected */
-            }
-            .btnInactive {
-                opacity: 0.5;
-            }
+        }
+        .btnActive, .btnInactive {
+                display: inline-block;
+                cursor: pointer;
+                border-radius: 20%;
+                color: white;
+                text-align: center;
+        }
+        .btnActive {
+            background-color: green; /* Background color when selected */
+        }
+        .btnInactive {
+            opacity: 0.5;
+        }
         .btnBlack {
             display: inline-block;
             cursor: pointer;
@@ -78,7 +85,6 @@
             background-color: black;
             margin: 1vw;
         }
-
         .largeInfoField {
             background-color: rgba(54, 49, 35, 0.48);
             color: white;
