@@ -269,47 +269,7 @@
     </div>
     <div id="notificationArea"></div>
     <script>
-        function toggleSelection(button) {
-            // Get the ID of the clicked button
-            const selectedId = button.id;
-
-            // Map button IDs to their corresponding autopilot states
-            const stateMap = {
-                'btnCircleStandby': 'standby',
-                'btnCircleWind': 'wind',
-                'btnCircleTrack': 'route',
-                'btnCircleAuto': 'auto'
-            };
-            // Determine the state based on the button ID
-            const selectedState = stateMap[selectedId];
-
-        // Send the selected state to the autopilot
-        sendPutRequest('steering.autopilot.state', selectedState);
-
-        function updateButtonStates(activeButtonId) {
-            // Get all buttons
-            const buttons = {
-                standby: document.getElementById('btnCircleStandby'),
-                auto: document.getElementById('btnCircleAuto'),
-                wind: document.getElementById('btnCircleWind'),
-                track: document.getElementById('btnCircleTrack')
-            };
-
-            // Reset all buttons to inactive
-            Object.values(buttons).forEach(button => {
-                button.classList.remove('btnActive');
-                button.classList.add('btnInactive');
-            });
-
-            // Set the active button based on the provided ID
-            const activeButton = buttons[activeButtonId.replace('btnCircle', '').toLowerCase()];
-            if (activeButton) {
-                activeButton.classList.remove('btnInactive');
-                activeButton.classList.add('btnActive');
-            }
-        }
-    </script>
-    <script>
+        
         document.addEventListener('DOMContentLoaded', (event) => {
             console.log('DOM fully loaded and parsed');
             const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzIxMjIwNjA3LCJleHAiOjE3NTI3NzgyMDd9.QCOUf94JO2M2wdYved1p4uN6A9JeL0thuVvhK0jxCjg';
@@ -345,6 +305,47 @@
 
             function radToDeg(rad) {
                 return rad * (180 / Math.PI);
+            }
+
+            function toggleSelection(button) {
+                // Get the ID of the clicked button
+                const selectedId = button.id;
+
+                // Map button IDs to their corresponding autopilot states
+                const stateMap = {
+                    'btnCircleStandby': 'standby',
+                    'btnCircleWind': 'wind',
+                    'btnCircleTrack': 'route',
+                    'btnCircleAuto': 'auto'
+                };
+                const selectedState = stateMap[selectedId]; // Determine the state based on the button ID
+
+                // Send the selected state to the autopilot
+                sendPutRequest('steering.autopilot.state', selectedState);
+
+                updateButtonStates(selectedId); // Update button appearances
+
+            function updateButtonStates(activeButtonId) {
+                // Get all buttons
+                const buttons = {
+                    standby: document.getElementById('btnCircleStandby'),
+                    auto: document.getElementById('btnCircleAuto'),
+                    wind: document.getElementById('btnCircleWind'),
+                    track: document.getElementById('btnCircleTrack')
+                };
+
+                // Reset all buttons to inactive
+                Object.values(buttons).forEach(button => {
+                    button.classList.remove('btnActive');
+                    button.classList.add('btnInactive');
+                });
+
+                // Set the active button based on the provided ID
+                const activeButton = buttons[activeButtonId.replace('btnCircle', '').toLowerCase()];
+                if (activeButton) {
+                    activeButton.classList.remove('btnInactive');
+                    activeButton.classList.add('btnActive');
+                }
             }
 
             function sendPutRequest(path, value) {
