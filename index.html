@@ -291,25 +291,30 @@
             socket.onmessage = function(event) {
                 console.log('WebSocket message received:', event.data);
                 const message = JSON.parse(event.data);
-                const updates = message.updates || [];
 
                 if (message.updates) {
-                    updates.forEach(update => {
+                    message.updates.forEach(update => {
                         update.values.forEach(value => {
-                            handleUpdate(value);
+                            if (value.path === 'steering.autopilot.state') {
+                                const state = value.value;
+                                updateAutopilotButtons(state);
+                            }
                         });
                     });
                 }
             };
+
             socket.onclose = function() {
                 console.log('WebSocket connection closed');
             };
             socket.onerror = function(error) {
                 console.error('WebSocket error:', error);
             };
+
             function radToDeg(rad) {
                 return rad * (180 / Math.PI);
             }
+
             function sendPutRequest(path, value) {
                 fetch('http://fidelibe.local:3000/signalk/v1/api/vessels/self/' + path, {
                     method: 'PUT',
@@ -333,6 +338,32 @@
                     displayNotification('Error: Unable to change course.');
                 });
             }
+            function updateAutopilotButtons(state) {
+                const buttons = {
+                    standby: document.getElementById('btnCircleStandby'),
+                    auto: document.getElementById('btnCircleAuto'),
+                    wind: document.getElementById('btnCircleWind'),
+                    track: document.getElementById('btnCircleTrack')
+                };
+
+                // Reset all buttons to inactive
+                Object.values(buttons).forEach(button => {
+                    button.classList.remove('btnActive');
+                    button.classList.add('btnInactive');
+                });
+
+                // Set the active button based on the current state
+                if (state === 'standby') {
+                    buttons.standby.classList.add('btnActive');
+                } else if (state === 'auto') {
+                    buttons.auto.classList.add('btnActive');
+                } else if (state === 'wind') {
+                    buttons.wind.classList.add('btnActive');
+                } else if (state === 'route') {
+                    buttons.track.classList.add('btnActive');
+                }
+            }
+
             async function updateAutopilotState() {
                 const data = await fetchData('/signalk/v1/api/vessels/self/navigation/autopilot/state');
                 if (data && data.value) {
@@ -350,6 +381,8 @@
                 fetchData('environment.depth.belowKeel', 'sdepth_belowKeel');
                 fetchData('environment/wind/angleApparent', 'windAngle');
                 fetchData('performance/targetAngle', 'targetAWA');
+                fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButtons); // Fetch initial state and update buttons
+
             }
             function fetchData(path, elementId) {
                 fetch(`http://fidelibe.local:3000/signalk/v1/api/vessels/self/${path}`, {
