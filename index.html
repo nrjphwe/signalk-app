@@ -256,7 +256,7 @@
                 <div class="btnCircle" id="btnCircleAuto" onclick="toggleSelection(this)">AUTO</div>
             </div>
             <div class="infoContainer">
-                <div class="largeInfoField">DPTH: <span id="depth_belowKeel">N/A</span> m </div>
+                <div class="largeInfoField">DPTH: <span id="depthBelowTransducer">N/A</span> m </div>
                 <div class="largeInfoField">AWA: <span id="windAngle">N/A</span> ° </div>
                 <div class="largeInfoField">TAWA: <span id="targetAWA">N/A</span> ° </div>
             </div>
@@ -367,7 +367,7 @@
             fetchData('navigation/speedThroughWater', 'speedThroughWater');
             fetchData('performance/targetSpeed', 'targetSpeed');
             fetchData('navigation/trip/log', 'tripLog');
-            fetchData('environment.depth.belowKeel', 'sdepth_belowKeel');
+            fetchData('environment.depth.belowTransducer', 'depthBelowTransducer');
             fetchData('environment/wind/angleApparent', 'windAngle');
             fetchData('performance/targetAngle', 'targetAWA');
             fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButtons); // Fetch initial state and update buttons
