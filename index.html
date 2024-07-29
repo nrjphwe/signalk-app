@@ -450,8 +450,6 @@
             socket.onerror = function(error) {
                 console.error('WebSocket error:', error);
             };
-
-
             // Event listeners for your buttons
             document.getElementById('btnLeftTack').addEventListener('click', () => {
                 sendPutRequest('steering.autopilot.actions.adjustHeading', -80);
