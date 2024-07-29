@@ -8,6 +8,10 @@
     <link rel="preload" as="image" href="cf_background.jpg">
     <script src="public/signalk-autopilot.min.js"></script>
     <style>
+        @font-face {
+            font-family: 'curved-seven-segment';
+            src: url('curved-seven-segment.ttf') format('truetype');
+        }
         body, html {
             margin: 0;
             padding: 0;
@@ -262,7 +266,7 @@
             <div class="infoContainer">
                 <div class="largeInfoField">AWA: <span id="windAngle">N/A</span> ° </div>
                 <div class="largeInfoField">TAWA: <span id="targetAWA">N/A</span> ° </div>
-                <div class="largeInfoField">DPTH: <span id="depthBelowTransducer">N/A</span> m </div>
+                <div class="largeInfoField">DPTH: <span id="depthBelowTransducer">font-family: curved-seven-segment>N/A</span> m </div>
             </div>
         </div>
     </div>
