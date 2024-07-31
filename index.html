@@ -364,7 +364,7 @@
         }
 
         async function updateAutopilotButton() {
-            const data = await fetchData('/signalk/v1/api/vessels/self/navigation/autopilot/state');
+            const data = await fetchData('/signalk/v1/api/vessels/self/steering/autopilot/state');
             if (data && data.value) {
                 currentValues.autopilotState = data.value;
                 updateField('autopilotState', currentValues.autopilotState);
@@ -399,7 +399,7 @@
             })
             .then(data => {
                 let value = 'N/A';
-                if (path === 'environment/wind/angleApparent') {
+                if (path === 'environment/wind/angleApparent' || path === 'steering.autopilot.target.windAngleApparent') {
                     // Convert radians to degrees for wind angle apparent
                     value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0) : 'N/A';
                 } else {
