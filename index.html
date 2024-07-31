@@ -329,20 +329,7 @@
             });
         }
 
-        function toggleSelection(button) {
-            const selectedId = button.id; // Get the ID of the clicked button
-            // Map button IDs to their corresponding autopilot states
-            const stateMap = {
-                'btnCircleStandby': 'standby',
-                'btnCircleWind': 'wind',
-                'btnCircleTrack': 'route',
-                'btnCircleAuto': 'auto'
-            };
-            const selectedState = stateMap[selectedId]; // Determine the state based on the button ID
-            // Send the selected state to the autopilot
-            sendPutRequest('steering.autopilot.state', selectedState);
-            updateButtonStates(selectedId); // Update button appearances
-        }
+        
 
         function updateButtonStates(activeButtonId) {
             const buttons = {
@@ -362,6 +349,21 @@
                 activeButton.classList.remove('btnInactive');
                 activeButton.classList.add('btnActive');
             }
+        }
+
+        function toggleSelection(button) {
+            const selectedId = button.id; // Get the ID of the clicked button
+            // Map button IDs to their corresponding autopilot states
+            const stateMap = {
+                'btnCircleStandby': 'standby',
+                'btnCircleWind': 'wind',
+                'btnCircleTrack': 'route',
+                'btnCircleAuto': 'auto'
+            };
+            const selectedState = stateMap[selectedId]; // Determine the state based on the button ID
+            // Send the selected state to the autopilot
+            sendPutRequest('steering.autopilot.state', selectedState);
+            updateButtonStates(selectedId); // Update button appearances
         }
 
         async function updateAutopilotButton() {
