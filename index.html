@@ -364,7 +364,7 @@
             }
         }
 
-        async function updateAutopilotState() {
+        async function updateAutopilotButtons() {
             const data = await fetchData('/signalk/v1/api/vessels/self/navigation/autopilot/state');
             if (data && data.value) {
                 currentValues.autopilotState = data.value;
@@ -446,7 +446,7 @@
                         update.values.forEach(value => {
                             if (value.path === 'steering.autopilot.state') {
                                 const state = value.value;
-                                updateAutopilotState(state);
+                                updateAutopilotButton(state);
                             }
                         });
                     });
