@@ -403,8 +403,12 @@
                     // Convert radians to degrees for wind angle apparent
                     value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0) : 'N/A';
                 } else {
-                    // For other values, just use toFixed if the value is a number
-                    value = (typeof data.value === 'number') ? data.value.toFixed(1) : 'N/A';
+                    if (path === 'environment/depth/belowTransducer') {
+                        value = (typeof data.value === 'number') ? data.value.toFixed(0) : 'N/A';
+                    } else {
+                        // For other values, just use toFixed if the value is a number
+                        value = (typeof data.value === 'number') ? data.value.toFixed(1) : 'N/A';
+                    }
                 }
                 document.getElementById(elementId).innerText = value;
             })
