@@ -12,7 +12,6 @@
             font-family: 'alarm-clock';
             src: url('alarm-clock.ttf') format('truetype');
         }
-
         .alarm-clock-font {
             font-family: 'alarm-clock', sans-serif;
             font-size: 9vw;
@@ -447,7 +446,7 @@
                         update.values.forEach(value => {
                             if (value.path === 'steering.autopilot.state') {
                                 const state = value.value;
-                                updateAutopilotButtons(state);
+                                updateAutopilotState(state);
                             }
                         });
                     });
