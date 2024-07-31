@@ -364,7 +364,7 @@
             }
         }
 
-        async function updateAutopilotButtons() {
+        async function updateAutopilotButton() {
             const data = await fetchData('/signalk/v1/api/vessels/self/navigation/autopilot/state');
             if (data && data.value) {
                 currentValues.autopilotState = data.value;
