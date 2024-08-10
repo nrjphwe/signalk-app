@@ -247,7 +247,7 @@
                 <div class="infoField">TWS: <span id="currentTWS">N/A </span><span style="font-size:1.5vw">m/s</span></div>
                 <div class="infoField">Speed: <span id="speedThroughWater">N/A </span><span style="font-size:1.5vw">kt</span></div>
                 <div class="infoField">TargetSpeed: <span id="targetSpeed">N/A </span><span style="font-size:1.5vw">kt</span></div>
-                <div class="infoField">Trip: <span id="tripLog">N/A </span><span style="font-size:1.5vw">kt</span></div>
+                <div class="infoField">Volt: <span id="electricalVoltage">N/A </span><span style="font-size:1.5vw">kt</span></div>
             </div>
             <div class="btnContainer">
                 <div class="btnBlack" id="btnLeftTack"><<</div>
@@ -370,18 +370,18 @@
                 updateField('autopilotState', currentValues.autopilotState);
             }
         }
-
+        // Fetch initial state and update buttons
         function getCurrentData() {
             fetchData('navigation/courseOverGroundTrue', 'currentCourse');
             fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
             fetchData('environment/wind/speedTrue', 'currentTWS');
             fetchData('navigation/speedThroughWater', 'speedThroughWater');
             fetchData('performance/targetSpeed', 'targetSpeed');
-            fetchData('navigation/trip/log', 'tripLog');
+            fetchData('electrical/solar/SmartSolar/voltage', 'electricalVoltage');
             fetchData('environment/depth/belowTransducer', 'depthBelowTransducer');
             fetchData('environment/wind/angleApparent', 'windAngle');
             fetchData('performance/targetAngle', 'targetAWA');
-            fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButton); // Fetch initial state and update buttons
+            fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButton); 
 
         }
 
