@@ -271,6 +271,10 @@
                 <div class="largeInfoField">TAWA: <span id="targetAWA">N/A</span> ° </div>
                 <div class="largeInfoField">DPTH: <span id="depthBelowTransducer" class="alarm-clock-font">N/A</span> m</div>
             </div>
+            <div class="infoContainer">
+                <div class="infoField">beatAngle: <span id="beatAngle">N/A</span> ° </div>
+                <div class="infoField">gybeAngle <span id="gybeAngle">N/A</span> ° </div>
+            </div>
         </div>
     </div>
     <div id="notificationArea"></div>
@@ -382,7 +386,8 @@
             fetchData('environment/wind/angleApparent', 'windAngle');
             fetchData('performance/targetAngle', 'targetAWA');
             fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButton); 
-
+            fetchData('performance/beatAngle', 'beatAngle');
+            fetchData('performance/gybeAngle', 'gybeAngle');
         }
 
         function fetchData(path, elementId) {
@@ -399,7 +404,7 @@
             })
             .then(data => {
                 let value = 'N/A';
-                if (path === 'environment/wind/angleApparent' || path === 'steering.autopilot.target.windAngleApparent') {
+                if (path === 'environment/wind/angleApparent' || path === 'steering.autopilot.target.windAngleApparent' || path === 'performance.beatAngle' || path === 'performance.gybeAngle') {
                     // Convert radians to degrees for wind angle apparent
                     value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0) : 'N/A';
                 } else {
