@@ -285,29 +285,6 @@
             return rad * (180 / Math.PI);
         }
 
-        function updateButtonStates(activeButtonId) {
-            // Get all buttons
-            const buttons = {
-                standby: document.getElementById('btnCircleStandby'),
-                auto: document.getElementById('btnCircleAuto'),
-                wind: document.getElementById('btnCircleWind'),
-                track: document.getElementById('btnCircleTrack')
-            };
-
-            // Reset all buttons to inactive
-            Object.values(buttons).forEach(button => {
-                button.classList.remove('btnActive');
-                button.classList.add('btnInactive');
-            });
-
-            // Set the active button based on the provided ID
-            const activeButton = buttons[activeButtonId.replace('btnCircle', '').toLowerCase()];
-            if (activeButton) {
-                activeButton.classList.remove('btnInactive');
-                activeButton.classList.add('btnActive');
-            }
-        }
-
         function sendPutRequest(path, value) {
             fetch('http://fidelibe.local:3000/signalk/v1/api/vessels/self/' + path, {
                 method: 'PUT',
@@ -332,6 +309,14 @@
             });
         }
 
+        async function updateAutopilotButton() {
+            const data = await fetchData('/signalk/v1/api/vessels/self/steering/autopilot/state');
+            if (data && data.value) {
+                currentValues.autopilotState = data.value;
+                updateButtonStates(currentValues.autopilotState);
+            }
+        }
+
         function updateButtonStates(activeButtonId) {
             const buttons = {
                 standby: document.getElementById('btnCircleStandby'),
@@ -339,13 +324,23 @@
                 wind: document.getElementById('btnCircleWind'),
                 track: document.getElementById('btnCircleTrack')
             };
-
+            // Reset all buttons to inactive
             Object.values(buttons).forEach(button => {
                 button.classList.remove('btnActive');
                 button.classList.add('btnInactive');
             });
 
-            const activeButton = buttons[activeButtonId.replace('btnCircle', '').toLowerCase()];
+            // Map autopilot state to button ID and set the active button
+            const stateToButtonId = {
+                'standby': 'btnCircleStandby',
+                'auto': 'btnCircleAuto',
+                'wind': 'btnCircleWind',
+                'route': 'btnCircleTrack'
+            };
+
+            const activeButtonId = stateToButtonId[autopilotState];
+            const activeButton = buttons[autopilotState];
+
             if (activeButton) {
                 activeButton.classList.remove('btnInactive');
                 activeButton.classList.add('btnActive');
@@ -367,13 +362,6 @@
             updateButtonStates(selectedId); // Update button appearances
         }
 
-        async function updateAutopilotButton() {
-            const data = await fetchData('/signalk/v1/api/vessels/self/steering/autopilot/state');
-            if (data && data.value) {
-                currentValues.autopilotState = data.value;
-                updateField('autopilotState', currentValues.autopilotState);
-            }
-        }
         // Fetch initial state and update buttons
         function getCurrentData() {
             fetchData('navigation/courseOverGroundTrue', 'currentCourse');
@@ -454,7 +442,7 @@
                         update.values.forEach(value => {
                             if (value.path === 'steering.autopilot.state') {
                                 const state = value.value;
-                                updateAutopilotButton(state);
+                                updateButtonStates(state);
                             }
                         });
                     });
@@ -489,15 +477,19 @@
             });
             document.getElementById('btnCircleStandby').addEventListener('click', () => {
                 sendPutRequest('steering.autopilot.state', 'standby');
+                updateButtonStates('standby');
             });
             document.getElementById('btnCircleAuto').addEventListener('click', () => {
                 sendPutRequest('steering.autopilot.state', 'auto');
+                updateButtonStates('auto');
             });
             document.getElementById('btnCircleWind').addEventListener('click', () => {
                 sendPutRequest('steering.autopilot.state', 'wind');
+                updateButtonStates('wind');
             });
             document.getElementById('btnCircleTrack').addEventListener('click', () => {
                 sendPutRequest('steering.autopilot.state', 'route');
+                updateButtonStates('route');
             });
             document.querySelectorAll('.btnCircle').forEach(button => {
                 button.addEventListener('click', () => toggleSelection(button));
