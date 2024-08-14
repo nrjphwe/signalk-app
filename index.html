@@ -281,13 +281,18 @@
     <script>
         const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzIxMjIwNjA3LCJleHAiOjE3NTI3NzgyMDd9.QCOUf94JO2M2wdYved1p4uN6A9JeL0thuVvhK0jxCjg';
 
+        // Determine the base URL based on the environment
+        const baseURL = (window.location.hostname === 'fidelibe.local') 
+                        ? 'http://fidelibe.local:3000' 
+                        : 'http://2.68.92.157:8081';
+
+
         function radToDeg(rad) {
             return rad * (180 / Math.PI);
         }
 
         function sendPutRequest(path, value) {
-            //fetch('http://fidelibe.local:3000/signalk/v1/api/vessels/self/' + path, {
-            fetch('http://2.68.92.157:8081/signalk/v1/api/vessels/self/' + path, {
+            fetch('${baseURL}/signalk/v1/api/vessels/self/' + path, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -380,8 +385,7 @@
         }
 
         function fetchData(path, elementId) {
-            //fetch(`http://fidelibe.local:3000/signalk/v1/api/vessels/self/${path}`, {
-            fetch(`http://2.68.92.157:8081/signalk/v1/api/vessels/self/${path}`, {
+            fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
                 headers: {
                     'Authorization': 'Bearer ' + authToken
                 }
@@ -429,8 +433,7 @@
         document.addEventListener('DOMContentLoaded', (event) => {
             console.log('DOM fully loaded and parsed');
 
-            //const socket = new WebSocket('ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all');
-            const socket = new WebSocket('ws://2.68.92.157:8081/signalk/v1/stream?subscribe=all');
+            const socket = new WebSocket(`${baseURL.replace('http', 'ws')}/signalk/v1/stream?subscribe=all`);
 
             socket.onopen = function() {
                 console.log('WebSocket connection opened');
