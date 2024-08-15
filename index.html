@@ -351,9 +351,9 @@
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                return response.text(); // get raw response text
+                return response.json(); // parse response as JSON
             })
-            .then(text => {
+            .then(data => { // `data` now holds the parsed JSON
                 let value = 'N/A';
 
                 if (path === 'environment/wind/angleApparent' || 
