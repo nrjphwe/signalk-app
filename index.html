@@ -291,13 +291,7 @@
             return rad * (180 / Math.PI);
         }
 
-        function initializeButtons() {
-            // Set all buttons to red initially
-            const buttons = document.querySelectorAll('.btnCircle');
-            buttons.forEach(button => {
-                button.style.backgroundColor = 'red';
-            });
-        }
+        
 
         function updateButtonStates(state) {
             const buttons = {
@@ -482,6 +476,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
+            function initializeButtons() {
+                // Set all buttons to red initially
+                const buttons = document.querySelectorAll('.btnCircle');
+                buttons.forEach(button => {
+                    button.style.backgroundColor = 'red';
+                });
+            }
+
             console.log('DOM fully loaded and parsed');
 
             const socket = new WebSocket(`${baseURL.replace('http', 'ws')}/signalk/v1/stream?subscribe=all`);
