@@ -421,6 +421,10 @@
                 if (data && data.value) {
                     currentValues.autopilotState = data.value;
                     updateButtonStates(currentValues.autopilotState);
+
+                    // Update the autopilotState UI field
+                    document.getElementById('autopilotState').textContent = `" ${currentValues.autopilotState.toUpperCase()} "`;
+
                 }
             } catch (error) {
                 console.error('Error fetching autopilot state:', error);
@@ -442,10 +446,24 @@
 
             if (selectedState) {
                 // Send the selected state to the autopilot
-                sendPutRequest('steering.autopilot.state', selectedState);
+                await sendPutRequest('steering.autopilot.state', selectedState);
 
-                // Update button appearances based on the new state
-                updateButtonStates(selectedState);
+                // Double-check the state after sending the command
+                await updateAutopilotButton();
+
+                // Get the updated state
+                const currentState = currentValues.autopilotState;
+
+                // Update the autopilotState UI field
+                document.getElementById('autopilotState').textContent = `" ${currentState.toUpperCase()} "`;
+
+                // Check if the state matches what was selected
+                if (currentState === selectedState) {
+                    updateButtonStates(selectedState);
+                } else {
+                    console.error('Failed to engage the autopilot in the selected mode.');
+                    // Optionally: display an alert or some indication to the user that the command failed
+                }
             } else {
                 console.error('Invalid button ID or state');
             }
