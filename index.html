@@ -347,22 +347,6 @@
             });
         }
 
-        // Fetch initial state and update buttons
-        function getCurrentData() {
-            fetchData('navigation/courseOverGroundTrue', 'currentCourse');
-            fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
-            fetchData('environment/wind/speedTrue', 'currentTWS');
-            fetchData('navigation/speedThroughWater', 'speedThroughWater');
-            fetchData('performance/targetSpeed', 'targetSpeed');
-            fetchData('electrical/solar/SmartSolar/voltage', 'electricalVoltage');
-            fetchData('environment/depth/belowTransducer', 'depthBelowTransducer');
-            fetchData('environment/wind/angleApparent', 'windAngle');
-            fetchData('performance/targetAngle', 'targetAWA');
-            fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButton); 
-            fetchData('performance/beatAngle', 'beatAngle');
-            fetchData('performance/gybeAngle', 'gybeAngle');
-        }
-
         function fetchData(path, elementId) {
             fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
                 headers: {
@@ -446,6 +430,22 @@
             } catch (error) {
                 console.error('Error fetching autopilot state:', error);
             }
+        }
+
+         // Fetch initial state and update buttons
+         function getCurrentData() {
+            fetchData('navigation/courseOverGroundTrue', 'currentCourse');
+            fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
+            fetchData('environment/wind/speedTrue', 'currentTWS');
+            fetchData('navigation/speedThroughWater', 'speedThroughWater');
+            fetchData('performance/targetSpeed', 'targetSpeed');
+            fetchData('electrical/solar/SmartSolar/voltage', 'electricalVoltage');
+            fetchData('environment/depth/belowTransducer', 'depthBelowTransducer');
+            fetchData('environment/wind/angleApparent', 'windAngle');
+            fetchData('performance/targetAngle', 'targetAWA');
+            fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButton); 
+            fetchData('performance/beatAngle', 'beatAngle');
+            fetchData('performance/gybeAngle', 'gybeAngle');
         }
 
         async function toggleSelection(button) {
