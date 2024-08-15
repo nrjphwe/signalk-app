@@ -354,27 +354,37 @@
                 }
             })
             .then(response => response.json())
-
             .then(data => {
                 let value = 'N/A';
-                if (path === 'environment/wind/angleApparent' || path === 'steering.autopilot.target.windAngleApparent' || path === 'performance.beatAngle' || path === 'performance.gybeAngle') {
+
+                if (path === 'environment/wind/angleApparent' || 
+                    path === 'steering.autopilot.target.windAngleApparent' || 
+                    path === 'performance.beatAngle' || 
+                    path === 'performance.gybeAngle') {
+                    
                     // Convert radians to degrees for wind angle apparent
                     value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0) : 'N/A';
+                
+                } else if (path === 'environment/depth/belowTransducer') {
+                    
+                    // Handle depth separately
+                    value = (typeof data.value === 'number') ? data.value.toFixed(0) : 'N/A';
+                
                 } else {
-                    if (path === 'environment/depth/belowTransducer') {
-                        value = (typeof data.value === 'number') ? data.value.toFixed(0) : 'N/A';
-                    } else {
-                        // For other values, just use toFixed if the value is a number
-                        value = (typeof data.value === 'number') ? data.value.toFixed(1) : 'N/A';
-                    }
+                    
+                    // For other numeric values
+                    value = (typeof data.value === 'number') ? data.value.toFixed(1) : 'N/A';
                 }
+
+                // Update the element's innerText with the fetched value
                 document.getElementById(elementId).innerText = value;
+
+                // If a callback is provided, execute it
                 if (callback) {
                     callback(data.value);
                 }
             })
             .catch(error => console.error('Error fetching data:', error));
-
         }
 
         function displayNotification(text) {
