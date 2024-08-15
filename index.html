@@ -404,18 +404,32 @@
                 console.error('Notification area element not found');
             }
         }
-
         async function updateAutopilotButton() {
-            const data = await fetchData('/signalk/v1/api/vessels/self/steering/autopilot/state');
-            if (data && data.value) {
-                currentValues.autopilotState = data.value;
-                updateButtonStates(currentValues.autopilotState);
+            try {
+                const response = await fetch(`${baseURL}/signalk/v1/api/vessels/self/steering/autopilot/state`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + authToken
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+
+                if (data && data.value) {
+                    currentValues.autopilotState = data.value;
+                    updateButtonStates(currentValues.autopilotState);
+                }
+            } catch (error) {
+                console.error('Error fetching autopilot state:', error);
             }
         }
 
-       
         function toggleSelection(button) {
             const selectedId = button.id; // Get the ID of the clicked button
+
             // Map button IDs to their corresponding autopilot states
             const stateMap = {
                 'btnCircleStandby': 'standby',
@@ -423,15 +437,20 @@
                 'btnCircleTrack': 'route',
                 'btnCircleAuto': 'auto'
             };
+
             const selectedState = stateMap[selectedId]; // Determine the state based on the button ID
-            // Send the selected state to the autopilot
-            sendPutRequest('steering.autopilot.state', selectedState);
-            updateButtonStates(selectedId); // Update button appearances
+
+            if (selectedState) {
+                // Send the selected state to the autopilot
+                sendPutRequest('steering.autopilot.state', selectedState);
+
+                // Update button appearances based on the new state
+                updateButtonStates(selectedState);
+            } else {
+                console.error('Invalid button ID or state');
+            }
         }
 
-        
-       
- 
         document.addEventListener('DOMContentLoaded', (event) => {
             console.log('DOM fully loaded and parsed');
 
