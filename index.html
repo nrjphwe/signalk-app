@@ -291,6 +291,34 @@
             return rad * (180 / Math.PI);
         }
 
+        function initializeButtons() {
+            // Set all buttons to red initially
+            const buttons = document.querySelectorAll('.btnCircle');
+            buttons.forEach(button => {
+                button.style.backgroundColor = 'red';
+            });
+        }
+
+        function updateButtonStates(activeState) {
+            const buttons = {
+                standby: document.getElementById('btnCircleStandby'),
+                auto: document.getElementById('btnCircleAuto'),
+                wind: document.getElementById('btnCircleWind'),
+                track: document.getElementById('btnCircleTrack')
+            };
+
+            // Reset all buttons to blue
+            Object.values(buttons).forEach(button => {
+                button.style.backgroundColor = 'blue';
+            });
+
+            // Map autopilot state to button and set the active button to green
+            if (buttons[activeState]) {
+                buttons[activeState].style.backgroundColor = 'green';
+            }
+
+        }
+
         function sendPutRequest(path, value) {
             fetch('${baseURL}/signalk/v1/api/vessels/self/' + path, {
                 method: 'PUT',
@@ -313,59 +341,6 @@
                 console.error('Error during PUT request:', error);
                 displayNotification('Error: Unable to change course.');
             });
-        }
-
-        async function updateAutopilotButton() {
-            const data = await fetchData('/signalk/v1/api/vessels/self/steering/autopilot/state');
-            if (data && data.value) {
-                currentValues.autopilotState = data.value;
-                updateButtonStates(currentValues.autopilotState);
-            }
-        }
-
-        function updateButtonStates(activeButtonId) {
-            const buttons = {
-                standby: document.getElementById('btnCircleStandby'),
-                auto: document.getElementById('btnCircleAuto'),
-                wind: document.getElementById('btnCircleWind'),
-                track: document.getElementById('btnCircleTrack')
-            };
-            // Reset all buttons to inactive
-            Object.values(buttons).forEach(button => {
-                button.classList.remove('btnActive');
-                button.classList.add('btnInactive');
-            });
-
-            // Map autopilot state to button ID and set the active button
-            const stateToButtonId = {
-                'standby': 'btnCircleStandby',
-                'auto': 'btnCircleAuto',
-                'wind': 'btnCircleWind',
-                'route': 'btnCircleTrack'
-            };
-
-            //const activeButtonId = stateToButtonId[autopilotState];
-            const activeButton = buttons[autopilotState];
-
-            if (activeButton) {
-                activeButton.classList.remove('btnInactive');
-                activeButton.classList.add('btnActive');
-            }
-        }
-
-        function toggleSelection(button) {
-            const selectedId = button.id; // Get the ID of the clicked button
-            // Map button IDs to their corresponding autopilot states
-            const stateMap = {
-                'btnCircleStandby': 'standby',
-                'btnCircleWind': 'wind',
-                'btnCircleTrack': 'route',
-                'btnCircleAuto': 'auto'
-            };
-            const selectedState = stateMap[selectedId]; // Determine the state based on the button ID
-            // Send the selected state to the autopilot
-            sendPutRequest('steering.autopilot.state', selectedState);
-            updateButtonStates(selectedId); // Update button appearances
         }
 
         // Fetch initial state and update buttons
@@ -430,6 +405,33 @@
             }
         }
 
+        async function updateAutopilotButton() {
+            const data = await fetchData('/signalk/v1/api/vessels/self/steering/autopilot/state');
+            if (data && data.value) {
+                currentValues.autopilotState = data.value;
+                updateButtonStates(currentValues.autopilotState);
+            }
+        }
+
+       
+        function toggleSelection(button) {
+            const selectedId = button.id; // Get the ID of the clicked button
+            // Map button IDs to their corresponding autopilot states
+            const stateMap = {
+                'btnCircleStandby': 'standby',
+                'btnCircleWind': 'wind',
+                'btnCircleTrack': 'route',
+                'btnCircleAuto': 'auto'
+            };
+            const selectedState = stateMap[selectedId]; // Determine the state based on the button ID
+            // Send the selected state to the autopilot
+            sendPutRequest('steering.autopilot.state', selectedState);
+            updateButtonStates(selectedId); // Update button appearances
+        }
+
+        
+       
+ 
         document.addEventListener('DOMContentLoaded', (event) => {
             console.log('DOM fully loaded and parsed');
 
