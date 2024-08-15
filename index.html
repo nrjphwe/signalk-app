@@ -449,7 +449,7 @@
         }
 
         async function toggleSelection(button) {
-            const selectedId = button.id; // Get the ID of the clicked button
+            const selectedId = button.id;
 
             // Map button IDs to their corresponding autopilot states
             const stateMap = {
@@ -459,28 +459,14 @@
                 'btnCircleAuto': 'auto'
             };
 
-            const selectedState = stateMap[selectedId]; // Determine the state based on the button ID
+            const selectedState = stateMap[selectedId];
 
             if (selectedState) {
                 // Send the selected state to the autopilot
                 await sendPutRequest('steering.autopilot.state', selectedState);
 
-                // Double-check the state after sending the command
+                // Update the button states after sending the command
                 await updateAutopilotButton();
-
-                // Get the updated state
-                const currentState = currentValues.autopilotState;
-
-                // Update the autopilotState UI field
-                document.getElementById('autopilotState').textContent = `" ${currentState.toUpperCase()} "`;
-
-                // Check if the state matches what was selected
-                if (currentState === selectedState) {
-                    updateButtonStates(selectedState);
-                } else {
-                    console.error('Failed to engage the autopilot in the selected mode.');
-                    // Optionally: display an alert or some indication to the user that the command failed
-                }
             } else {
                 console.error('Invalid button ID or state');
             }
