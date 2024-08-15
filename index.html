@@ -324,7 +324,7 @@
         }
 
         function sendPutRequest(path, value) {
-            fetch('${baseURL}/signalk/v1/api/vessels/self/' + path, {
+            fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
