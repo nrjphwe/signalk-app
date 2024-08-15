@@ -404,6 +404,7 @@
                 console.error('Notification area element not found');
             }
         }
+
         async function updateAutopilotButton() {
             try {
                 const response = await fetch(`${baseURL}/signalk/v1/api/vessels/self/steering/autopilot/state`, {
@@ -431,7 +432,7 @@
             }
         }
 
-        function toggleSelection(button) {
+        async function toggleSelection(button) {
             const selectedId = button.id; // Get the ID of the clicked button
 
             // Map button IDs to their corresponding autopilot states
