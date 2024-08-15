@@ -347,18 +347,14 @@
             });
         }
 
-        function fetchData(path, elementId) {
+        function fetchData(path, elementId, callback) {
             fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
                 headers: {
                     'Authorization': 'Bearer ' + authToken
                 }
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
+
             .then(data => {
                 let value = 'N/A';
                 if (path === 'environment/wind/angleApparent' || path === 'steering.autopilot.target.windAngleApparent' || path === 'performance.beatAngle' || path === 'performance.gybeAngle') {
@@ -373,11 +369,12 @@
                     }
                 }
                 document.getElementById(elementId).innerText = value;
+                if (callback) {
+                    callback(data.value);
+                }
             })
-            .catch(error => {
-                console.error(`Error during GET request for ${path}:`, error);
-                document.getElementById(elementId).innerText = 'N/A';
-            });
+            .catch(error => console.error('Error fetching data:', error));
+
         }
 
         function displayNotification(text) {
