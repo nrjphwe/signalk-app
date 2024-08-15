@@ -299,24 +299,28 @@
             });
         }
 
-        function updateButtonStates(activeState) {
+        function updateButtonStates(state) {
             const buttons = {
                 standby: document.getElementById('btnCircleStandby'),
-                auto: document.getElementById('btnCircleAuto'),
                 wind: document.getElementById('btnCircleWind'),
-                track: document.getElementById('btnCircleTrack')
+                route: document.getElementById('btnCircleTrack'),
+                auto: document.getElementById('btnCircleAuto')
             };
 
-            // Reset all buttons to blue
+            // First set all buttons to blue
             Object.values(buttons).forEach(button => {
                 button.style.backgroundColor = 'blue';
             });
 
-            // Map autopilot state to button and set the active button to green
-            if (buttons[activeState]) {
-                buttons[activeState].style.backgroundColor = 'green';
+            // Set the corresponding button to green if a valid state is provided
+            if (state && buttons[state]) {
+                buttons[state].style.backgroundColor = 'green';
+            } else {
+                // If no valid state is provided, set all buttons to red
+                Object.values(buttons).forEach(button => {
+                    button.style.backgroundColor = 'red';
+                });
             }
-
         }
 
         function sendPutRequest(path, value) {
@@ -407,6 +411,7 @@
 
         async function updateAutopilotButton() {
             try {
+                // Fetch autopilot state
                 const response = await fetch(`${baseURL}/signalk/v1/api/vessels/self/steering/autopilot/state`, {
                     headers: {
                         'Authorization': 'Bearer ' + authToken
@@ -421,11 +426,22 @@
 
                 if (data && data.value) {
                     currentValues.autopilotState = data.value;
-                    updateButtonStates(currentValues.autopilotState);
 
                     // Update the autopilotState UI field
                     document.getElementById('autopilotState').textContent = `" ${currentValues.autopilotState.toUpperCase()} "`;
 
+                    // Update button states based on autopilot state
+                    updateButtonStates(currentValues.autopilotState);
+                } else {
+                    // If the state is undefined or null, assume the autopilot is off
+                    currentValues.autopilotState = null;
+                    document.getElementById('autopilotState').textContent = '" OFF "';
+
+                    // Set all buttons to red (inactive)
+                    const buttons = document.querySelectorAll('.btncircle');
+                    buttons.forEach(button => {
+                        button.style.backgroundColor = 'red';
+                    });
                 }
             } catch (error) {
                 console.error('Error fetching autopilot state:', error);
