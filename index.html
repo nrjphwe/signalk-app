@@ -361,17 +361,17 @@
                     path === 'steering.autopilot.target.windAngleApparent' || 
                     path === 'performance.beatAngle' || 
                     path === 'performance.gybeAngle') {
-                    
+
                     // Convert radians to degrees for wind angle apparent
                     value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0) : 'N/A';
-                
+
                 } else if (path === 'environment/depth/belowTransducer') {
-                    
+
                     // Handle depth separately
                     value = (typeof data.value === 'number') ? data.value.toFixed(0) : 'N/A';
-                
+
                 } else {
-                    
+
                     // For other numeric values
                     value = (typeof data.value === 'number') ? data.value.toFixed(1) : 'N/A';
                 }
@@ -399,6 +399,8 @@
                 console.error('Notification area element not found');
             }
         }
+
+        let currentValues = {};  // Initialize the variable if it's supposed to store state
 
         async function updateAutopilotButton() {
             try {
