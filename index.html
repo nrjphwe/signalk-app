@@ -348,7 +348,12 @@
                 }
             })
             .then(response => response.json())
-            .then(data => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text(); // get raw response text
+            })
+            .then(text => {
                 let value = 'N/A';
 
                 if (path === 'environment/wind/angleApparent' || 
