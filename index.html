@@ -339,51 +339,6 @@
             });
         }
 
-        function fetchData(path, elementId, callback) {
-            fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
-                headers: {
-                    'Authorization': 'Bearer ' + authToken
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json(); // parse response as JSON
-            })
-            .then(data => { // `data` now holds the parsed JSON
-                let value = 'N/A';
-
-                if (path === 'environment/wind/angleApparent' || 
-                    path === 'steering.autopilot.target.windAngleApparent' || 
-                    path === 'performance.beatAngle' || 
-                    path === 'performance.gybeAngle') {
-
-                    // Convert radians to degrees for wind angle apparent
-                    value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0) : 'N/A';
-
-                } else if (path === 'environment/depth/belowTransducer') {
-
-                    // Handle depth separately
-                    value = (typeof data.value === 'number') ? data.value.toFixed(0) : 'N/A';
-
-                } else {
-
-                    // For other numeric values
-                    value = (typeof data.value === 'number') ? data.value.toFixed(1) : 'N/A';
-                }
-
-                // Update the element's innerText with the fetched value
-                document.getElementById(elementId).innerText = value;
-
-                // If a callback is provided, execute it
-                if (callback) {
-                    callback(data.value);
-                }
-            })
-            .catch(error => console.error('Error fetching data:', error));
-        }
-
         function displayNotification(text) {
             const notificationArea = document.getElementById('notificationArea');
             if (notificationArea) {
