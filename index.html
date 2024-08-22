@@ -456,6 +456,9 @@
             fetchData('performance/gybeAngle', 'gybeAngle');
         }
 
+        // Set up a timer to refresh data every 500 milliseconds (twice per second)
+        setInterval(getCurrentData, 500); // 500 milliseconds = 0.5 seconds
+
         async function toggleSelection(button) {
             const selectedId = button.id;
 
