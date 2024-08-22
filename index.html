@@ -401,40 +401,72 @@
 
         async function updateAutopilotButton() {
             try {
-                // Fetch autopilot state
-                const response = await fetch(`${baseURL}/signalk/v1/api/vessels/self/steering/autopilot/state`, {
+            // Fetch Data Function
+            function fetchData(path, elementId, callback) {
+                fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
                     headers: {
                         'Authorization': 'Bearer ' + authToken
                     }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text(); // get raw response text
+                })
+                .then(text => {
+                    let value = 'N/A';
+
+                    // Parse the text to JSON, but handle any errors that may occur
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch (error) {
+                        console.error('Error parsing JSON:', error);
+                        return;
+                    }
+
+                    // Handle autopilot state or other special cases
+                    if (path === 'steering/autopilot/state') {
+                        value = data.value || 'N/A'; // Default to 'N/A' if no valid value
+                    } else if (path === 'environment/wind/angleApparent' || 
+                            path === 'steering.autopilot.target.windAngleApparent' || 
+                            path === 'performance.beatAngle' || 
+                            path === 'performance.gybeAngle') {
+
+                        // Convert radians to degrees for wind angle apparent
+                        value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0) : 'N/A';
+
+                    } else if (path === 'environment/depth/belowTransducer') {
+
+                        // Handle depth separately
+                        value = (typeof data.value === 'number') ? data.value.toFixed(0) : 'N/A';
+
+                    } else {
+
+                        // For other numeric values
+                        value = (typeof data.value === 'number') ? data.value.toFixed(1) : 'N/A';
+                    }
+
+                    // Update the element's innerText only if the new value is different
+                    const element = document.getElementById(elementId);
+                    if (element.innerText !== value) {
+                        element.innerText = value;
+                    }
+
+                    // If a callback is provided, execute it
+                    if (callback) {
+                        callback(data.value);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    // Only update to 'N/A' if no valid data was previously displayed
+                    const element = document.getElementById(elementId);
+                    if (element.innerText === '' || element.innerText === 'N/A') {
+                        element.innerText = 'N/A';
+                    }
                 });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-
-                if (data && data.value) {
-                    currentValues.autopilotState = data.value;
-
-                    // Update the autopilotState UI field
-                    document.getElementById('autopilotState').textContent = `" ${currentValues.autopilotState.toUpperCase()} "`;
-
-                    // Update button states based on autopilot state
-                    updateButtonStates(currentValues.autopilotState);
-                } else {
-                    // If the state is undefined or null, assume the autopilot is off
-                    currentValues.autopilotState = null;
-                    document.getElementById('autopilotState').textContent = '" OFF "';
-
-                    // Set all buttons to red (inactive)
-                    const buttons = document.querySelectorAll('.btncircle');
-                    buttons.forEach(button => {
-                        button.style.backgroundColor = 'red';
-                    });
-                }
-            } catch (error) {
-                console.error('Error fetching autopilot state:', error);
             }
         }
 
