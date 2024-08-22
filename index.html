@@ -291,8 +291,6 @@
             return rad * (180 / Math.PI);
         }
 
-        
-
         function updateButtonStates(state) {
             const buttons = {
                 standby: document.getElementById('btnCircleStandby'),
@@ -440,24 +438,41 @@
             }
         }
 
-         // Fetch initial state and update buttons
-         function getCurrentData() {
-            fetchData('navigation/courseOverGroundTrue', 'currentCourse');
-            fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
-            fetchData('environment/wind/speedTrue', 'currentTWS');
-            fetchData('navigation/speedThroughWater', 'speedThroughWater');
-            fetchData('performance/targetSpeed', 'targetSpeed');
-            fetchData('electrical/solar/SmartSolar/voltage', 'electricalVoltage');
-            fetchData('environment/depth/belowTransducer', 'depthBelowTransducer');
-            fetchData('environment/wind/angleApparent', 'windAngle');
-            fetchData('performance/targetAngle', 'targetAWA');
-            fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButton); 
-            fetchData('performance/beatAngle', 'beatAngle');
-            fetchData('performance/gybeAngle', 'gybeAngle');
+        // Function to fetch initial data and update buttons
+        function getCurrentData() {
+            updateEvery2Seconds();
+            updateEvery1Second();
+            updateTwicePerSecond();
         }
 
-        // Set up a timer to refresh data every 500 milliseconds (twice per second)
-        setInterval(getCurrentData, 500); // 500 milliseconds = 0.5 seconds
+        // Group 1: Data to be updated every 2 seconds (2000 milliseconds)
+        function updateEvery2Seconds() {
+            fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
+            fetchData('electrical/solar/SmartSolar/voltage', 'electricalVoltage');
+            fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButton); 
+        }
+        // Group 2: Data to be updated every 1 second (1000 milliseconds)
+        function updateEvery1Second() {
+            fetchData('navigation/courseOverGroundTrue', 'currentCourse');
+            fetchData('environment/depth/belowTransducer', 'depthBelowTransducer');
+            fetchData('performance/beatAngle', 'beatAngle');
+            fetchData('performance/gybeAngle', 'gybeAngle');
+            fetchData('environment/wind/speedTrue', 'currentTWS');
+        }
+        // Group 3: Data to be updated twice per second (500 milliseconds)
+        function updateTwicePerSecond() {
+            fetchData('navigation/speedThroughWater', 'speedThroughWater');
+            fetchData('performance/targetSpeed', 'targetSpeed');
+            fetchData('environment/wind/angleApparent', 'windAngle');
+            fetchData('performance/targetAngle', 'targetAWA');
+        }
+
+        // Set up intervals for each group
+        function startDataIntervals() {
+            setInterval(updateEvery2Seconds, 2000);  // Every 2 seconds
+            setInterval(updateEvery1Second, 1000);   // Every 1 second
+            setInterval(updateTwicePerSecond, 500);  // Every 0.5 seconds
+        }
 
         async function toggleSelection(button) {
             const selectedId = button.id;
@@ -496,9 +511,12 @@
 
             const socket = new WebSocket(`${baseURL.replace('http', 'ws')}/signalk/v1/stream?subscribe=all`);
 
+            // WebSocket connection open event  
+
             socket.onopen = function() {
                 console.log('WebSocket connection opened');
                 getCurrentData(); // Get initial data
+                startDataIntervals(); // Start the intervals for dynamic updates
             };
             socket.onmessage = function(event) {
                 console.log('WebSocket message received:', event.data);
