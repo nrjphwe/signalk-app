@@ -384,9 +384,10 @@
                 if (path === 'steering/autopilot/state') {
                     value = data.value || 'N/A'; // Default to 'N/A' if no valid value
                 } else if (path === 'environment/wind/angleApparent' || 
-                        path === 'steering.autopilot.target.windAngleApparent' || 
-                        path === 'performance.beatAngle' || 
-                        path === 'performance.gybeAngle') {
+                        path === 'steering/autopilot/target/windAngleApparent' || 
+                        path === 'performance/beatAngle' || 
+                        path === 'navigation/headingMagnetic' || 
+                        path === 'performance/gybeAngle') {
 
                     // Convert radians to degrees for wind angle apparent
                     value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0) : 'N/A';
@@ -434,7 +435,6 @@
         // Start the intervals for regular updates
         startDataIntervals();
 
-
         // Function to fetch initial data and update buttons
         function getCurrentData() {
             updateEvery2Seconds();
@@ -444,7 +444,8 @@
 
         // Group 1: Data to be updated every 2 seconds (2000 milliseconds)
         function updateEvery2Seconds() {
-            fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
+            //fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
+            fetchData('navigation/headingMagnetic', 'targetHeading');
             fetchData('electrical/solar/SmartSolar/voltage', 'electricalVoltage');
             fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButton); 
         }
@@ -536,6 +537,7 @@
             socket.onerror = function(error) {
                 console.error('WebSocket error:', error);
             };
+
             // Event listeners for your buttons
             document.getElementById('btnLeftTack').addEventListener('click', () => {
                 sendPutRequest('steering.autopilot.actions.adjustHeading', -80);
