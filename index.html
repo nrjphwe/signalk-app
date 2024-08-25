@@ -321,6 +321,11 @@
         function radToDeg(rad) {
             return rad * (180 / Math.PI);
         }
+        // Convert radians to degrees and ensure the value is always positive
+        function radToDeg(rad) {
+            let deg = rad * (180 / Math.PI);
+            return (deg < 0) ? deg + 360 : deg; // Adjust negative degrees to be within 0-360 range
+        }
 
         function updateButtonStates(state) {
             const buttons = {
@@ -423,7 +428,7 @@
                         path === 'performance/gybeAngle') {
 
                     // Convert radians to degrees for wind angle apparent
-                    value = (typeof data.value === 'number') ? int(radToDeg(data.value).toFixed(0)): 'N/A';
+                    value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0): 'N/A';
 
                 } else if (path === 'environment/depth/belowTransducer') {
 
