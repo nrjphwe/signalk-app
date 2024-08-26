@@ -578,12 +578,12 @@
 
             // Event listeners for your buttons
             document.getElementById('btnLeftTack').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.actions.adjustHeading', -80);
-                //sendPutRequest('steering.autopilot.actions.tack', 'port');
+                //sendPutRequest('steering.autopilot.actions.adjustHeading', -80);
+                sendPutRequest('steering.autopilot.actions.tack', 'port');
             });
             document.getElementById('btnRightTack').addEventListener('click', () => {
-                //sendPutRequest('steering.autopilot.actions.tack', 'starboard');
-                sendPutRequest('steering.autopilot.actions.adjustHeading', 80);
+                sendPutRequest('steering.autopilot.actions.tack', 'starboard');
+                //sendPutRequest('steering.autopilot.actions.adjustHeading', 80);
             });
             document.getElementById('btnMinus1').addEventListener('click', () => {
                 sendPutRequest('steering.autopilot.actions.adjustHeading', -1);
