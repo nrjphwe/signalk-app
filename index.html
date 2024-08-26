@@ -525,7 +525,7 @@
 
             if (selectedState) {
                 // Send the selected state to the autopilot
-                await sendPutRequest('steering.autopilot.state', selectedState);
+                await sendPutRequest('steering/autopilot/state', selectedState);
 
                 // Update the button states after sending the command
                 await updateAutopilotButton();
