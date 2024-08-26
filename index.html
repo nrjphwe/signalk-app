@@ -586,16 +586,16 @@
                 //sendPutRequest('steering.autopilot.actions.adjustHeading', 80);
             });
             document.getElementById('btnMinus1').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.actions.adjustHeading', -1);
+                sendPutRequest('steering/autopilot/actions/adjustHeading', -1);
             });
             document.getElementById('btn-10').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.actions.adjustHeading', -10);
+                sendPutRequest('steering/autopilot/actions/adjustHeading', -10);
             });
             document.getElementById('btn+10').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.actions.adjustHeading', +10);
+                sendPutRequest('steering/autopilot/actions/adjustHeading', +10);
             });
             document.getElementById('btn+1').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.actions.adjustHeading', +1);
+                sendPutRequest('steering/autopilot/actions/adjustHeading', +1);
             });
             document.getElementById('btnCircleStandby').addEventListener('click', () => {
                 sendPutRequest('steering.autopilot.state', 'standby');
