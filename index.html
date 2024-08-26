@@ -528,7 +528,7 @@
                 await sendPutRequest('steering/autopilot/state', selectedState);
 
                 // Update the button states after sending the command
-                await updateAutopilotButton();
+                updateAutopilotButton();
             } else {
                 console.error('Invalid button ID or state');
             }
@@ -597,22 +597,8 @@
             document.getElementById('btn+1').addEventListener('click', () => {
                 sendPutRequest('steering/autopilot/actions/adjustHeading', +1);
             });
-            document.getElementById('btnCircleStandby').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.state', 'standby');
-                updateButtonStates('standby');
-            });
-            document.getElementById('btnCircleAuto').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.state', 'auto');
-                updateButtonStates('auto');
-            });
-            document.getElementById('btnCircleWind').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.state', 'wind');
-                updateButtonStates('wind');
-            });
-            document.getElementById('btnCircleTrack').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.state', 'route');
-                updateButtonStates('route');
-            });
+            // 
+            // Event listener for all buttons with the class 'btnCircle'
             document.querySelectorAll('.btnCircle').forEach(button => {
                 button.addEventListener('click', () => toggleSelection(button));
             });
