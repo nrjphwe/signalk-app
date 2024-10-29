@@ -557,19 +557,6 @@
 
             socket.onmessage = function(event) {
                 console.log('WebSocket message received:', event.data);
-
-                try {
-                    const message = JSON.parse(event.data);
-
-                    if (message.updates) {
-                        message.updates.forEach(update => {
-                            update.values.forEach(value => {
-                                // Check for both possible path formats
-                                if (value.path === 'steering.autopilot.state' || value.path === 'steering/autopilot/state') {
-                                    const state = value.value;
-                                    updateButtonStates(state);
-                                }
-                            });
                         });
                     }
                 } catch (error) {
