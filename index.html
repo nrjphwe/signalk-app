@@ -5,22 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="favicon.ico">
-    <link rel="preload" as="image" href="public/img/bgRemoteMain.png">
     <script src="public/signalk-autopilot.min.js"></script>
     <style>
+        @font-face {
+            font-family: 'alarm-clock';
+            src: url('alarm-clock.ttf') format('truetype');
+        }
+        .alarm-clock-font {
+            font-family: 'alarm-clock', sans-serif;
+            font-size: 8vw;
+        }
         body, html {
             margin: 0;
             padding: 0;
             overflow: hidden;
             height: 100%;
+            font-family: sans-serif;
         }
         #main {
             margin: 0;
             width: 100vw;
             height: 100vh;
-            background-image: url('public/img/bgRemoteMain.png');
-            background-repeat: no-repeat;
-            background-size: cover;
+            background-color: gray;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -55,26 +61,31 @@
             flex-direction: row;
             justify-content: center;
         }
-        .btnCircleRed, .btnCircleBlue, .btnBlack {
-            display: inline-block;
-            cursor: pointer;
-            border-radius: 20px;
-            color: white;
-            text-align: center;
-            margin: 1vw;
+        .btnCircle, .btnActive, .btnInactive {
+                display: inline-block;
+                cursor: pointer;
+                border-radius: 25%;
+                color: white;
+                text-align: center;
+                background-color: red; /* Default background color */
+        }
+
+        .btnActive {
+            background-color: green; /* Background color when selected */
+        }
+        .btnInactive {
+            background-color: blue; /* Inactive color */
         }
         .btnBlack {
-            border-radius: 10px;
+            display: inline-block;
+            cursor: pointer;
+            color: white;
+            text-align: center;
+            border-radius: 20%;
             background-color: black;
         }
-        .btnCircleRed {
-            background-color: red;
-        }
-        .btnCircleBlue {
-            background-color: blue;
-        }
         .largeInfoField {
-            background-color: rgba(54, 49, 35, 0.48);
+            background-color: rgba(48, 46, 41, 0.933);
             color: white;
             text-align: center;
             border-radius: 10px;
@@ -93,18 +104,19 @@
         }
         /* iPhone 14 (Portrait Mode) */
         @media only screen and (min-device-width: 390px) and (max-device-width: 390px) and (-webkit-device-pixel-ratio: 3) {
-            .btnCircleRed, .btnCircleBlue {
+            .btnCircle, .btnActive, .btnInactive {
                 font-size: 10vw; /* Much bigger font size */
-                padding: 3vw 6vw; /* Increased padding top right bottom left*/
+                padding: 3vw 4vw; /* Increased padding top right bottom left*/
                 margin: 2vw;
             }
             .btnBlack {
                 font-size: 8vw; /* Slightly bigger font size */
                 padding: 2vw 3vw; /* Slightly increased padding */
+                margin: 1vw;
             }
             .infoField {
                 font-size: 5vw; /* Adjust font size */
-                padding: 3vw 2vw; /* Adjust padding */
+                padding: 2vw 3vw; /* Adjust padding */
                 margin: 1vw;
             }
             .btnContainer, .infoContainer {
@@ -113,19 +125,20 @@
             }
             .largeInfoField {
                 font-size: 7vw; /* Adjust font size */
-                padding: 3vw 2vw; /* Adjust padding */
+                padding: 2vw 3vw; /* Adjust padding */
                 margin: 1vw;
             }
         }
         /* iPhone 14 (Landscape Mode) */
         @media only screen and (max-width: 844px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
-            .btnCircleRed, .btnCircleBlue {
-                font-size: 4vw; /* Adjust font size */
-                padding: 1.5vw 4vw; /* Adjust padding */
+            .btnCircle, .btnActive, .btnInactive {
+                font-size: 4vw; /* Much bigger font size */
+                padding: 1.5vw 3vw; /* Increased padding top right bottom left*/
             }
             .btnBlack {
-                font-size: 3vw; /* Adjust font size */
+                font-size: 2.5vw; /* Adjust font size */
                 padding: 1vw 2vw; /* Adjust padding */
+                margin: 0.5vw;
             }
             .infoField {
                 font-size: 2vw; /* Adjust font size */
@@ -138,18 +151,50 @@
             .largeInfoField {
                 font-size: 4vw; /* Adjust font size */
                 padding: 1vw 2vw; /* Adjust padding */
-                margin: 1vw;
+                margin: 0.5vw;
             }
         }
-        /* Responsive styles for iPad Air 2 and similar tablets in portrait mode*/
-        @media only screen and (min-device-width: 768px) and (max-device-width: 1023px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
-            .btnCircleRed, .btnCircleBlue {
-                font-size: 10vw; /* Reduced font size */
-                padding: 1vw 3vw; /* Reduced padding */
+        /* iPad mini tablets (Landscape Mode)*/
+        @media only screen and (min-device-width: 768px) and (orientation: landscape) {
+            .btnCircle, .btnActive, .btnInactive {
+                font-size: 7vw; /* Much bigger font size */
+                padding: 1vw 2vw; /* Increased padding top right bottom left*/
             }
             .btnBlack {
                 font-size: 6vw; /* Reduced font size */
                 padding: 1vw 2vw; /* Reduced padding */
+                margin: 1vw;
+            }
+            .infoField {
+                font-size: 1.5vw; /* Reduced font size */
+                padding: 0.5vw 1vw; /* Reduced padding */
+                margin: 1vw;
+            }
+            .btnContainer, .infoContainer {
+                display: flex;
+                flex-wrap: nowrap; /* No wrapping in landscape mode */
+            }
+            .largeInfoField {
+                font-size: 7vw; /* Adjust font size */
+                padding: 1vw 2vw; /* Adjust padding */
+                margin: 1vw;
+            }
+            #main {
+                padding-top: 5px; /* Adjust padding to fit content */
+            }
+        }
+
+        /* Responsive styles for iPad Air 2 and similar tablets in portrait mode*/
+        @media only screen and (min-device-width: 768px) and (max-device-height: 1023px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
+            .btnCircle, .btnActive, .btnInactive {
+                font-size: 8vw; /* Much bigger font size */
+                padding: 1vw 3vw; /* Increased padding top right bottom left*/
+                margin: 1vw;
+            }
+            .btnBlack {
+                font-size: 6vw; /* Reduced font size */
+                padding: 1vw 2vw; /* Reduced padding */
+                margin: 1vw;
             }
             .infoField {
                 font-size: 5vw; /* Reduced font size */
@@ -161,7 +206,7 @@
                 flex-wrap: wrap; /* wrapping in portrait mode */
             }
             .largeInfoField {
-                font-size: 8vw; /* Adjust font size */
+                font-size: 7vw; /* Adjust font size */
                 padding: 1vw 3vw; /* Adjust padding */
                 margin: 1vw;
             }
@@ -170,14 +215,15 @@
             }
         }
         /* iPad Air 2 and similar tablets (Landscape Mode)*/
-        @media only screen and (min-device-width: 768px) and (max-device-width: 1023px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
-            .btnCircleRed, .btnCircleBlue {
-                font-size: 8vw; /* Reduced font size */
-                padding: 1vw 2vw; /* Reduced padding */
+        @media only screen and (min-device-width: 768px) and (max-device-height: 1023px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
+            .btnCircle, .btnActive, .btnInactive {
+                font-size: 8vw; /* Much bigger font size */
+                padding: 1vw 2vw; /* Increased padding top right bottom left*/
             }
             .btnBlack {
                 font-size: 6vw; /* Reduced font size */
                 padding: 1vw 2vw; /* Reduced padding */
+                margin: 1vw;
             }
             .infoField {
                 font-size: 1.5vw; /* Reduced font size */
@@ -199,13 +245,15 @@
         }
         /* General styles for larger screens */
         @media only screen and (min-width: 1025px) {
-            .btnCircleRed, .btnCircleBlue {
-                font-size: 4.5vw; /* Responsive font size */
-                padding: 1.5vw 4vw; /* Responsive padding */
+            .btnCircle, .btnActive, .btnInactive {
+                font-size: 4.5vw; /* Much bigger font size */
+                padding: 1.5vw 4vw; /* Increased padding top right bottom left*/
+                margin: 1vw;
             }
             .btnBlack {
                 font-size: 4vw; /* Responsive font size */
                 padding: 1.5vw 3vw; /* Responsive padding */
+                margin: 1vw;
             }
             .infoField {
                 font-size: 2vw; /* Responsive font size */
@@ -214,7 +262,7 @@
             }
             .largeInfoField {
                 font-size: 4vw; /* Adjust font size */
-                padding: 1vw 3vw; /* Adjust padding */
+                padding: 1vw 2vw; /* Adjust padding */
                 margin: 1vw;
             }
         }
@@ -224,16 +272,17 @@
     <div id="main">
          <div id="remoteMain">
             <div class="infoContainer">
-                <div class="infoField">COG: <span id="currentCourse">N/A</span> ° </div>
+                <!--div class="infoField">COG: <span id="currentCourse">N/A</span> ° </div-->
+                <div class="infoField">HM: <span id="HeadingMagn">N/A</span> ° </div>
                 <div class="infoField">HDG: <span id="targetHeading">N/A</span> ° </div>
-                <div class="infoField">TWS: <span id="currentTWS">N/A</span> m/s </div>
-                <div class="infoField">Speed: <span id="speedThroughWater">N/A</span> kt </div>
-                <div class="infoField">TargetSpeed: <span id="targetSpeed">N/A</span> kt </div>
-                <div class="infoField">Trip: <span id="tripLog">N/A</span> kt </div>
+                <div class="infoField">TWS: <span id="currentTWS">N/A </span><span style="font-size:1.5vw"> m/s</span></div>
+                <div class="infoField">Speed: <span id="speedThroughWater">N/A </span><span style="font-size:1.5vw"> kt</span></div>
+                <div class="infoField">TargetSpeed: <span id="targetSpeed">N/A </span><span style="font-size:1.5vw"> kt</span></div>
+                <div class="infoField">Volt: <span id="electricalVoltage">N/A </span><span style="font-size:1.5vw"> V</span></div>
             </div>
             <div class="btnContainer">
                 <div class="btnBlack" id="btnLeftTack"><<</div>
-                <div class="btnBlack" id="autopilotState">" N/A "</div>
+                <div class="btnBlack" id="autopilotState">N/A</div>
                 <div class="btnBlack" id="btnRightTack">>></div>
             </div>
             <div class="btnContainer">
@@ -243,70 +292,275 @@
                 <div class="btnBlack" id="btn+1"> +1 </div>
             </div>
             <div class="btnContainer">
-                <div class="btnCircleRed" id="btnCircleStandby">STBY</div>
-                <div class="btnCircleBlue" id="btnCircleWind">WIND</div>
-                <div class="btnCircleBlue" id="btnCircleTrack">TRACK</div>
-                <div class="btnCircleBlue" id="btnCircleAuto"> AUTO </div>
+                <div class="btnCircle" id="btnCircleStandby" onclick="toggleSelection(this)">STBY</div>
+                <div class="btnCircle" id="btnCircleWind" onclick="toggleSelection(this)">WIND</div>
+                <div class="btnCircle" id="btnCircleTrack" onclick="toggleSelection(this)">TRACK</div>
+                <div class="btnCircle" id="btnCircleAuto" onclick="toggleSelection(this)">AUTO</div>
             </div>
             <div class="infoContainer">
-                <div class="largeInfoField">DPTH: <span id="depth_belowKeel">N/A</span> m </div>
-                <div class="largeInfoField">AWA: <span id="windAngle">N/A</span> ° </div>
-                <div class="largeInfoField">TAWA: <span id="targetAWA">N/A</span> ° </div>
+                <div class="largeInfoField">AWA: <span id="windAngle" class="alarm-clock-font">N/A</span> °</div>
+                <div class="largeInfoField">TWA: <span id="targetAWA"class="alarm-clock-font">N/A</span> °</div>
+                <div class="largeInfoField">DPTH: <span id="depthBelowTransducer" class="alarm-clock-font">N/A</span> m</div>
+            </div>
+            <div class="infoContainer">
+                <div class="infoField">beatAngle: <span id="beatAngle">N/A</span> ° </div>
+                <div class="infoField">gybeAngle <span id="gybeAngle">N/A</span> ° </div>
             </div>
         </div>
     </div>
     <div id="notificationArea"></div>
     <script>
+        const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzIxMjIwNjA3LCJleHAiOjE3NTI3NzgyMDd9.QCOUf94JO2M2wdYved1p4uN6A9JeL0thuVvhK0jxCjg';
+
+        // Determine the base URL based on the environment
+        const baseURL = (window.location.hostname === 'fidelibe.local') 
+                        ? 'http://fidelibe.local:3000' 
+                        : 'http://2.69.47.219:8081';
+
+
+        function radToDeg(rad) {
+            return rad * (180 / Math.PI);
+        }
+        // Convert radians to degrees and ensure the value is always positive
+        function radToDeg(rad) {
+            let deg = rad * (180 / Math.PI);
+            return (deg < 0) ? deg + 360 : deg; // Adjust negative degrees to be within 0-360 range
+        }
+
+        function updateButtonStates(state) {
+            const buttons = {
+                standby: document.getElementById('btnCircleStandby'),
+                wind: document.getElementById('btnCircleWind'),
+                route: document.getElementById('btnCircleTrack'),
+                auto: document.getElementById('btnCircleAuto')
+            };
+
+            // First set all buttons to blue
+            Object.values(buttons).forEach(button => {
+                button.style.backgroundColor = 'blue';
+            });
+
+            // Set the corresponding button to green if a valid state is provided
+            if (state && buttons[state]) {
+                buttons[state].style.backgroundColor = 'green';
+            } else {
+                // If no valid state is provided, set all buttons to red
+                Object.values(buttons).forEach(button => {
+                    button.style.backgroundColor = 'red';
+                });
+            }
+        }
+
+        function sendPutRequest(path, value) {
+            fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + authToken // Include the token in the Authorization header
+                },
+                body: JSON.stringify({
+                    value: value
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                console.log('PUT request successful');
+                displayNotification('Course change accepted.');
+            })
+            .catch(error => {
+                console.error('Error during PUT request:', error);
+                displayNotification('Error: Unable to change course.');
+            });
+        }
+
+        function displayNotification(text) {
+            const notificationArea = document.getElementById('notificationArea');
+            if (notificationArea) {
+                notificationArea.innerText = text;
+                notificationArea.style.display = 'block';
+                setTimeout(() => {
+                    notificationArea.style.display = 'none';
+                }, 5000); // Hide the notification after 5 seconds
+            } else {
+                console.error('Notification area element not found');
+            }
+        }
+
+        let currentValues = {};  // Initialize the variable if it's supposed to store state
+
+        // Function to fetch data from SignalK API
+        async function fetchData(path, elementId, callback) {
+            try {
+                const response = await fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
+                    headers: {
+                        'Authorization': 'Bearer ' + authToken
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const text = await response.text();
+
+                // Parse the text to JSON, handling any parsing errors
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                    return;
+                }
+
+                let value = 'N/A';
+
+                // Handle autopilot state or other special cases
+                if (path === 'steering/autopilot/state') {
+                    value = data.value || 'N/A'; // Default to 'N/A' if no valid value
+                } else if (path === 'environment/wind/angleApparent' || 
+                        path === 'steering/autopilot/target/windAngleApparent' || 
+                        path === 'performance/beatAngle' || 
+                        path === 'performance/targetAngle' || 
+                        path === 'navigation/headingMagnetic' ||
+                        path === 'steering/autopilot/target/headingMagnetic' || 
+                        path === 'performance/gybeAngle') {
+
+                    // Convert radians to degrees for wind angle apparent
+                    value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0): 'N/A';
+
+                } else if (path === 'environment/depth/belowTransducer') {
+
+                    // Handle depth separately
+                    value = (typeof data.value === 'number') ? data.value.toFixed(0) : 'N/A';
+
+                } else {
+
+                    // For other numeric values
+                    value = (typeof data.value === 'number') ? data.value.toFixed(1) : 'N/A';
+                }
+
+                // Update the element's innerText only if the new value is different
+                const element = document.getElementById(elementId);
+                if (element.innerText !== value) {
+                    element.innerText = value;
+                }
+
+                // If a callback is provided, execute it
+                if (callback) {
+                    callback(data.value);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+
+                // Only update to 'N/A' if no valid data was previously displayed
+                const element = document.getElementById(elementId);
+                if (element.innerText === '' || element.innerText === 'N/A') {
+                    element.innerText = 'STBY';
+                }
+            }
+        }
+
+        async function updateAutopilotButton() {
+            // Fetch the autopilot state and update the button
+            await fetchData('steering/autopilot/state', 'autopilotState', updateButtonStates);
+        }
+
+        // Call the initial data fetch
+        getCurrentData();
+
+        // Start the intervals for regular updates
+        startDataIntervals();
+
+        // Function to fetch initial data and update buttons
+        function getCurrentData() {
+            updateEvery2Seconds();
+            updateEvery1Second();
+            updateTwicePerSecond();
+        }
+
+        // Group 1: Data to be updated every 2 seconds (2000 milliseconds)
+        function updateEvery2Seconds() {
+            fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
+            fetchData('navigation/headingMagnetic', 'HeadingMagn');
+            fetchData('electrical/solar/SmartSolar/voltage', 'electricalVoltage');
+            fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButton); 
+        }
+        // Group 2: Data to be updated every 1 second (1000 milliseconds)
+        function updateEvery1Second() {
+            //fetchData('navigation/courseOverGroundTrue', 'currentCourse');
+            fetchData('environment/depth/belowTransducer', 'depthBelowTransducer');
+            fetchData('performance/beatAngle', 'beatAngle');
+            fetchData('performance/gybeAngle', 'gybeAngle');
+            fetchData('environment/wind/speedTrue', 'currentTWS');
+        }
+        // Group 3: Data to be updated twice per second (500 milliseconds)
+        function updateTwicePerSecond() {
+            fetchData('navigation/speedThroughWater', 'speedThroughWater');
+            fetchData('performance/targetSpeed', 'targetSpeed');
+            fetchData('environment/wind/angleApparent', 'windAngle');
+            fetchData('performance/targetAngle', 'targetAWA');
+        }
+
+        // Set up intervals for each group
+        function startDataIntervals() {
+            setInterval(updateEvery2Seconds, 2000);  // Every 2 seconds
+            setInterval(updateEvery1Second, 1000);   // Every 1 second
+            setInterval(updateTwicePerSecond, 500);  // Every 0.5 seconds
+        }
+
+        async function toggleSelection(button) {
+            const selectedId = button.id;
+
+            // Map button IDs to their corresponding autopilot states
+            const stateMap = {
+                'btnCircleStandby': 'standby',
+                'btnCircleWind': 'wind',
+                'btnCircleTrack': 'route',
+                'btnCircleAuto': 'auto'
+            };
+
+            const selectedState = stateMap[selectedId];
+
+            if (selectedState) {
+                // Send the selected state to the autopilot
+                await sendPutRequest('steering/autopilot/state', selectedState);
+
+                // Update the button states after sending the command
+                updateAutopilotButton();
+            } else {
+                console.error('Invalid button ID or state');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', (event) => {
+            function initializeButtons() {
+                // Set all buttons to red initially
+                const buttons = document.querySelectorAll('.btnCircle');
+                buttons.forEach(button => {
+                    button.style.backgroundColor = 'red';
+                });
+            }
+
             console.log('DOM fully loaded and parsed');
-            const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzIxMjIwNjA3LCJleHAiOjE3NTI3NzgyMDd9.QCOUf94JO2M2wdYved1p4uN6A9JeL0thuVvhK0jxCjg';
-            const socket = new WebSocket('ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all');
+
+            const socket = new WebSocket(`${baseURL.replace('http', 'ws')}/signalk/v1/stream?subscribe=all`);
+
+            // WebSocket connection open event  
 
             socket.onopen = function() {
                 console.log('WebSocket connection opened');
                 getCurrentData(); // Get initial data
+                startDataIntervals(); // Start the intervals for dynamic updates
             };
 
             socket.onmessage = function(event) {
                 console.log('WebSocket message received:', event.data);
-                const message = JSON.parse(event.data);
-                const updates = message.updates || [];
-
-                if (message.updates) {
-                    message.updates.forEach(update => {
-                        update.values.forEach(value => {
-                            if (value.path && value.path.startsWith('notifications.autopilot')) {
-                                displayNotification(`${value.value.message}`);
-                            }
-                            if (value.path === 'navigation.courseOverGroundTrue') {
-                                document.getElementById('currentCourse').innerText = (typeof value.value === 'number') ? radToDeg(value.value).toFixed(0) : 'N/A';
-                            }
-                            if (value.path === 'steering.autopilot.target.headingMagnetic') {
-                                document.getElementById('targetHeading').innerText = (typeof value.value === 'number') ? radToDeg(value.value).toFixed(0) : 'N/A';
-                            }
-                            if (value.path === 'environment.wind.speedTrue') {
-                                document.getElementById('currentTWS').innerText = (typeof value.value === 'number') ? value.value.toFixed(1) : 'N/A';
-                            }
-                            if (value.path === 'navigation.speedThroughWater') {
-                                document.getElementById('speedThroughWater').innerText = (typeof value.value === 'number') ? ((value.value)*1.852).toFixed(1) : 'N/A';
-                            }
-                            if (value.path === 'performance.targetSpeed') {
-                                document.getElementById('targetSpeed').innerText = (typeof value.value === 'number') ? ((value.value)*1.852).toFixed(1) : 'N/A';
-                            }
-                            if (value.path === 'environment.wind.angleApparent') {
-                                document.getElementById('windAngle').innerText = (typeof value.value === 'number') ? Math.abs(radToDeg(value.value).toFixed(0)) : 'N/A';
-                            }
-                            if (value.path === 'performance.targetAngle') {
-                                document.getElementById('targetAWA').innerText = (typeof value.value === 'number') ? Math.abs(radToDeg(value.value).toFixed(0)) : 'N/A';
-                            }
-                            if (value.path === 'steering.autopilot.state') {
-                                document.getElementById('autopilotState').innerText = value.value || 'N/A';
-                            }
-                            if (value.path === 'environment.depth.belowKeel') {
-                                document.getElementById('depth_belowKeel').innerText = (typeof value.value === 'number') ? value.value.toFixed(1) : 'N/A';
-                            }
                         });
-                    });
+                    }
+                } catch (error) {
+                    console.error('Error parsing WebSocket message:', error);
                 }
             };
             socket.onclose = function() {
@@ -315,120 +569,32 @@
             socket.onerror = function(error) {
                 console.error('WebSocket error:', error);
             };
-            function radToDeg(rad) {
-                return rad * (180 / Math.PI);
-            }
-            function sendPutRequest(path, value) {
-                fetch('http://fidelibe.local:3000/signalk/v1/api/vessels/self/' + path, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + authToken // Include the token in the Authorization header
-                    },
-                    body: JSON.stringify({
-                        value: value
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    console.log('PUT request successful');
-                    displayNotification('Course change accepted.');
-                })
-                .catch(error => {
-                    console.error('Error during PUT request:', error);
-                    displayNotification('Error: Unable to change course.');
-                });
-            }
-            async function updateAutopilotState() {
-                const data = await fetchData('/signalk/v1/api/vessels/self/navigation/autopilot/state');
-                if (data && data.value) {
-                    currentValues.autopilotState = data.value;
-                    updateField('autopilotState', currentValues.autopilotState);
-                }
-            }
-            function getCurrentData() {
-                fetchData('navigation/courseOverGroundTrue', 'currentCourse');
-                fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
-                fetchData('environment/wind/speedTrue', 'currentTWS');
-                fetchData('navigation/speedThroughWater', 'speedThroughWater');
-                fetchData('performance/targetSpeed', 'targetSpeed');
-                fetchData('navigation/trip/log', 'tripLog');
-                fetchData('environment.depth.belowKeel', 'sdepth_belowKeel');
-                fetchData('environment/wind/angleApparent', 'windAngle');
-                fetchData('performance/targetAngle', 'targetAWA');
-            }
-            function fetchData(path, elementId) {
-                fetch(`http://fidelibe.local:3000/signalk/v1/api/vessels/self/${path}`, {
-                    headers: {
-                        'Authorization': 'Bearer ' + authToken
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    let value = 'N/A';
-                    if (path === 'environment/wind/angleApparent') {
-                        // Convert radians to degrees for wind angle apparent
-                        value = (typeof data.value === 'number') ? radToDeg(data.value).toFixed(0) : 'N/A';
-                    } else {
-                        // For other values, just use toFixed if the value is a number
-                        value = (typeof data.value === 'number') ? data.value.toFixed(2) : 'N/A';
-                    }
-                    document.getElementById(elementId).innerText = value;
-                })
-                .catch(error => {
-                    console.error(`Error during GET request for ${path}:`, error);
-                    document.getElementById(elementId).innerText = 'N/A';
-                });
-            }
-            function displayNotification(text) {
-                const notificationArea = document.getElementById('notificationArea');
-                if (notificationArea) {
-                    notificationArea.innerText = text;
-                    notificationArea.style.display = 'block';
-                    setTimeout(() => {
-                        notificationArea.style.display = 'none';
-                    }, 5000); // Hide the notification after 5 seconds
-                } else {
-                    console.error('Notification area element not found');
-                }
-            }
+
             // Event listeners for your buttons
             document.getElementById('btnLeftTack').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.actions.tack', 'port');
+                sendPutRequest('steering/autopilot/actions/adjustHeading', -80);
+                //sendPutRequest('steering/autopilot/actions/tack', 'port');
             });
             document.getElementById('btnRightTack').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.actions.tack', 'starboard');
+                //sendPutRequest('steering/autopilot/actions/tack', 'starboard');
+                sendPutRequest('steering/autopilot/actions/adjustHeading', 80);
             });
             document.getElementById('btnMinus1').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.actions.adjustHeading', -1);
+                sendPutRequest('steering/autopilot/actions/adjustHeading', -1);
             });
             document.getElementById('btn-10').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.actions.adjustHeading', -10);
+                sendPutRequest('steering/autopilot/actions/adjustHeading', -10);
             });
             document.getElementById('btn+10').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.actions.adjustHeading', +10);
+                sendPutRequest('steering/autopilot/actions/adjustHeading', +10);
             });
             document.getElementById('btn+1').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.actions.adjustHeading', +1);
+                sendPutRequest('steering/autopilot/actions/adjustHeading', +1);
             });
-            document.getElementById('btnCircleStandby').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.state', 'standby');
-            });
-            document.getElementById('btnCircleAuto').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.state', 'auto');
-            });
-            document.getElementById('btnCircleWind').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.state', 'wind');
-            });
-            document.getElementById('btnCircleTrack').addEventListener('click', () => {
-                sendPutRequest('steering.autopilot.state', 'route');
+            // 
+            // Event listener for all buttons with the class 'btnCircle'
+            document.querySelectorAll('.btnCircle').forEach(button => {
+                button.addEventListener('click', () => toggleSelection(button));
             });
         });
     </script>
