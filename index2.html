@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="favicon.ico">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            font-family: sans-serif;
+        }
+        #main {
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: gray;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align items at the start of the container */
+            padding-top: 5px; /* Add some padding at the top */
+        }
+        #remoteMain {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .infoContainer {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap; /* Allow wrapping */
+            justify-content: center;
+            margin-bottom: 0px; /* Add some margin to separate button groups */
+        }
+        .infoField {
+            margin-top: 5px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+        }
+        .btnContainer {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+        .btnCircle, .btnActive, .btnInactive {
+                display: inline-block;
+                cursor: pointer;
+                border-radius: 25%;
+                color: white;
+                text-align: center;
+                background-color: red; /* Default background color */
+        }
+
+        .btnActive {
+            background-color: green; /* Background color when selected */
+        }
+        .btnInactive {
+            background-color: blue; /* Inactive color */
+        }
+        .btnBlack {
+            display: inline-block;
+            cursor: pointer;
+            color: white;
+            text-align: center;
+            border-radius: 20%;
+            background-color: black;
+        }
+        .largeInfoField {
+            background-color: rgba(48, 46, 41, 0.933);
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+        }
+        #notificationArea {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 30px;
+            text-align: center;
+            padding: 10px;
+            display: none;
+            z-index: 1000;
+        }
+        /* iPhone 14 (Portrait Mode) */
+        @media only screen and (min-device-width: 390px) and (max-device-width: 390px) and (-webkit-device-pixel-ratio: 3) {
+            .btnCircle, .btnActive, .btnInactive {
+                font-size: 10vw; /* Much bigger font size */
+                padding: 3vw 4vw; /* Increased padding top right bottom left*/
+                margin: 2vw;
+            }
+            .btnBlack {
+                font-size: 8vw; /* Slightly bigger font size */
+                padding: 2vw 3vw; /* Slightly increased padding */
+                margin: 1vw;
+            }
+            .infoField {
+                font-size: 5vw; /* Adjust font size */
+                padding: 2vw 3vw; /* Adjust padding */
+                margin: 1vw;
+            }
+            .btnContainer, .infoContainer {
+                display: flex;
+                flex-wrap: wrap; /* Allow wrapping in portrait mode */
+            }
+            .largeInfoField {
+                font-size: 7vw; /* Adjust font size */
+                padding: 2vw 3vw; /* Adjust padding */
+                margin: 1vw;
+            }
+        }
+        /* iPhone 14 (Landscape Mode) */
+        @media only screen and (max-width: 844px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
+            .btnCircle, .btnActive, .btnInactive {
+                font-size: 4vw; /* Much bigger font size */
+                padding: 1.5vw 3vw; /* Increased padding top right bottom left*/
+            }
+            .btnBlack {
+                font-size: 2.5vw; /* Adjust font size */
+                padding: 1vw 2vw; /* Adjust padding */
+                margin: 0.5vw;
+            }
+            .infoField {
+                font-size: 2vw; /* Adjust font size */
+                padding: 1vw 1vw; /* Adjust padding */
+            }
+            .btnContainer, .infoContainer {
+                display: flex;
+                flex-wrap: nowrap; /* No wrapping in landscape mode */
+            }
+            .largeInfoField {
+                font-size: 4vw; /* Adjust font size */
+                padding: 1vw 2vw; /* Adjust padding */
+                margin: 0.5vw;
+            }
+        }
+        /* iPad mini tablets (Landscape Mode)*/
+        @media only screen and (min-device-width: 768px) and (orientation: landscape) {
+            .btnCircle, .btnActive, .btnInactive {
+                font-size: 7vw; /* Much bigger font size */
+                padding: 1vw 2vw; /* Increased padding top right bottom left*/
+            }
+            .btnBlack {
+                font-size: 6vw; /* Reduced font size */
+                padding: 1vw 2vw; /* Reduced padding */
+                margin: 1vw;
+            }
+            .infoField {
+                font-size: 1.5vw; /* Reduced font size */
+                padding: 0.5vw 1vw; /* Reduced padding */
+                margin: 1vw;
+            }
+            .btnContainer, .infoContainer {
+                display: flex;
+                flex-wrap: nowrap; /* No wrapping in landscape mode */
+            }
+            .largeInfoField {
+                font-size: 7vw; /* Adjust font size */
+                padding: 1vw 2vw; /* Adjust padding */
+                margin: 1vw;
+            }
+            #main {
+                padding-top: 5px; /* Adjust padding to fit content */
+            }
+        }
+
+        /* Responsive styles for iPad Air 2 and similar tablets in portrait mode*/
+        @media only screen and (min-device-width: 768px) and (max-device-height: 1023px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
+            .btnCircle, .btnActive, .btnInactive {
+                font-size: 8vw; /* Much bigger font size */
+                padding: 1vw 3vw; /* Increased padding top right bottom left*/
+                margin: 1vw;
+            }
+            .btnBlack {
+                font-size: 6vw; /* Reduced font size */
+                padding: 1vw 2vw; /* Reduced padding */
+                margin: 1vw;
+            }
+            .infoField {
+                font-size: 5vw; /* Reduced font size */
+                padding: 0.5vw 1vw; /* Reduced padding */
+                margin: 1vw;
+            }
+            .btnContainer, .infoContainer {
+                display: flex;
+                flex-wrap: wrap; /* wrapping in portrait mode */
+            }
+            .largeInfoField {
+                font-size: 7vw; /* Adjust font size */
+                padding: 1vw 3vw; /* Adjust padding */
+                margin: 1vw;
+            }
+            #main {
+                padding-top: 5px; /* Adjust padding to fit content */
+            }
+        }
+        /* iPad Air 2 and similar tablets (Landscape Mode)*/
+        @media only screen and (min-device-width: 768px) and (max-device-height: 1023px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
+            .btnCircle, .btnActive, .btnInactive {
+                font-size: 8vw; /* Much bigger font size */
+                padding: 1vw 2vw; /* Increased padding top right bottom left*/
+            }
+            .btnBlack {
+                font-size: 6vw; /* Reduced font size */
+                padding: 1vw 2vw; /* Reduced padding */
+                margin: 1vw;
+            }
+            .infoField {
+                font-size: 1.5vw; /* Reduced font size */
+                padding: 0.5vw 1vw; /* Reduced padding */
+                margin: 1vw;
+            }
+            .btnContainer, .infoContainer {
+                display: flex;
+                flex-wrap: nowrap; /* No wrapping in landscape mode */
+            }
+            .largeInfoField {
+                font-size: 8vw; /* Adjust font size */
+                padding: 1vw 2vw; /* Adjust padding */
+                margin: 1vw;
+            }
+            #main {
+                padding-top: 5px; /* Adjust padding to fit content */
+            }
+        }
+        /* General styles for larger screens */
+        @media only screen and (min-width: 1025px) {
+            .btnCircle, .btnActive, .btnInactive {
+                font-size: 4.5vw; /* Much bigger font size */
+                padding: 1.5vw 4vw; /* Increased padding top right bottom left*/
+                margin: 1vw;
+            }
+            .btnBlack {
+                font-size: 4vw; /* Responsive font size */
+                padding: 1.5vw 3vw; /* Responsive padding */
+                margin: 1vw;
+            }
+            .infoField {
+                font-size: 2vw; /* Responsive font size */
+                padding: 1.5vw 1vw; /* Responsive padding */
+                margin: 0.5vw
+            }
+            .largeInfoField {
+                font-size: 4vw; /* Adjust font size */
+                padding: 1vw 2vw; /* Adjust padding */
+                margin: 1vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <div id="remoteMain">
+            <div class="infoContainer">
+                <div class="infoField">maxSpeedAngle: <span id="performance.maxSpeedAngle">N/A</span></div>
+                <div class="infoField">maxSpeed: <span id="performance.maxSpeed">N/A</span></div>
+                <div class="infoField">TargSpeed: <span id="performance.targetSpeed">N/A</span></div>
+                <div class="infoField">TargetAngle: <span id="performance.targetAngle">N/A</span></div>
+                <div class="infoField">PolarSpeed: <span id="performance.polarSpeed">N/A</span></div>
+            </div>
+            <div class="infoContainer">
+                <!--div class="infoField">COG: <span id="currentCourse">N/A</span> ° </div-->
+                <div class="infoField">HM: <span id="headingMagnetic">N/A</span> ° </div>
+                <div class="infoField">HDG: <span id="targetHeading">N/A</span> ° </div>
+                <div class="infoField">TWS: <span id="currentTWS">N/A </span><span style="font-size:1.5vw"> m/s</span></div>
+                <div class="infoField">Speed: <span id="speedThroughWater">N/A </span><span style="font-size:1.5vw"> kt</span></div>
+                <div class="infoField">Volt: <span id="electricalVoltage">N/A </span><span style="font-size:1.5vw"> V</span></div>
+            </div>
+            <div class="btnContainer">
+                <div class="btnBlack" id="btnLeftTack"><<</div>
+                <div class="btnBlack" id="autopilotState">N/A</div>
+                <div class="btnBlack" id="btnRightTack">>></div>
+            </div>
+            <div class="btnContainer">
+                <div class="btnBlack" id="btnMinus1"> -1 </div>
+                <div class="btnBlack" id="btn-10"> -10 </div>
+                <div class="btnBlack" id="btn+10"> +10 </div>
+                <div class="btnBlack" id="btn+1"> +1 </div>
+            </div>
+            <div class="btnContainer">
+                <div class="btnCircle" id="btnCircleStandby" onclick="toggleSelection(this)">STBY</div>
+                <div class="btnCircle" id="btnCircleWind" onclick="toggleSelection(this)">WIND</div>
+                <div class="btnCircle" id="btnCircleTrack" onclick="toggleSelection(this)">TRACK</div>
+                <div class="btnCircle" id="btnCircleAuto" onclick="toggleSelection(this)">AUTO</div>
+            </div>
+            <div class="infoContainer">
+                <div class="largeInfoField">AWA: <span id="windAngle" class="alarm-clock-font">N/A</span> °</div>
+                <div class="largeInfoField">TWA: <span id="targetAWA"class="alarm-clock-font">N/A</span> °</div>
+                <div class="largeInfoField">DPTH: <span id="depthBelowTransducer" class="alarm-clock-font">N/A</span> m</div>
+            </div>
+            <div class="infoContainer">
+                <div class="infoField">Beat Angle: <span id="beatAngle">N/A</span> ° </div>
+                <div class="infoField">Gybe Angle <span id="gybeAngle">N/A</span> ° </div>
+            </div>
+        </div>
+    </div>
+    <div id="windAngle">Wind Angle: --</div>
+    <div id="APwindAngle">AP Wind Angle: --</div>
+    <div id="beatAngle">Beat Angle: --</div>
+    <div id="gybeAngle">Gybe Angle: --</div>
+    <div id="p_targetAngle">Perf targetAngle: --</div>
+    <div id="headingMagnetic">Heading Magnetic: --</div>
+    <div id="APheadingMagnetic">AP Heading Magnetic: --</div>
+    <div id="autopilotState">Autopilot State: --</div>
+    <!-- Include Socket.IO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+    <button id="testButton">Test Socket.IO</button>
+    <script>
+        console.log("i18 Socket.IO loaded"); // Add this to verify loading
+        const socket = io();
+        //const socket = io("http://fideli.local:8001");  // Replace with the actual IP or hostname of the server
+
+        // Socket.IO listener for updates
+        socket.on("update_data", (data) => {
+            console.log("i23 Received update data:", data); // Confirm data reception
+            data.updates.forEach(update => {
+                const path = update.path;
+                const value = update.value;
+                console.log("i27 Update path:", path, "Value:", value); // Add this to verify value
+
+                if (path === 'performance.maxSpeedAngle') {
+                    document.getElementById("performance.maxSpeedAngle").innerText =  value.toFixed(2) + "°";
+                } else if (path === 'performance.maxSpeed') {
+                    document.getElementById("performance.maxSpeed").innerText =  value.toFixed(2) + "kn";
+                } else if (path === 'performance.targetSpeed') {
+                    document.getElementById("performance.targetSpeed").innerText =  value.toFixed(2) + "kn";
+                } else if (path === 'performance.polarSpeed') {
+                    document.getElementById("performance.polarSpeed").innerText =  value.toFixed(2) + "kn";
+                } else if (path === "performance.gybeAngle") {
+                    document.getElementById("gybeAngle").innerText = value.toFixed(2) + "°";
+                } else if (path === "performance.beatAngle") {
+                    document.getElementById("beatAngle").innerText =  value.toFixed(2) + "°";
+                } else if (path === "performance.targetAngle") {
+                    document.getElementById("perf_targ_Angle").innerText = value.toFixed(2) + "°";
+                } else if (path === 'environment.wind.angleApparent') {
+                    document.getElementById("windAngle").innerText =  value.toFixed(2) + "°";
+                } else if (path === "navigation.headingMagnetic") {
+                    document.getElementById("headingMagnetic").innerText = value.toFixed(2) + "°";
+                } else if (path === "steering.autopilot.state") {
+                    document.getElementById("autopilotState").innerText =  value;
+                } else if (path === 'steering.autopilot.target.windAngleApparent') {
+                    document.getElementById("APwindAngle").innerText = value.toFixed(2) + "°";
+                } else if (path === "steering.autopilot.target.headingMagnetic") {
+                    document.getElementById("AP_headingMagnetic").innerText = value.toFixed(2) + "°";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
