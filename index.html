@@ -326,7 +326,8 @@
             let deg = rad * (180 / Math.PI);
             return (deg < 0) ? deg + 360 : deg; // Adjust negative degrees to be within 0-360 range
         }
-
+        // A WebSocket connection is opened to receive real-time updates. When messages
+        // are received, they’re parsed, and relevant updates are applied to the button states 
         function updateButtonStates(state) {
             const buttons = {
                 standby: document.getElementById('btnCircleStandby'),
@@ -350,7 +351,7 @@
                 });
             }
         }
-
+        // sends commands to adjust the autopilot settings, like changing the heading.
         function sendPutRequest(path, value) {
             fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
                 method: 'PUT',
@@ -459,7 +460,7 @@
                 if (element.innerText === '' || element.innerText === 'N/A') {
                     element.innerText = 'STBY';
                 }
-            }
+            } // end try
         }
 
         async function updateAutopilotButton() {
@@ -483,8 +484,8 @@
         // Group 1: Data to be updated every 2 seconds (2000 milliseconds)
         function updateEvery2Seconds() {
             fetchData('steering/autopilot/target/headingMagnetic', 'targetHeading');
-            fetchData('navigation/headingMagnetic', 'HeadingMagn');
-            fetchData('electrical/solar/SmartSolar/voltage', 'electricalVoltage');
+            fetchData('navigation/headingMagnetic', 'HeadingMagn');cd 
+            fetchData('electrical/solar/SmartSolar/voltage/', 'electricalVoltage');
             fetchData('steering/autopilot/state', 'autopilotState', updateAutopilotButton); 
         }
         // Group 2: Data to be updated every 1 second (1000 milliseconds)
