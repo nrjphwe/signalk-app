@@ -33,6 +33,23 @@
             flex-direction: column;
             align-items: center;
         }
+        /* Style all elements with the class name "table" */
+        .table {
+            background-color: black;
+            color: white;
+            padding: 8px;
+            border-spacing: 10px;
+            border: 1px solid black;
+            flex-wrap: wrap; /* Allow wrapping */
+        }
+        .tableField {
+            font-size:160%;
+            color: white;
+            text-align: center;
+            padding: 5px;
+            border-radius: 4px;
+        }
+        /* Style all elements with the class name "infocontainer" */
         .infoContainer {
             display: flex;
             flex-direction: row;
@@ -262,19 +279,38 @@
 <body>
     <div id="main">
         <div id="remoteMain">
+            <table>
+                <tr class="table">
+                    <td class="tableField">MaxSpeedAngle </td>
+                    <td class="tableField">MaxSpeed </td>
+                    <td class="tableField">TargetSpeed</td>
+                    <!--<td class="tableField">TargetAngle</td> -->
+                    <td class="tableField">PolarSpeed</td>
+                </tr>
+                <tr class="table">
+                    <td class="tableField"><span id="performance_maxSpeedAngle">N/A</span></td>
+                    <td class="tableField"><span id="performance_maxSpeed">N/A</span></td>
+                    <td class="tableField"><span id="performance_targetSpeed">N/A</span></td>
+                    <!--<td class="tableField"><span id="performance_targetAngle">N/A</span></td> -->
+                    <td class="tableField"><span id="performance_polarSpeed">N/A</span></td>
+                </tr>
+            </table>
+            <!--
             <div class="infoContainer">
-                <div class="infoField">maxSpeedAngle: <span id="performance.maxSpeedAngle">N/A</span></div>
-                <div class="infoField">maxSpeed: <span id="performance.maxSpeed">N/A</span></div>
-                <div class="infoField">TargSpeed: <span id="performance.targetSpeed">N/A</span></div>
-                <div class="infoField">TargetAngle: <span id="performance.targetAngle">N/A</span></div>
-                <div class="infoField">PolarSpeed: <span id="performance.polarSpeed">N/A</span></div>
+                <div class="infoField">maxSpeedAngle: <span id="performance_maxSpeedAngle">N/A</span></div>
+                <div class="infoField">maxSpeed: <span id="performance_maxSpeed">N/A</span></div>
+                <div class="infoField">TargSpeed: <span id="performance_targetSpeed">N/A</span></div>
+                <div class="infoField">TargetAngle: <span id="performance_targetAngle">N/A</span></div>
+                <div class="infoField">PolarSpeed: <span id="performance_polarSpeed">N/A</span></div>
             </div>
+            -->
             <div class="infoContainer">
                 <!--div class="infoField">COG: <span id="currentCourse">N/A</span> ° </div-->
-                <div class="infoField">HM: <span id="headingMagnetic">N/A</span> ° </div>
-                <div class="infoField">HDG: <span id="targetHeading">N/A</span> ° </div>
-                <div class="infoField">TWS: <span id="currentTWS">N/A </span><span style="font-size:1.5vw"> m/s</span></div>
-                <div class="infoField">Speed: <span id="speedThroughWater">N/A </span><span style="font-size:1.5vw"> kt</span></div>
+                <div class="infoField">HDT: <span id="navigation_headingTrue">N/A</span> </div>
+                <div class="infoField">HDG/RMC: <span id="navigation_magneticVariation">N/A</span> </div>
+                <div class="infoField">TWS: <span id="environment_wind.speedTrue">N/A </span><span style="font-size:1.5vw"> m/s</span></div>
+                <div class="infoField">SOG/VTG: <span id="navigation_speedOverGround">N/A </span><span style="font-size:1.5vw"> kn</span></div>
+                <div class="infoField">Speed/VHW: <span id="navigation_speedThroughWater">N/A </span><span style="font-size:1.5vw"> kn</span></div>
                 <div class="infoField">Volt: <span id="electricalVoltage">N/A </span><span style="font-size:1.5vw"> V</span></div>
             </div>
             <div class="btnContainer">
@@ -295,31 +331,36 @@
                 <div class="btnCircle" id="btnCircleAuto" onclick="toggleSelection(this)">AUTO</div>
             </div>
             <div class="infoContainer">
-                <div class="largeInfoField">AWA: <span id="windAngle" class="alarm-clock-font">N/A</span> °</div>
-                <div class="largeInfoField">TWA: <span id="targetAWA"class="alarm-clock-font">N/A</span> °</div>
-                <div class="largeInfoField">DPTH: <span id="depthBelowTransducer" class="alarm-clock-font">N/A</span> m</div>
+                <div class="largeInfoField">AWA: <span id="environment_wind.angleApparent" class="alarm-clock-font">N/A</span> </div>
+                <div class="largeInfoField">TargetWA: <span id="performance_targetAngle" class="alarm-clock-font">N/A</span> </div>
+                <div class="largeInfoField">DPTH: <span id="environment_depth.belowKeel" class="alarm-clock-font">N/A</span> m</div>
             </div>
             <div class="infoContainer">
-                <div class="infoField">Beat Angle: <span id="beatAngle">N/A</span> ° </div>
-                <div class="infoField">Gybe Angle <span id="gybeAngle">N/A</span> ° </div>
+                <div class="infoField">Beat Angle: <span id="beatAngle">N/A</span> °</div>
+                <div class="infoField">Gybe Angle <span id="gybeAngle">N/A</span> °</div>
             </div>
         </div>
     </div>
+    <!--
     <div id="windAngle">Wind Angle: --</div>
     <div id="APwindAngle">AP Wind Angle: --</div>
     <div id="beatAngle">Beat Angle: --</div>
     <div id="gybeAngle">Gybe Angle: --</div>
-    <div id="p_targetAngle">Perf targetAngle: --</div>
+    <div id="performance_targetAngle">Perf targetAngle: --</div>
     <div id="headingMagnetic">Heading Magnetic: --</div>
     <div id="APheadingMagnetic">AP Heading Magnetic: --</div>
     <div id="autopilotState">Autopilot State: --</div>
+    -->
     <!-- Include Socket.IO -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
     <button id="testButton">Test Socket.IO</button>
     <script>
         console.log("i18 Socket.IO loaded"); // Add this to verify loading
         const socket = io();
-        //const socket = io("http://fideli.local:8001");  // Replace with the actual IP or hostname of the server
+
+        function radToDeg(rad) {
+            return rad * (180 / Math.PI);
+        }
 
         // Socket.IO listener for updates
         socket.on("update_data", (data) => {
@@ -330,29 +371,42 @@
                 console.log("i27 Update path:", path, "Value:", value); // Add this to verify value
 
                 if (path === 'performance.maxSpeedAngle') {
-                    document.getElementById("performance.maxSpeedAngle").innerText =  value.toFixed(2) + "°";
+                    document.getElementById("performance_maxSpeedAngle").innerText =  radToDeg(value).toFixed() + "°";
                 } else if (path === 'performance.maxSpeed') {
-                    document.getElementById("performance.maxSpeed").innerText =  value.toFixed(2) + "kn";
+                    document.getElementById("performance_maxSpeed").innerText =  value.toFixed(1) + " kn";
                 } else if (path === 'performance.targetSpeed') {
-                    document.getElementById("performance.targetSpeed").innerText =  value.toFixed(2) + "kn";
-                } else if (path === 'performance.polarSpeed') {
-                    document.getElementById("performance.polarSpeed").innerText =  value.toFixed(2) + "kn";
-                } else if (path === "performance.gybeAngle") {
-                    document.getElementById("gybeAngle").innerText = value.toFixed(2) + "°";
-                } else if (path === "performance.beatAngle") {
-                    document.getElementById("beatAngle").innerText =  value.toFixed(2) + "°";
+                    document.getElementById("performance_targetSpeed").innerText =  value.toFixed(1) + " kn";
                 } else if (path === "performance.targetAngle") {
-                    document.getElementById("perf_targ_Angle").innerText = value.toFixed(2) + "°";
+                    document.getElementById("performance_targetAngle").innerText = radToDeg(value).toFixed() + "°";
+                } else if (path === 'performance.polarSpeed') {
+                    document.getElementById("performance_polarSpeed").innerText =  value.toFixed(1) + " kn";
+                } else if (path === "performance.gybeAngle") {
+                    document.getElementById("gybeAngle").innerText = radToDeg(value).toFixed(0) + "";
+                } else if (path === "performance.beatAngle") {
+                    document.getElementById("beatAngle").innerText = radToDeg(value).toFixed(0) + "";
+                // environment
                 } else if (path === 'environment.wind.angleApparent') {
-                    document.getElementById("windAngle").innerText =  value.toFixed(2) + "°";
-                } else if (path === "navigation.headingMagnetic") {
-                    document.getElementById("headingMagnetic").innerText = value.toFixed(2) + "°";
+                    document.getElementById("environment_wind.angleApparent").innerText =  radToDeg(value).toFixed(0) + "°";
+                } else if (path === 'environment.wind.speedTrue') {
+                    document.getElementById("environment_wind.speedTrue").innerText =  value.toFixed(1) + "";
+                } else if (path === 'environment.depth.belowKeel') {
+                    document.getElementById("environment_depth.belowKeel").innerText =  value.toFixed(1) + "";
+                // steering
                 } else if (path === "steering.autopilot.state") {
                     document.getElementById("autopilotState").innerText =  value;
                 } else if (path === 'steering.autopilot.target.windAngleApparent') {
-                    document.getElementById("APwindAngle").innerText = value.toFixed(2) + "°";
+                    document.getElementById("APwindAngle").innerText = radToDeg(value).toFixed() + "°";
                 } else if (path === "steering.autopilot.target.headingMagnetic") {
-                    document.getElementById("AP_headingMagnetic").innerText = value.toFixed(2) + "°";
+                    document.getElementById("AP_headingMagnetic").innerText = radToDeg(value).toFixed() + "°";
+                // navigation
+                } else if (path === "navigation.headingTrue") {
+                    document.getElementById("navigation_headingTrue").innerText = radToDeg(value).toFixed() + "°";
+                } else if (path === "navigation.magneticVariation") {
+                    document.getElementById("navigation_magneticVariation").innerText = radToDeg(value).toFixed() + "";
+                } else if (path === 'navigation.speedOverGround') { // SOG VTG
+                    document.getElementById("navigation_speedOverGround").innerText =  value.toFixed(1) + "";
+                } else if (path === 'navigation.speedThroughWater') { // VHW
+                    document.getElementById('navigation_speedThroughWater').innerText =  value.toFixed(1) + "";
                 }
             });
         });
