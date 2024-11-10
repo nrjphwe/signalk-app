@@ -37,17 +37,15 @@
         .table {
             background-color: black;
             color: white;
-            padding: 8px;
-            border-spacing: 10px;
-            border: 1px solid black;
             flex-wrap: wrap; /* Allow wrapping */
         }
         .tableField {
-            font-size:160%;
+            font-size: 4vw; /* Adjust font size */
             color: white;
             text-align: center;
-            padding: 5px;
-            border-radius: 4px;
+            border-spacing: 5px;
+            padding: 1vw;
+            border-radius: 5px;
         }
         /* Style all elements with the class name "infocontainer" */
         .infoContainer {
@@ -77,7 +75,6 @@
                 text-align: center;
                 background-color: red; /* Default background color */
         }
-
         .btnActive {
             background-color: green; /* Background color when selected */
         }
@@ -96,7 +93,7 @@
             background-color: rgba(48, 46, 41, 0.933);
             color: white;
             text-align: center;
-            border-radius: 10px;
+            border-radius: 20%;
         }
         #notificationArea {
             position: fixed;
@@ -111,7 +108,8 @@
             z-index: 1000;
         }
         /* iPhone 14 (Portrait Mode) */
-        @media only screen and (min-device-width: 390px) and (max-device-width: 390px) and (-webkit-device-pixel-ratio: 3) {
+        @media only screen and (min-width: 390px) and (max-width: 844px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3) {
+            body {background-color:red }
             .btnCircle, .btnActive, .btnInactive {
                 font-size: 10vw; /* Much bigger font size */
                 padding: 3vw 4vw; /* Increased padding top right bottom left*/
@@ -119,12 +117,12 @@
             }
             .btnBlack {
                 font-size: 8vw; /* Slightly bigger font size */
-                padding: 2vw 3vw; /* Slightly increased padding */
+                padding: 3vw 4vw; /* Slightly increased padding */
                 margin: 1vw;
             }
             .infoField {
-                font-size: 5vw; /* Adjust font size */
-                padding: 2vw 3vw; /* Adjust padding */
+                font-size: 4vw; /* Reduced font size */
+                padding: 0.5vw 1vw; /* Reduced padding */
                 margin: 1vw;
             }
             .btnContainer, .infoContainer {
@@ -139,6 +137,7 @@
         }
         /* iPhone 14 (Landscape Mode) */
         @media only screen and (max-width: 844px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
+            body {background-color:green }
             .btnCircle, .btnActive, .btnInactive {
                 font-size: 4vw; /* Much bigger font size */
                 padding: 1.5vw 3vw; /* Increased padding top right bottom left*/
@@ -147,6 +146,9 @@
                 font-size: 2.5vw; /* Adjust font size */
                 padding: 1vw 2vw; /* Adjust padding */
                 margin: 0.5vw;
+            }
+            .tableField {
+                font-size: 2.0vw; /* Adjust font size */
             }
             .infoField {
                 font-size: 2vw; /* Adjust font size */
@@ -162,16 +164,55 @@
                 margin: 0.5vw;
             }
         }
-        /* iPad mini tablets (Landscape Mode)*/
-        @media only screen and (min-device-width: 768px) and (orientation: landscape) {
+        /* iPad mini tablets (portrait Mode)*/
+        @media only screen and (max-width: 768px) and (max-height: 1024px) and (orientation: portrait) {
+            body {background-color:orange}
             .btnCircle, .btnActive, .btnInactive {
-                font-size: 7vw; /* Much bigger font size */
+                font-size: 5vw; /* Much bigger font size */
                 padding: 1vw 2vw; /* Increased padding top right bottom left*/
             }
             .btnBlack {
-                font-size: 6vw; /* Reduced font size */
-                padding: 1vw 2vw; /* Reduced padding */
+                font-size: 5vw; /* Reduced font size */
+                padding: 1vw 1vw; /* Reduced padding */
                 margin: 1vw;
+            }
+            .tableField {
+                padding: 0.5vw 1vw; /* Adjust padding */
+                font-size: 3vw; /* Reduced font size */
+            }
+            .infoField {
+                font-size: 3vw; /* Reduced font size */
+                padding: 0.5vw 1vw; /* Reduced padding */
+                margin: 1vw;
+            }
+            .btnContainer, .infoContainer {
+                display: flex;
+                flex-wrap: nowrap; /* No wrapping in landscape mode */
+            }
+            .largeInfoField {
+                font-size: 5vw; /* Adjust font size */
+                padding: 1vw 2vw; /* Adjust padding */
+                margin: 1vw;
+            }
+            #main {
+                padding-top: 5px; /* Adjust padding to fit content */
+            }
+        }
+        /* iPad mini tablets (landscape Mode)*/
+        @media only screen and (max-width: 1024px) and (max-height: 768px) and (orientation: landscape) {
+            body {background-color:pink }
+            .btnCircle, .btnActive, .btnInactive {
+                font-size: 5vw; /* Much bigger font size */
+                padding: 1vw 2vw; /* Increased padding top right bottom left*/
+            }
+            .btnBlack {
+                font-size: 5vw; /* Reduced font size */
+                padding: 1vw 1vw; /* Reduced padding */
+                margin: 0.5vw;
+            }
+            .tableField {
+                padding: 0.5vw 1vw; /* Adjust padding */
+                font-size: 3vw; /* Reduced font size */
             }
             .infoField {
                 font-size: 1.5vw; /* Reduced font size */
@@ -183,7 +224,7 @@
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
             }
             .largeInfoField {
-                font-size: 7vw; /* Adjust font size */
+                font-size: 5vw; /* Adjust font size */
                 padding: 1vw 2vw; /* Adjust padding */
                 margin: 1vw;
             }
@@ -191,21 +232,25 @@
                 padding-top: 5px; /* Adjust padding to fit content */
             }
         }
-
         /* Responsive styles for iPad Air 2 and similar tablets in portrait mode*/
-        @media only screen and (min-device-width: 768px) and (max-device-height: 1023px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
+        @media only screen and  (max-width: 1280px) and (min-width: 768px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
+            body {background-color:blue }
             .btnCircle, .btnActive, .btnInactive {
-                font-size: 8vw; /* Much bigger font size */
+                font-size: 6vw; /* Much bigger font size */
                 padding: 1vw 3vw; /* Increased padding top right bottom left*/
                 margin: 1vw;
             }
             .btnBlack {
                 font-size: 6vw; /* Reduced font size */
                 padding: 1vw 2vw; /* Reduced padding */
-                margin: 1vw;
+                margin: 0.5vw;
+            }
+            .tableField {
+                padding: 0.5vw 1vw; /* Adjust padding */
+                font-size: 3vw; /* Reduced font size */
             }
             .infoField {
-                font-size: 5vw; /* Reduced font size */
+                font-size: 4vw; /* Reduced font size */
                 padding: 0.5vw 1vw; /* Reduced padding */
                 margin: 1vw;
             }
@@ -214,69 +259,83 @@
                 flex-wrap: wrap; /* wrapping in portrait mode */
             }
             .largeInfoField {
-                font-size: 7vw; /* Adjust font size */
-                padding: 1vw 3vw; /* Adjust padding */
+                font-size: 6vw; /* Adjust font size */
+                padding: 1.5vw 3vw; /* Adjust padding */
                 margin: 1vw;
             }
             #main {
-                padding-top: 5px; /* Adjust padding to fit content */
+                padding-top: 4px; /* Adjust padding to fit content */
             }
         }
         /* iPad Air 2 and similar tablets (Landscape Mode)*/
-        @media only screen and (min-device-width: 768px) and (max-device-height: 1023px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
+        @media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
+            body {background-color:yellow }
             .btnCircle, .btnActive, .btnInactive {
-                font-size: 8vw; /* Much bigger font size */
+                font-size: 5.5vw; /* Much bigger font size */
                 padding: 1vw 2vw; /* Increased padding top right bottom left*/
+                margin: 0.5vw;
             }
             .btnBlack {
-                font-size: 6vw; /* Reduced font size */
+                font-size: 4.5vw; /* Reduced font size */
                 padding: 1vw 2vw; /* Reduced padding */
-                margin: 1vw;
+                margin: 0.5vw;
+            }
+            /* Adjust padding */ 
+            .tableField {
+                padding: 0.1px 0.1px;
+                font-size: 3vw; /* Reduced font size */
             }
             .infoField {
-                font-size: 1.5vw; /* Reduced font size */
-                padding: 0.5vw 1vw; /* Reduced padding */
-                margin: 1vw;
+                font-size: 3vw; /* Reduced font size */
+                padding: 0.5vw 0.5vw; /* Reduced padding */
+                margin: 0.5vw;
             }
             .btnContainer, .infoContainer {
                 display: flex;
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
             }
             .largeInfoField {
-                font-size: 8vw; /* Adjust font size */
+                font-size: 4vw; /* Adjust font size */
                 padding: 1vw 2vw; /* Adjust padding */
                 margin: 1vw;
             }
             #main {
-                padding-top: 5px; /* Adjust padding to fit content */
+                padding-top: 2px; /* Adjust padding to fit content */
             }
         }
         /* General styles for larger screens */
-        @media only screen and (min-width: 1025px) {
+        @media only screen and (min-width: 1280px) {
+            body {background-color:purple }
             .btnCircle, .btnActive, .btnInactive {
-                font-size: 4.5vw; /* Much bigger font size */
-                padding: 1.5vw 4vw; /* Increased padding top right bottom left*/
-                margin: 1vw;
+                font-size: 5vw; /* Much bigger font size */
+                padding: 1vw 2vw; /* Increased padding top right bottom left*/
+                margin: 0.5vw;
             }
             .btnBlack {
                 font-size: 4vw; /* Responsive font size */
-                padding: 1.5vw 3vw; /* Responsive padding */
-                margin: 1vw;
+                padding: 1vw 3vw; /* Responsive padding */
+                margin: 0.5vw;
+            }
+            .tableField {
+                font-size: 3vw; /* Adjust font size */
+                padding: 0.2vw 0.2vw; /* Adjust padding */
+                margin: 0.5vw
             }
             .infoField {
                 font-size: 2vw; /* Responsive font size */
-                padding: 1.5vw 1vw; /* Responsive padding */
+                padding: 1vw 1vw; /* Responsive padding */
                 margin: 0.5vw
             }
             .largeInfoField {
                 font-size: 4vw; /* Adjust font size */
                 padding: 1vw 2vw; /* Adjust padding */
-                margin: 1vw;
+                margin: 0.5vw;
             }
         }
     </style>
 </head>
 <body>
+    <div id="beatAngle">Beat Angle: --</div>
     <div id="main">
         <div id="remoteMain">
             <table>
@@ -295,29 +354,21 @@
                     <td class="tableField"><span id="performance_polarSpeed">N/A</span></td>
                 </tr>
             </table>
-            <!--
             <div class="infoContainer">
-                <div class="infoField">maxSpeedAngle: <span id="performance_maxSpeedAngle">N/A</span></div>
-                <div class="infoField">maxSpeed: <span id="performance_maxSpeed">N/A</span></div>
-                <div class="infoField">TargSpeed: <span id="performance_targetSpeed">N/A</span></div>
-                <div class="infoField">TargetAngle: <span id="performance_targetAngle">N/A</span></div>
-                <div class="infoField">PolarSpeed: <span id="performance_polarSpeed">N/A</span></div>
-            </div>
-            -->
-            <div class="infoContainer">
-                <!--div class="infoField">COG: <span id="currentCourse">N/A</span> ° </div-->
+                <div class="infoField">COG: <span id="navigation_courseOverGroundTrue">N/A</span></div>
                 <div class="infoField">HDT: <span id="navigation_headingTrue">N/A</span> </div>
-                <div class="infoField">HDG/RMC: <span id="navigation_magneticVariation">N/A</span> </div>
+                <div class="infoField">HDG: <span id="navigation_magneticVariation">N/A</span>°</div>
                 <div class="infoField">TWS: <span id="environment_wind.speedTrue">N/A </span><span style="font-size:1.5vw"> m/s</span></div>
                 <div class="infoField">SOG/VTG: <span id="navigation_speedOverGround">N/A </span><span style="font-size:1.5vw"> kn</span></div>
                 <div class="infoField">Speed/VHW: <span id="navigation_speedThroughWater">N/A </span><span style="font-size:1.5vw"> kn</span></div>
                 <div class="infoField">Volt: <span id="electricalVoltage">N/A </span><span style="font-size:1.5vw"> V</span></div>
             </div>
             <div class="btnContainer">
-                <div class="btnBlack" id="btnLeftTack"><<</div>
-                <div class="btnBlack" id="autopilotState">N/A</div>
-                <div class="btnBlack" id="btnRightTack">>></div>
+                <div class="btnBlack" id="btnLeftTack">←</div>
+                <div class="btnBlack" id="steering_autopilot.state">N/A</div>
+                <div class="btnBlack" id="btnRightTack">→</div>
             </div>
+
             <div class="btnContainer">
                 <div class="btnBlack" id="btnMinus1"> -1 </div>
                 <div class="btnBlack" id="btn-10"> -10 </div>
@@ -330,6 +381,7 @@
                 <div class="btnCircle" id="btnCircleTrack" onclick="toggleSelection(this)">TRACK</div>
                 <div class="btnCircle" id="btnCircleAuto" onclick="toggleSelection(this)">AUTO</div>
             </div>
+
             <div class="infoContainer">
                 <div class="largeInfoField">AWA: <span id="environment_wind.angleApparent" class="alarm-clock-font">N/A</span> </div>
                 <div class="largeInfoField">TargetWA: <span id="performance_targetAngle" class="alarm-clock-font">N/A</span> </div>
@@ -393,7 +445,7 @@
                     document.getElementById("environment_depth.belowKeel").innerText =  value.toFixed(1) + "";
                 // steering
                 } else if (path === "steering.autopilot.state") {
-                    document.getElementById("autopilotState").innerText =  value;
+                    document.getElementById("steering_autopilot.state").innerText =  value;
                 } else if (path === 'steering.autopilot.target.windAngleApparent') {
                     document.getElementById("APwindAngle").innerText = radToDeg(value).toFixed() + "°";
                 } else if (path === "steering.autopilot.target.headingMagnetic") {
@@ -405,6 +457,8 @@
                     document.getElementById("navigation_magneticVariation").innerText = radToDeg(value).toFixed() + "";
                 } else if (path === 'navigation.speedOverGround') { // SOG VTG
                     document.getElementById("navigation_speedOverGround").innerText =  value.toFixed(1) + "";
+                } else if (path === "navigation.courseOverGroundTrue") {
+                    document.getElementById("navigation_courseOverGroundTrue").innerText = radToDeg(value).toFixed() + "°";
                 } else if (path === 'navigation.speedThroughWater') { // VHW
                     document.getElementById('navigation_speedThroughWater').innerText =  value.toFixed(1) + "";
                 }
