@@ -66,15 +66,14 @@ async def signalk_listener():
                         'navigation.headingTrue', # pgn:127250
                         'navigation.headingMagnetic',
                         'navigation.magneticVariation', # RMC, HDG & pgn:127250
-                        'navigation.courseOverGroundTrue', # VTG & pgn: 129038
+                        'navigation.courseOverGroundTrue', # VTG & pgn: 129038 129026
                         'navigation.speedOverGround', # SOG ,VTG & pgn:129039
                         'navigation.speedThroughWater', # VHW
-                        'navigation.courseOverGroundTrue', # pgn:129039
                     }:
                         updates.append(value)
 
                     elif path in { # environment
-                        "environment.wind.angleApparent",
+                        'environment.wind.angleApparent', # pgn: 130306
                         'environment.wind.directionTrue',
                         'environment.depth.belowKeel',
                         'environment.wind.angleTrueWaterDamped',
