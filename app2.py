@@ -53,29 +53,35 @@ async def signalk_listener():
                         'performance.beatAngle',
                     }:
                         updates.append(value)
-                    # data fromn autopilot
+                    # data from autopilot
                     elif path in { #steering
-                        'steering.autopilot.target.headingMagnetic',
+                        'steering.autopilot.state', # pgn:65379
+                        'steering.autopilot.target.headingMagnetic', # pgn: 65360
+                        'steering.autopilot.target.windAngleApparent', # pgn: 65345
+                        'steering.rudderAngle',  # pgn: 127245
                         'steering.autopilot.target.headingTrue', # APB
-                        'steering.autopilot.state',
-                        'steering.autopilot.target.windAngleApparent',
+                        'steering.autopilot.actions.tack',
+                        'steering.autopilot.actions.adjustHeading',
                     }:
+                        print(f"a66 path in steering value = {value}")
                         updates.append(value)
+
                     # other data
                     elif path in { # navigation 
-                        'navigation.headingTrue', # pgn:127250
-                        'navigation.headingMagnetic',
-                        'navigation.magneticVariation', # RMC, HDG & pgn:127250
+                        'navigation.headingTrue', # pgn:127250 
+                        'navigation.headingMagnetic', # pgn: 65359
+                        'navigation.magneticVariation', # HDG pgn: 127258
                         'navigation.courseOverGroundTrue', # VTG & pgn: 129038 129026
-                        'navigation.speedOverGround', # SOG ,VTG & pgn:129039
+                        'navigation.speedOverGround', # SOG ,VTG & pgn:129039 129026
                         'navigation.speedThroughWater', # VHW
                     }:
                         updates.append(value)
 
                     elif path in { # environment
                         'environment.wind.angleApparent', # pgn: 130306
+                        'environment.wind.speedApparent', # pgn: 130306
                         'environment.wind.directionTrue',
-                        'environment.depth.belowKeel',
+                        'environment.depth.belowKeel', # pgn: 128267
                         'environment.wind.angleTrueWaterDamped',
                         'environment.wind.speedTrue', # VWT
 
@@ -83,7 +89,7 @@ async def signalk_listener():
                         updates.append(value)
             if updates:
                 socketio.emit("update_data", {"updates": updates})
-                print(f"a84 Emitted data: {updates}")
+                #print(f"a84 Emitted data: {updates}")
 
 # Wrapper function to start the asyncio event loop
 def run_async_task():
