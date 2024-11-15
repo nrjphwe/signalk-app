@@ -17,7 +17,7 @@
             margin: 0;
             width: 100vw;
             height: 100vh;
-            background-color: gray;
+            background-color: black;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -35,17 +35,32 @@
         }
         /* Style all elements with the class name "table" */
         .table {
-            background-color: black;
             color: white;
-            flex-wrap: wrap; /* Allow wrapping */
+            width: 100%; /* Ensure the table spans the container */
+            border-spacing: 5px; /* Space between cells */
+            border-collapse: separate;
+            border: none; /* Remove any borders */
+            border-radius: 5px; /* Optional rounded corners for headers */
+        }
+        /* Style for table header cells */
+        .table th {
+            font-size: 2.5vw; /* Smaller font size for headers */
+            font-weight: normal;
+            text-align: center;
+            padding: 0.5, 1vw, 0.5, 1vw;
+            color: #ddd; /* Slightly lighter color for headers */
+            background-color: #2A475C; 
+            border: none; /* Remove any borders */
+            border-radius: 5px; /* Optional rounded corners for data cells */
         }
         .tableField {
-            font-size: 4vw; /* Adjust font size */
+            font-size: 4vw; /* Larger font size for numbers */
             color: white;
             text-align: center;
-            border-spacing: 5px;
             padding: 1vw;
-            border-radius: 5px;
+            border: 1px solid #555; /* Adds border to data cells */
+            background-color: #2A475C; 
+            border-radius: 5px; /* Optional rounded corners */
         }
         /* Style all elements with the class name "infocontainer" */
         .infoContainer {
@@ -57,7 +72,7 @@
         }
         .infoField {
             margin-top: 5px;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: #2A475C; 
             color: white;
             text-align: center;
             border-radius: 10px;
@@ -74,6 +89,11 @@
                 color: white;
                 text-align: center;
                 background-color: red; /* Default background color */
+                margin: 0.5vw;
+        }
+        .btnCircle.selected {
+            background-color: green; /* or any color to indicate the active state */
+            color: white; /* adjust text color if needed */
         }
         .btnActive {
             background-color: green; /* Background color when selected */
@@ -87,19 +107,25 @@
             color: white;
             text-align: center;
             border-radius: 20%;
-            background-color: black;
+            background-color: #2A475C;
+        }
+        .btnBlack.selected {
+            background-color: #4CAF50; /* Example: Green background */
+            color: white;
+            border: 2px solid #2A475C; /* Example: darker border */
         }
         .largeInfoField {
-            background-color: rgba(48, 46, 41, 0.933);
+            background-color: #2A475C;
             color: white;
             text-align: center;
-            border-radius: 20%;
+            border-radius: 10%;
+            margin: 1vw;
         }
         #notificationArea {
             position: fixed;
             bottom: 0;
             width: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color:#2A475C;
             color: white;
             font-size: 30px;
             text-align: center;
@@ -168,8 +194,10 @@
         @media only screen and (max-width: 768px) and (max-height: 1024px) and (orientation: portrait) {
             body {background-color:orange}
             .btnCircle, .btnActive, .btnInactive {
-                font-size: 5vw; /* Much bigger font size */
-                padding: 1vw 2vw; /* Increased padding top right bottom left*/
+                font-size: 6vw; /* Much bigger font size */
+                padding: 1vw 2.5vw; /* Increased padding top right bottom left*/
+                margin-top: 2vw;
+                margin-bottom: 2vw;
             }
             .btnBlack {
                 font-size: 5vw; /* Reduced font size */
@@ -178,12 +206,12 @@
             }
             .tableField {
                 padding: 0.5vw 1vw; /* Adjust padding */
-                font-size: 3vw; /* Reduced font size */
+                font-size: 3.5vw; /* Reduced font size */
             }
             .infoField {
                 font-size: 3vw; /* Reduced font size */
                 padding: 0.5vw 1vw; /* Reduced padding */
-                margin: 1vw;
+                margin: 0.5vw;
             }
             .btnContainer, .infoContainer {
                 display: flex;
@@ -191,8 +219,9 @@
             }
             .largeInfoField {
                 font-size: 5vw; /* Adjust font size */
-                padding: 1vw 2vw; /* Adjust padding */
-                margin: 1vw;
+                padding: 1vw 1.5vw; /* Adjust padding */
+                margin-top: 2vw;
+                margin-bottom: 2vw;
             }
             #main {
                 padding-top: 5px; /* Adjust padding to fit content */
@@ -203,7 +232,7 @@
             body {background-color:pink }
             .btnCircle, .btnActive, .btnInactive {
                 font-size: 5vw; /* Much bigger font size */
-                padding: 1vw 2vw; /* Increased padding top right bottom left*/
+                padding: 1vw 4vw; /* Increased padding top right bottom left*/
             }
             .btnBlack {
                 font-size: 5vw; /* Reduced font size */
@@ -215,7 +244,7 @@
                 font-size: 3vw; /* Reduced font size */
             }
             .infoField {
-                font-size: 1.5vw; /* Reduced font size */
+                font-size: 2.5vw; /* Reduced font size */
                 padding: 0.5vw 1vw; /* Reduced padding */
                 margin: 1vw;
             }
@@ -224,7 +253,7 @@
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
             }
             .largeInfoField {
-                font-size: 5vw; /* Adjust font size */
+                font-size: 4vw; /* Adjust font size */
                 padding: 1vw 2vw; /* Adjust padding */
                 margin: 1vw;
             }
@@ -236,7 +265,7 @@
         @media only screen and  (max-width: 1280px) and (min-width: 768px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
             body {background-color:blue }
             .btnCircle, .btnActive, .btnInactive {
-                font-size: 6vw; /* Much bigger font size */
+                font-size: 5vw; /* Much bigger font size */
                 padding: 1vw 3vw; /* Increased padding top right bottom left*/
                 margin: 1vw;
             }
@@ -259,8 +288,8 @@
                 flex-wrap: wrap; /* wrapping in portrait mode */
             }
             .largeInfoField {
-                font-size: 6vw; /* Adjust font size */
-                padding: 1.5vw 3vw; /* Adjust padding */
+                font-size: 5vw; /* Adjust font size */
+                padding: 1.5vw 2vw; /* Adjust padding */
                 margin: 1vw;
             }
             #main {
@@ -273,7 +302,6 @@
             .btnCircle, .btnActive, .btnInactive {
                 font-size: 5.5vw; /* Much bigger font size */
                 padding: 1vw 2vw; /* Increased padding top right bottom left*/
-                margin: 0.5vw;
             }
             .btnBlack {
                 font-size: 4.5vw; /* Reduced font size */
@@ -297,7 +325,6 @@
             .largeInfoField {
                 font-size: 4vw; /* Adjust font size */
                 padding: 1vw 2vw; /* Adjust padding */
-                margin: 1vw;
             }
             #main {
                 padding-top: 2px; /* Adjust padding to fit content */
@@ -338,21 +365,25 @@
     <div id="beatAngle">Beat Angle: --</div>
     <div id="main">
         <div id="remoteMain">
-            <table>
-                <tr class="table">
-                    <td class="tableField">MaxSpeedAngle </td>
-                    <td class="tableField">MaxSpeed </td>
-                    <td class="tableField">TargetSpeed</td>
-                    <!--<td class="tableField">TargetAngle</td> -->
-                    <td class="tableField">PolarSpeed</td>
-                </tr>
-                <tr class="table">
-                    <td class="tableField"><span id="performance_maxSpeedAngle">N/A</span></td>
-                    <td class="tableField"><span id="performance_maxSpeed">N/A</span></td>
-                    <td class="tableField"><span id="performance_targetSpeed">N/A</span></td>
-                    <!--<td class="tableField"><span id="performance_targetAngle">N/A</span></td> -->
-                    <td class="tableField"><span id="performance_polarSpeed">N/A</span></td>
-                </tr>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="tableField">MaxSpeedAngle</th>
+                        <th class="tableField">MaxSpeed</th>
+                        <th class="tableField">TargetSpeed</th>
+                        <!--<td class="tableField">TargetAngle</td> -->
+                        <th class="tableField">PolarSpeed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="tableField"><span id="performance_maxSpeedAngle">N/A</span></td>
+                        <td class="tableField"><span id="performance_maxSpeed">N/A</span></td>
+                        <td class="tableField"><span id="performance_targetSpeed">N/A</span></td>
+                        <!--<td class="tableField"><span id="performance_targetAngle">N/A</span></td> -->
+                        <td class="tableField"><span id="performance_polarSpeed">N/A</span></td>
+                    </tr>
+                </tbody>
             </table>
             <div class="infoContainer">
                 <div class="infoField">COG: <span id="navigation_courseOverGroundTrue">N/A</span></div>
@@ -364,24 +395,23 @@
                 <div class="infoField">Volt: <span id="electricalVoltage">N/A </span><span style="font-size:1.5vw"> V</span></div>
             </div>
             <div class="btnContainer">
-                <div class="btnBlack" id="btnLeftTack">←</div>
-                <div class="btnBlack" id="steering_autopilot.state">N/A</div>
-                <div class="btnBlack" id="btnRightTack">→</div>
+                <div class="btnBlack" id="btnport" onclick="new_toggleSelection(this)"> ← </div>
+                <div class="btnBlack" id="steering_autopilot.state">N/A</div> <!-- pgn:65379 -->
+                <div class="btnBlack" id="btnstarboard" onclick="new_toggleSelection(this)"> → </div>
             </div>
 
             <div class="btnContainer">
-                <div class="btnBlack" id="btnMinus1"> -1 </div>
-                <div class="btnBlack" id="btn-10"> -10 </div>
-                <div class="btnBlack" id="btn+10"> +10 </div>
-                <div class="btnBlack" id="btn+1"> +1 </div>
+                <div class="btnBlack" id="btn-1" onclick="new_toggleSelection(this)"> -1 </div>
+                <div class="btnBlack" id="btn-10" onclick="new_toggleSelection(this)"> -10 </div>
+                <div class="btnBlack" id="btn+10" onclick="new_toggleSelection(this)"> +10 </div>
+                <div class="btnBlack" id="btn+1" onclick="new_toggleSelection(this)"> +1 </div>
             </div>
             <div class="btnContainer">
-                <div class="btnCircle" id="btnCircleStandby" onclick="toggleSelection(this)">STBY</div>
-                <div class="btnCircle" id="btnCircleWind" onclick="toggleSelection(this)">WIND</div>
-                <div class="btnCircle" id="btnCircleTrack" onclick="toggleSelection(this)">TRACK</div>
-                <div class="btnCircle" id="btnCircleAuto" onclick="toggleSelection(this)">AUTO</div>
+                <div class="btnCircle" id="steering_autopilot.state_standby" onclick="toggleSelection(this)">STBY</div>
+                <div class="btnCircle" id="steering_autopilot.state_wind" onclick="toggleSelection(this)">WIND</div>
+                <div class="btnCircle" id="steering_autopilot.state_track" onclick="toggleSelection(this)">TRACK</div>
+                <div class="btnCircle" id="steering_autopilot.state_auto" onclick="toggleSelection(this)">AUTO</div>
             </div>
-
             <div class="infoContainer">
                 <div class="largeInfoField">AWA: <span id="environment_wind.angleApparent" class="alarm-clock-font">N/A</span> </div>
                 <div class="largeInfoField">TargetWA: <span id="performance_targetAngle" class="alarm-clock-font">N/A</span> </div>
@@ -393,35 +423,126 @@
             </div>
         </div>
     </div>
-    <!--
-    <div id="windAngle">Wind Angle: --</div>
-    <div id="APwindAngle">AP Wind Angle: --</div>
-    <div id="beatAngle">Beat Angle: --</div>
-    <div id="gybeAngle">Gybe Angle: --</div>
-    <div id="performance_targetAngle">Perf targetAngle: --</div>
-    <div id="headingMagnetic">Heading Magnetic: --</div>
-    <div id="APheadingMagnetic">AP Heading Magnetic: --</div>
-    <div id="autopilotState">Autopilot State: --</div>
-    -->
+    <div id="notificationArea"></div>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/whatwg-fetch/dist/fetch.umd.js"></script>
     <!-- Include Socket.IO -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
     <button id="testButton">Test Socket.IO</button>
     <script>
-        console.log("i18 Socket.IO loaded"); // Add this to verify loading
-        const socket = io();
-
         function radToDeg(rad) {
             return rad * (180 / Math.PI);
         }
+        // Example: Generate a token against the user "pi" that is valid for 1 year.
+        // in shell
+        //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
+
+        const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzMxNDE4NDc1LCJleHAiOjE3NjI5NzYwNzV9.eHHvv28PDEdif1Ndn2GfL5QL4WUTuFAG5AapDa7d1pI';
+        // Determine the base URL based on the environment
+        const baseURL = (window.location.hostname === 'fidelibe.local')
+        ? 'http://fidelibe.local:3000' 
+        : 'http://2.70.47.188:8001';
+
+        // sends commands to adjust the autopilot settings, like changing the heading.
+        function sendPutRequest(path, value) {
+            console.log('i431 PUT reques path:',path,'value:', value);
+            fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + authToken // Include the token in the Authorization header
+                },
+                body: JSON.stringify({
+                    value: value
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.log('i444 PUT response:',response,);
+                    throw new Error('Network response was not ok');
+                }
+                console.log('i447 PUT request successful');
+                displayNotification('Course change accepted.');
+            })
+            .catch(error => {
+                console.error('i449 Error during PUT request:', error);
+                displayNotification('Error: Unable to change course.');
+            });
+        }
+
+        function displayNotification(text) {
+            const notificationArea = document.getElementById('notificationArea');
+            if (notificationArea) {
+                notificationArea.innerText = text;
+                notificationArea.style.display = 'block';
+                setTimeout(() => {
+                    notificationArea.style.display = 'none';
+                }, 5000); // Hide the notification after 5 seconds
+            } else {
+                console.error('Notification area element not found');
+            }
+        }
+
+        function new_toggleSelection(element) {
+            document.querySelectorAll('.btnBlack').forEach(btn => btn.classList.remove('selected'));
+            element.classList.add('selected');
+            console.log('i471 element.classList = ',element.classList);
+
+            const command = (element.id.slice(3));
+            console.log('i476 command = ',command);
+            if (Number.isNaN(parseInt(command))) {
+                // If not a number, treat as a string command
+                sendPutRequest('steering/autopilot/actions/adjustHeading', command);
+                console.log('i479 command = ',command);
+            }
+            else {
+                // If a number, convert and use it
+                sendPutRequest('steering/autopilot/actions/tack', parseInt(command));
+                console.log('i483 command = ',parseInt(command));
+            }
+            // Remove the 'selected' class after 2 seconds
+            setTimeout(() => {
+                element.classList.remove('selected');
+            }, 2000); // 3000 milliseconds = 2 seconds
+        }
+
+        async function toggleSelection(button) {
+            const selectedId = button.id;
+            console.log('Button ID:', selectedId);
+
+            const stateMap = {
+                'steering_autopilot.state_standby': 'standby',
+                'steering_autopilot.state_wind': 'wind',
+                'steering_autopilot.state_track': 'route',
+                'steering_autopilot.state_auto': 'auto'
+            };
+
+            const selectedState = stateMap[selectedId];
+            if (selectedState) {
+                await sendPutRequest('steering/autopilot/state', selectedState);
+
+                // Reset other buttons' selected state
+                document.querySelectorAll('.btnCircle').forEach(btn => btn.classList.remove('selected'));
+
+                // Apply "selected" style to the pressed button
+                button.classList.add('selected');
+
+            } else {
+                console.error('Invalid button ID or state');
+            }
+        }
+
+
+        const socket = io();
+        console.log("i511 Socket.IO loaded"); // Add this to verify loading
 
         // Socket.IO listener for updates
         socket.on("update_data", (data) => {
-            console.log("i23 Received update data:", data); // Confirm data reception
+            //console.log("i515 Received update data:", data); // Confirm data reception
             data.updates.forEach(update => {
                 const path = update.path;
                 const value = update.value;
-                console.log("i27 Update path:", path, "Value:", value); // Add this to verify value
-
+                //console.log("i519 Update path:", path, "Value:", value); // Add this to verify value
                 if (path === 'performance.maxSpeedAngle') {
                     document.getElementById("performance_maxSpeedAngle").innerText =  radToDeg(value).toFixed() + "°";
                 } else if (path === 'performance.maxSpeed') {
@@ -443,13 +564,6 @@
                     document.getElementById("environment_wind.speedTrue").innerText =  value.toFixed(1) + "";
                 } else if (path === 'environment.depth.belowKeel') {
                     document.getElementById("environment_depth.belowKeel").innerText =  value.toFixed(1) + "";
-                // steering
-                } else if (path === "steering.autopilot.state") {
-                    document.getElementById("steering_autopilot.state").innerText =  value;
-                } else if (path === 'steering.autopilot.target.windAngleApparent') {
-                    document.getElementById("APwindAngle").innerText = radToDeg(value).toFixed() + "°";
-                } else if (path === "steering.autopilot.target.headingMagnetic") {
-                    document.getElementById("AP_headingMagnetic").innerText = radToDeg(value).toFixed() + "°";
                 // navigation
                 } else if (path === "navigation.headingTrue") {
                     document.getElementById("navigation_headingTrue").innerText = radToDeg(value).toFixed() + "°";
@@ -461,8 +575,49 @@
                     document.getElementById("navigation_courseOverGroundTrue").innerText = radToDeg(value).toFixed() + "°";
                 } else if (path === 'navigation.speedThroughWater') { // VHW
                     document.getElementById('navigation_speedThroughWater').innerText =  value.toFixed(1) + "";
+                // steering
+                } else if (path === "steering.autopilot.state") {
+                    document.getElementById("steering_autopilot.state").innerText =  value;
+                    if (value == "standby") {
+                        document.getElementById("steering_autopilot.state_standby").innerText =  value; 
+                    } else if (value == "wind") {
+                        document.getElementById("steering_autopilot.state_wind").innerText =  value; 
+                    } else if (value == "tack") {
+                        document.getElementById("steering_autopilot.state_tack").innerText =  value; 
+                    } else if (value == "auto") {
+                        document.getElementById("steering_autopilot.state_auto").innerText =  value; 
+                    }
+                } else if (path === 'steering.autopilot.target.windAngleApparent') {
+                    document.getElementById("APwindAngle").innerText = radToDeg(value).toFixed() + "°";
+                } else if (path === "steering.autopilot.target.headingMagnetic") {
+                    document.getElementById("AP_headingMagnetic").innerText = radToDeg(value).toFixed() + "°";
                 }
             });
+        });
+        // Line 599 following code gives error 502
+        // Event listeners for your buttons
+        document.getElementById('btnport').addEventListener('click', () => {
+            sendPutRequest('steering/autopilot/actions/tack', 'port');
+        });
+        document.getElementById('btn-80').addEventListener('click', () => {
+            sendPutRequest('steering/autopilot/actions/adjustHeading', -80);
+        });
+        document.getElementById('btnstarboard').addEventListener('click', () => {
+            sendPutRequest('steering/autopilot/actions/adjustHeading', 80,);
+            //sendPutRequest('steering/autopilot/actions/tack', 'starboard');
+        });
+        document.getElementById('btn-1').addEventListener('click', () => {
+            console.log('i577 send -1 to autopilot:');
+            sendPutRequest('steering/autopilot/actions/adjustHeading', -1);
+        });
+        document.getElementById('btn-10').addEventListener('click', () => {
+            sendPutRequest('steering/autopilot/actions/adjustHeading', -10);
+        });
+        document.getElementById('btn+10').addEventListener('click', () => {
+            sendPutRequest('steering/autopilot/actions/adjustHeading', +10);
+        });
+        document.getElementById('btn+1').addEventListener('click', () => {
+            sendPutRequest('steering/autopilot/actions/adjustHeading', +1);
         });
     </script>
 </body>
