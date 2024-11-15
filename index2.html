@@ -82,24 +82,26 @@
             flex-direction: row;
             justify-content: center;
         }
-        .btnCircle, .btnActive, .btnInactive {
+        .btnCircle {
                 display: inline-block;
                 cursor: pointer;
                 border-radius: 25%;
                 color: white;
                 text-align: center;
-                background-color: red; /* Default background color */
+                background-color: blue; /* Default background color */
                 margin: 0.5vw;
         }
         .btnCircle.selected {
+            border: 2px solid #fff; /* Add a border to the selected button */
             background-color: green; /* or any color to indicate the active state */
             color: white; /* adjust text color if needed */
         }
-        .btnActive {
+        .btnCircle.Active {
             background-color: green; /* Background color when selected */
         }
-        .btnInactive {
-            background-color: blue; /* Inactive color */
+        /* Inactive (autopilot off) - Red */
+        .btnCircle.inactive {
+            background-color: red;
         }
         .btnBlack {
             display: inline-block;
@@ -136,7 +138,7 @@
         /* iPhone 14 (Portrait Mode) */
         @media only screen and (min-width: 390px) and (max-width: 844px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3) {
             body {background-color:red }
-            .btnCircle, .btnActive, .btnInactive {
+            .btnCircle {
                 font-size: 10vw; /* Much bigger font size */
                 padding: 3vw 4vw; /* Increased padding top right bottom left*/
                 margin: 2vw;
@@ -164,7 +166,7 @@
         /* iPhone 14 (Landscape Mode) */
         @media only screen and (max-width: 844px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
             body {background-color:green }
-            .btnCircle, .btnActive, .btnInactive {
+            .btnCircle {
                 font-size: 4vw; /* Much bigger font size */
                 padding: 1.5vw 3vw; /* Increased padding top right bottom left*/
             }
@@ -193,7 +195,7 @@
         /* iPad mini tablets (portrait Mode)*/
         @media only screen and (max-width: 768px) and (max-height: 1024px) and (orientation: portrait) {
             body {background-color:orange}
-            .btnCircle, .btnActive, .btnInactive {
+            .btnCircle {
                 font-size: 6vw; /* Much bigger font size */
                 padding: 1vw 2.5vw; /* Increased padding top right bottom left*/
                 margin-top: 2vw;
@@ -230,7 +232,7 @@
         /* iPad mini tablets (landscape Mode)*/
         @media only screen and (max-width: 1024px) and (max-height: 768px) and (orientation: landscape) {
             body {background-color:pink }
-            .btnCircle, .btnActive, .btnInactive {
+            .btnCircle {
                 font-size: 5vw; /* Much bigger font size */
                 padding: 1vw 4vw; /* Increased padding top right bottom left*/
             }
@@ -264,7 +266,7 @@
         /* Responsive styles for iPad Air 2 and similar tablets in portrait mode*/
         @media only screen and  (max-width: 1280px) and (min-width: 768px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
             body {background-color:blue }
-            .btnCircle, .btnActive, .btnInactive {
+            .btnCircle {
                 font-size: 5vw; /* Much bigger font size */
                 padding: 1vw 3vw; /* Increased padding top right bottom left*/
                 margin: 1vw;
@@ -299,7 +301,7 @@
         /* iPad Air 2 and similar tablets (Landscape Mode)*/
         @media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
             body {background-color:yellow }
-            .btnCircle, .btnActive, .btnInactive {
+            .btnCircle {
                 font-size: 5.5vw; /* Much bigger font size */
                 padding: 1vw 2vw; /* Increased padding top right bottom left*/
             }
@@ -333,7 +335,7 @@
         /* General styles for larger screens */
         @media only screen and (min-width: 1280px) {
             body {background-color:purple }
-            .btnCircle, .btnActive, .btnInactive {
+            .btnCircle {
                 font-size: 5vw; /* Much bigger font size */
                 padding: 1vw 2vw; /* Increased padding top right bottom left*/
                 margin: 0.5vw;
@@ -424,8 +426,6 @@
         </div>
     </div>
     <div id="notificationArea"></div>
-    <script src="https://cdn.jsdelivr.net/npm/es6-promise/dist/es6-promise.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/whatwg-fetch/dist/fetch.umd.js"></script>
     <!-- Include Socket.IO -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
     <button id="testButton">Test Socket.IO</button>
@@ -445,7 +445,7 @@
 
         // sends commands to adjust the autopilot settings, like changing the heading.
         function sendPutRequest(path, value) {
-            console.log('i431 PUT reques path:',path,'value:', value);
+            console.log('i448 PUT reques path:',path,'value:', value);
             fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
                 method: 'PUT',
                 headers: {
@@ -506,10 +506,38 @@
             }, 2000); // 3000 milliseconds = 2 seconds
         }
 
+        // Function to update the button colors based on autopilot state
+        function updateButtonStates(currentState) {
+            // List all the buttons
+            const buttons = document.querySelectorAll('.btnCircle');
+            
+            // Reset all buttons to blue (inactive state)
+            buttons.forEach(button => {
+                button.style.backgroundColor = 'blue';
+                button.style.color = 'white';
+            });
+
+            // Check if autopilot is off, and color buttons red if it is
+            if (currentState === 'off') {
+                buttons.forEach(button => {
+                    button.style.backgroundColor = 'red';
+                    button.style.color = 'white';
+                });
+            } else {
+                // Set the button corresponding to the current autopilot state to green
+                const activeButton = document.getElementById('steering_autopilot.state_' + currentState);
+                if (activeButton) {
+                    activeButton.style.backgroundColor = 'green';
+                    activeButton.style.color = 'white';
+                }
+            }
+        }
+
         async function toggleSelection(button) {
             const selectedId = button.id;
             console.log('Button ID:', selectedId);
 
+            // Map button IDs to autopilot states
             const stateMap = {
                 'steering_autopilot.state_standby': 'standby',
                 'steering_autopilot.state_wind': 'wind',
@@ -519,26 +547,43 @@
 
             const selectedState = stateMap[selectedId];
             if (selectedState) {
+                // Send PUT request to update autopilot state
                 await sendPutRequest('steering/autopilot/state', selectedState);
 
-                // Reset other buttons' selected state
-                document.querySelectorAll('.btnCircle').forEach(btn => btn.classList.remove('selected'));
+                // Reset all buttons to blue (inactive)
+                document.querySelectorAll('.btnCircle').forEach(btn => {
+                    btn.style.backgroundColor = 'blue';
+                    btn.classList.remove('selected');
+                });
 
-                // Apply "selected" style to the pressed button
+                // Set the clicked button to green (active)
+                button.style.backgroundColor = 'green';
                 button.classList.add('selected');
+
+                // Update all button states based on the autopilot state
+                updateButtonStates(selectedState);
 
             } else {
                 console.error('Invalid button ID or state');
             }
         }
 
-
         const socket = io();
         console.log("i511 Socket.IO loaded"); // Add this to verify loading
+        // Listen for autopilot status updates
+        socket.on('autopilot_status', (data) => {
+            if (data.status === 'off') {
+                // If autopilot is off, set all buttons to red
+                document.querySelectorAll('.btnCircle').forEach(btn => {
+                    btn.style.backgroundColor = 'red';
+                    btn.style.color = 'white';
+                });
+            }
+        });
 
         // Socket.IO listener for updates
         socket.on("update_data", (data) => {
-            //console.log("i515 Received update data:", data); // Confirm data reception
+            // console.log("i515 Received update data:", data); // Confirm data reception
             data.updates.forEach(update => {
                 const path = update.path;
                 const value = update.value;

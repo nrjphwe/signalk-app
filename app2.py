@@ -4,6 +4,11 @@ from flask_cors import CORS
 import asyncio
 import websockets
 import json
+import time
+from threading import Thread
+
+# Add a global variable to track the last time autopilot data was received
+last_autopilot_time = time.time()
 
 app = Flask(__name__)
 CORS(app)
@@ -31,9 +36,22 @@ SIGNALK_SERVER_URL = "ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all"
 # sends maximum speed angle and max boat speed for a given TWS
 #######################################################################
 
+# Function to periodically check for autopilot inactivity
+def check_autopilot_status():
+    global last_autopilot_time
+    while True:
+        # If more than 10 seconds have passed since the last autopilot message, assume autopilot is off
+        if time.time() - last_autopilot_time > 10:
+            # Emit a message to the frontend that the autopilot is off
+            socketio.emit('autopilot_status', {'status': 'off'})
+        time.sleep(1)  # Check every second
+
+# Start the check in a separate thread
+Thread(target=check_autopilot_status, daemon=True).start()
 
 async def signalk_listener():
     async with websockets.connect(SIGNALK_SERVER_URL) as websocket:
+        global last_autopilot_time
         while True:
             message = await websocket.recv()
             data = json.loads(message) #https://www.geeksforgeeks.org/json-loads-in-python/
@@ -63,7 +81,9 @@ async def signalk_listener():
                         'steering.autopilot.actions.tack',
                         'steering.autopilot.actions.adjustHeading',
                     }:
-                        print(f"a66 path in steering value = {value}")
+                        print(f"a93 path in steering value = {value}")
+                        if 'autopilot' in path:
+                            last_autopilot_time = time.time()
                         updates.append(value)
 
                     # other data
@@ -89,7 +109,7 @@ async def signalk_listener():
                         updates.append(value)
             if updates:
                 socketio.emit("update_data", {"updates": updates})
-                #print(f"a84 Emitted data: {updates}")
+                #print(f"a112 Emitted data: {updates}")
 
 # Wrapper function to start the asyncio event loop
 def run_async_task():
