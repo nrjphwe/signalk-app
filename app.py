@@ -15,9 +15,9 @@ CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
-@app.route('/index2')
+@app.route('/index')
 def index():
-    return render_template('index2.html')
+    return render_template('index.html')
 
 @socketio.on('connect')
 def on_connect():
