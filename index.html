@@ -430,240 +430,240 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
     <button id="testButton">Test Socket.IO</button>
     <script>
-    function radToDeg(rad) {
-        return rad * (180 / Math.PI);
-    }
-    // Example: Generate a token against the user "pi" that is valid for 1 year.
-    // in shell
-    //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
+        function radToDeg(rad) {
+            return rad * (180 / Math.PI);
+        }
+        // Example: Generate a token against the user "pi" that is valid for 1 year.
+        // in shell
+        //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
 
-    const authToken = 'xxxx';
-    // Determine the base URL based on the environment
-    const baseURL = (window.location.hostname === 'fidelibe.local')
-    ? 'http://fidelibe.local:3000' 
-    : 'http://2.70.47.188:8001';
+        const authToken = 'xxxx';
+        // Determine the base URL based on the environment
+        const baseURL = (window.location.hostname === 'fidelibe.local')
+        ? 'http://fidelibe.local:3000' 
+        : 'http://2.70.47.188:8001';
 
-    // sends commands to adjust the autopilot settings, like changing the heading.
-    function sendPutRequest(path, value) {
-        console.log('i448 PUT reques path:',path,'value:', value);
-        fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + authToken // Include the token in the Authorization header
-            },
-            body: JSON.stringify({
-                value: value
+        // sends commands to adjust the autopilot settings, like changing the heading.
+        function sendPutRequest(path, value) {
+            console.log('i448 PUT reques path:',path,'value:', value);
+            fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + authToken // Include the token in the Authorization header
+                },
+                body: JSON.stringify({
+                    value: value
+                })
             })
-        })
-        .then(response => {
-            if (!response.ok) {
-                console.log('i444 PUT response:',response,);
-                throw new Error('Network response was not ok');
+            .then(response => {
+                if (!response.ok) {
+                    console.log('i444 PUT response:',response,);
+                    throw new Error('Network response was not ok');
+                }
+                console.log('i447 PUT request successful');
+                displayNotification('Course change accepted.');
+            })
+            .catch(error => {
+                console.error('i449 Error during PUT request:', error);
+                displayNotification('Error: Unable to change course.');
+            });
+        }
+
+        function displayNotification(text) {
+            const notificationArea = document.getElementById('notificationArea');
+            if (notificationArea) {
+                notificationArea.innerText = text;
+                notificationArea.style.display = 'block';
+                setTimeout(() => {
+                    notificationArea.style.display = 'none';
+                }, 5000); // Hide the notification after 5 seconds
+            } else {
+                console.error('Notification area element not found');
             }
-            console.log('i447 PUT request successful');
-            displayNotification('Course change accepted.');
-        })
-        .catch(error => {
-            console.error('i449 Error during PUT request:', error);
-            displayNotification('Error: Unable to change course.');
-        });
-    }
+        }
 
-    function displayNotification(text) {
-        const notificationArea = document.getElementById('notificationArea');
-        if (notificationArea) {
-            notificationArea.innerText = text;
-            notificationArea.style.display = 'block';
+        function new_toggleSelection(element) {
+            document.querySelectorAll('.btnBlack').forEach(btn => btn.classList.remove('selected'));
+            element.classList.add('selected');
+            console.log('i471 element.classList = ',element.classList);
+
+            const command = (element.id.slice(3));
+            console.log('i476 command = ',command);
+            if (Number.isNaN(parseInt(command))) {
+                // If not a number, treat as a string command
+                sendPutRequest('steering/autopilot/actions/adjustHeading', command);
+                console.log('i479 command = ',command);
+            }
+            else {
+                // If a number, convert and use it
+                sendPutRequest('steering/autopilot/actions/tack', parseInt(command));
+                console.log('i483 command = ',parseInt(command));
+            }
+            // Remove the 'selected' class after 2 seconds
             setTimeout(() => {
-                notificationArea.style.display = 'none';
-            }, 5000); // Hide the notification after 5 seconds
-        } else {
-            console.error('Notification area element not found');
+                element.classList.remove('selected');
+            }, 2000); // 3000 milliseconds = 2 seconds
         }
-    }
 
-    function new_toggleSelection(element) {
-        document.querySelectorAll('.btnBlack').forEach(btn => btn.classList.remove('selected'));
-        element.classList.add('selected');
-        console.log('i471 element.classList = ',element.classList);
+        // Function to update the button colors based on autopilot state
+        function updateButtonStates(currentState) {
+            // List all the buttons
+            const buttons = document.querySelectorAll('.btnCircle');
 
-        const command = (element.id.slice(3));
-        console.log('i476 command = ',command);
-        if (Number.isNaN(parseInt(command))) {
-            // If not a number, treat as a string command
-            sendPutRequest('steering/autopilot/actions/adjustHeading', command);
-            console.log('i479 command = ',command);
-        }
-        else {
-            // If a number, convert and use it
-            sendPutRequest('steering/autopilot/actions/tack', parseInt(command));
-            console.log('i483 command = ',parseInt(command));
-        }
-        // Remove the 'selected' class after 2 seconds
-        setTimeout(() => {
-            element.classList.remove('selected');
-        }, 2000); // 3000 milliseconds = 2 seconds
-    }
-
-    // Function to update the button colors based on autopilot state
-    function updateButtonStates(currentState) {
-        // List all the buttons
-        const buttons = document.querySelectorAll('.btnCircle');
-
-        // Reset all buttons to blue (inactive state)
-        buttons.forEach(button => {
-            button.style.backgroundColor = 'blue';
-            button.style.color = 'white';
-        });
-
-        // Check if autopilot is off, and color buttons red if it is
-        if (currentState === 'off') {
+            // Reset all buttons to blue (inactive state)
             buttons.forEach(button => {
-                button.style.backgroundColor = 'red';
+                button.style.backgroundColor = 'blue';
                 button.style.color = 'white';
             });
-        } else {
-            // Set the button corresponding to the current autopilot state to green
-            const activeButton = document.getElementById('steering_autopilot.state_' + currentState);
-            if (activeButton) {
-                activeButton.style.backgroundColor = 'green';
-                activeButton.style.color = 'white';
+
+            // Check if autopilot is off, and color buttons red if it is
+            if (currentState === 'off') {
+                buttons.forEach(button => {
+                    button.style.backgroundColor = 'red';
+                    button.style.color = 'white';
+                });
+            } else {
+                // Set the button corresponding to the current autopilot state to green
+                const activeButton = document.getElementById('steering_autopilot.state_' + currentState);
+                if (activeButton) {
+                    activeButton.style.backgroundColor = 'green';
+                    activeButton.style.color = 'white';
+                }
             }
         }
-    }
 
-    async function toggleSelection(button) {
-        const selectedId = button.id;
-        console.log('Button ID:', selectedId);
+        async function toggleSelection(button) {
+            const selectedId = button.id;
+            console.log('Button ID:', selectedId);
 
-        // Map button IDs to autopilot states
-        const stateMap = {
-            'steering_autopilot.state_standby': 'standby',
-            'steering_autopilot.state_wind': 'wind',
-            'steering_autopilot.state_track': 'route',
-            'steering_autopilot.state_auto': 'auto'
-        };
+            // Map button IDs to autopilot states
+            const stateMap = {
+                'steering_autopilot.state_standby': 'standby',
+                'steering_autopilot.state_wind': 'wind',
+                'steering_autopilot.state_track': 'route',
+                'steering_autopilot.state_auto': 'auto'
+            };
 
-        const selectedState = stateMap[selectedId];
-        if (selectedState) {
-            // Send PUT request to update autopilot state
-            await sendPutRequest('steering/autopilot/state', selectedState);
+            const selectedState = stateMap[selectedId];
+            if (selectedState) {
+                // Send PUT request to update autopilot state
+                await sendPutRequest('steering/autopilot/state', selectedState);
 
-            // Reset all buttons to blue (inactive)
-            document.querySelectorAll('.btnCircle').forEach(btn => {
-                btn.style.backgroundColor = 'blue';
-                btn.classList.remove('selected');
-            });
+                // Reset all buttons to blue (inactive)
+                document.querySelectorAll('.btnCircle').forEach(btn => {
+                    btn.style.backgroundColor = 'blue';
+                    btn.classList.remove('selected');
+                });
 
-            // Set the clicked button to green (active)
-            button.style.backgroundColor = 'green';
-            button.classList.add('selected');
+                // Set the clicked button to green (active)
+                button.style.backgroundColor = 'green';
+                button.classList.add('selected');
 
-            // Update all button states based on the autopilot state
-            updateButtonStates(selectedState);
+                // Update all button states based on the autopilot state
+                updateButtonStates(selectedState);
 
-        } else {
-            console.error('Invalid button ID or state');
+            } else {
+                console.error('Invalid button ID or state');
+            }
         }
-    }
 
-    const socket = io();
-    console.log("i511 Socket.IO loaded"); // Add this to verify loading
-    // Listen for autopilot status updates
-    socket.on('autopilot_status', (data) => {
-        if (data.status === 'off') {
-            // If autopilot is off, set all buttons to red
-            document.querySelectorAll('.btnCircle').forEach(btn => {
-                btn.style.backgroundColor = 'red';
-                btn.style.color = 'white';
-            });
-        }
-    });
-
-    // Socket.IO listener for updates
-    socket.on("update_data", (data) => {
-        // console.log("i515 Received update data:", data); // Confirm data reception
-        data.updates.forEach(update => {
-            const path = update.path;
-            const value = update.value;
-            //console.log("i519 Update path:", path, "Value:", value); // Add this to verify value
-            if (path === 'performance.maxSpeedAngle') {
-                document.getElementById("performance_maxSpeedAngle").innerText =  radToDeg(value).toFixed() + "°";
-            } else if (path === 'performance.maxSpeed') {
-                document.getElementById("performance_maxSpeed").innerText =  value.toFixed(1) + " kn";
-            } else if (path === 'performance.targetSpeed') {
-                document.getElementById("performance_targetSpeed").innerText =  value.toFixed(1) + " kn";
-            } else if (path === "performance.targetAngle") {
-                document.getElementById("performance_targetAngle").innerText = radToDeg(value).toFixed() + "°";
-            } else if (path === 'performance.polarSpeed') {
-                document.getElementById("performance_polarSpeed").innerText =  value.toFixed(1) + " kn";
-            } else if (path === "performance.gybeAngle") {
-                document.getElementById("gybeAngle").innerText = radToDeg(value).toFixed(0) + "";
-            } else if (path === "performance.beatAngle") {
-                document.getElementById("beatAngle").innerText = radToDeg(value).toFixed(0) + "";
-            // environment
-            } else if (path === 'environment.wind.angleApparent') {
-                document.getElementById("environment_wind.angleApparent").innerText =  radToDeg(value).toFixed(0) + "°";
-            } else if (path === 'environment.wind.speedTrue') {
-                document.getElementById("environment_wind.speedTrue").innerText =  value.toFixed(1) + "";
-            } else if (path === 'environment.depth.belowKeel') {
-                document.getElementById("environment_depth.belowKeel").innerText =  value.toFixed(1) + "";
-            // navigation
-            } else if (path === "navigation.headingTrue") {
-                document.getElementById("navigation_headingTrue").innerText = radToDeg(value).toFixed() + "°";
-            } else if (path === "navigation.magneticVariation") {
-                document.getElementById("navigation_magneticVariation").innerText = radToDeg(value).toFixed() + "";
-            } else if (path === 'navigation.speedOverGround') { // SOG VTG
-                document.getElementById("navigation_speedOverGround").innerText =  value.toFixed(1) + "";
-            } else if (path === "navigation.courseOverGroundTrue") {
-                document.getElementById("navigation_courseOverGroundTrue").innerText = radToDeg(value).toFixed() + "°";
-            } else if (path === 'navigation.speedThroughWater') { // VHW
-                document.getElementById('navigation_speedThroughWater').innerText =  value.toFixed(1) + "";
-            // steering
-            } else if (path === "steering.autopilot.state") {
-                document.getElementById("steering_autopilot.state").innerText =  value;
-                if (value == "standby") {
-                    document.getElementById("steering_autopilot.state_standby").innerText =  value; 
-                } else if (value == "wind") {
-                    document.getElementById("steering_autopilot.state_wind").innerText =  value; 
-                } else if (value == "tack") {
-                    document.getElementById("steering_autopilot.state_tack").innerText =  value; 
-                } else if (value == "auto") {
-                    document.getElementById("steering_autopilot.state_auto").innerText =  value; 
-                }
-            } else if (path === 'steering.autopilot.target.windAngleApparent') {
-                document.getElementById("APwindAngle").innerText = radToDeg(value).toFixed() + "°";
-            } else if (path === "steering.autopilot.target.headingMagnetic") {
-                document.getElementById("AP_headingMagnetic").innerText = radToDeg(value).toFixed() + "°";
+        const socket = io();
+        console.log("i511 Socket.IO loaded"); // Add this to verify loading
+        // Listen for autopilot status updates
+        socket.on('autopilot_status', (data) => {
+            if (data.status === 'off') {
+                // If autopilot is off, set all buttons to red
+                document.querySelectorAll('.btnCircle').forEach(btn => {
+                    btn.style.backgroundColor = 'red';
+                    btn.style.color = 'white';
+                });
             }
         });
-    });
-    // Line 599 following code gives error 502
-    // Event listeners for your buttons
-    document.getElementById('btnport').addEventListener('click', () => {
-        sendPutRequest('steering/autopilot/actions/tack', 'port');
-    });
-    document.getElementById('btn-80').addEventListener('click', () => {
-        sendPutRequest('steering/autopilot/actions/adjustHeading', -80);
-    });
-    document.getElementById('btnstarboard').addEventListener('click', () => {
-        sendPutRequest('steering/autopilot/actions/adjustHeading', 80,);
-        //sendPutRequest('steering/autopilot/actions/tack', 'starboard');
-    });
-    document.getElementById('btn-1').addEventListener('click', () => {
-        console.log('i577 send -1 to autopilot:');
-        sendPutRequest('steering/autopilot/actions/adjustHeading', -1);
-    });
-    document.getElementById('btn-10').addEventListener('click', () => {
-        sendPutRequest('steering/autopilot/actions/adjustHeading', -10);
-    });
-    document.getElementById('btn+10').addEventListener('click', () => {
-        sendPutRequest('steering/autopilot/actions/adjustHeading', +10);
-    });
-    document.getElementById('btn+1').addEventListener('click', () => {
-        sendPutRequest('steering/autopilot/actions/adjustHeading', +1);
-    });
-</script>
+
+        // Socket.IO listener for updates
+        socket.on("update_data", (data) => {
+            // console.log("i515 Received update data:", data); // Confirm data reception
+            data.updates.forEach(update => {
+                const path = update.path;
+                const value = update.value;
+                //console.log("i519 Update path:", path, "Value:", value); // Add this to verify value
+                if (path === 'performance.maxSpeedAngle') {
+                    document.getElementById("performance_maxSpeedAngle").innerText =  radToDeg(value).toFixed() + "°";
+                } else if (path === 'performance.maxSpeed') {
+                    document.getElementById("performance_maxSpeed").innerText =  value.toFixed(1) + " kn";
+                } else if (path === 'performance.targetSpeed') {
+                    document.getElementById("performance_targetSpeed").innerText =  value.toFixed(1) + " kn";
+                } else if (path === "performance.targetAngle") {
+                    document.getElementById("performance_targetAngle").innerText = radToDeg(value).toFixed() + "°";
+                } else if (path === 'performance.polarSpeed') {
+                    document.getElementById("performance_polarSpeed").innerText =  value.toFixed(1) + " kn";
+                } else if (path === "performance.gybeAngle") {
+                    document.getElementById("gybeAngle").innerText = radToDeg(value).toFixed(0) + "";
+                } else if (path === "performance.beatAngle") {
+                    document.getElementById("beatAngle").innerText = radToDeg(value).toFixed(0) + "";
+                // environment
+                } else if (path === 'environment.wind.angleApparent') {
+                    document.getElementById("environment_wind.angleApparent").innerText =  radToDeg(value).toFixed(0) + "°";
+                } else if (path === 'environment.wind.speedTrue') {
+                    document.getElementById("environment_wind.speedTrue").innerText =  value.toFixed(1) + "";
+                } else if (path === 'environment.depth.belowKeel') {
+                    document.getElementById("environment_depth.belowKeel").innerText =  value.toFixed(1) + "";
+                // navigation
+                } else if (path === "navigation.headingTrue") {
+                    document.getElementById("navigation_headingTrue").innerText = radToDeg(value).toFixed() + "°";
+                } else if (path === "navigation.magneticVariation") {
+                    document.getElementById("navigation_magneticVariation").innerText = radToDeg(value).toFixed() + "";
+                } else if (path === 'navigation.speedOverGround') { // SOG VTG
+                    document.getElementById("navigation_speedOverGround").innerText =  value.toFixed(1) + "";
+                } else if (path === "navigation.courseOverGroundTrue") {
+                    document.getElementById("navigation_courseOverGroundTrue").innerText = radToDeg(value).toFixed() + "°";
+                } else if (path === 'navigation.speedThroughWater') { // VHW
+                    document.getElementById('navigation_speedThroughWater').innerText =  value.toFixed(1) + "";
+                // steering
+                } else if (path === "steering.autopilot.state") {
+                    document.getElementById("steering_autopilot.state").innerText =  value;
+                    if (value == "standby") {
+                        document.getElementById("steering_autopilot.state_standby").innerText =  value; 
+                    } else if (value == "wind") {
+                        document.getElementById("steering_autopilot.state_wind").innerText =  value; 
+                    } else if (value == "tack") {
+                        document.getElementById("steering_autopilot.state_tack").innerText =  value; 
+                    } else if (value == "auto") {
+                        document.getElementById("steering_autopilot.state_auto").innerText =  value; 
+                    }
+                } else if (path === 'steering.autopilot.target.windAngleApparent') {
+                    document.getElementById("APwindAngle").innerText = radToDeg(value).toFixed() + "°";
+                } else if (path === "steering.autopilot.target.headingMagnetic") {
+                    document.getElementById("AP_headingMagnetic").innerText = radToDeg(value).toFixed() + "°";
+                }
+            });
+        });
+        // Line 599 following code gives error 502
+        // Event listeners for your buttons
+        document.getElementById('btnport').addEventListener('click', () => {
+            sendPutRequest('steering/autopilot/actions/tack', 'port');
+        });
+        document.getElementById('btn-80').addEventListener('click', () => {
+            sendPutRequest('steering/autopilot/actions/adjustHeading', -80);
+        });
+        document.getElementById('btnstarboard').addEventListener('click', () => {
+            sendPutRequest('steering/autopilot/actions/adjustHeading', 80,);
+            //sendPutRequest('steering/autopilot/actions/tack', 'starboard');
+        });
+        document.getElementById('btn-1').addEventListener('click', () => {
+            console.log('i577 send -1 to autopilot:');
+            sendPutRequest('steering/autopilot/actions/adjustHeading', -1);
+        });
+        document.getElementById('btn-10').addEventListener('click', () => {
+            sendPutRequest('steering/autopilot/actions/adjustHeading', -10);
+        });
+        document.getElementById('btn+10').addEventListener('click', () => {
+            sendPutRequest('steering/autopilot/actions/adjustHeading', +10);
+        });
+        document.getElementById('btn+1').addEventListener('click', () => {
+            sendPutRequest('steering/autopilot/actions/adjustHeading', +1);
+        });
+    </script>
 </body>
 </html>
