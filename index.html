@@ -437,7 +437,7 @@
         // in shell
         //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
 
-        const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzMxNDE4NDc1LCJleHAiOjE3NjI5NzYwNzV9.eHHvv28PDEdif1Ndn2GfL5QL4WUTuFAG5AapDa7d1pI';
+        const authToken = 'xxxx';
         // Determine the base URL based on the environment
         const baseURL = (window.location.hostname === 'fidelibe.local')
         ? 'http://fidelibe.local:3000' 
@@ -510,7 +510,7 @@
         function updateButtonStates(currentState) {
             // List all the buttons
             const buttons = document.querySelectorAll('.btnCircle');
-            
+
             // Reset all buttons to blue (inactive state)
             buttons.forEach(button => {
                 button.style.backgroundColor = 'blue';
