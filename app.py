@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+app = Flask(__name__, template_folder='templates')
 from flask_socketio import SocketIO
 from flask_cors import CORS
 import asyncio
@@ -10,7 +11,7 @@ from threading import Thread
 # Add a global variable to track the last time autopilot data was received
 last_autopilot_time = time.time()
 
-app = Flask(__name__)
+#app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
