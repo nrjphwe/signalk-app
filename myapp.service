@@ -3,7 +3,7 @@ Description=Gunicorn instance to serve My Python App
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/gunicorn --workers 3 --bind 0.0.0.0:8001 app:app
+ExecStart=/home/pi/.local/bin/gunicorn --workers 3 --bind 0.0.0.0:8001 app:app
 WorkingDirectory=/home/pi/.signalk/node_modules/@signalk/signalk-autopilot
 StandardOutput=inherit
 StandardError=inherit
