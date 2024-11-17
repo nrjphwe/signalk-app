@@ -1,13 +1,14 @@
 [Unit]
-Description=Gunicorn instance to serve My Python App
+Description=My Python App
 After=network.target
 
 [Service]
-ExecStart=/home/pi/.local/bin/gunicorn --workers 3 --bind 0.0.0.0:8001 app:app
+ExecStart=/usr/bin/python3 /home/pi/.signalk/node_modules/@signalk/signalk-autopilot/app.py
 WorkingDirectory=/home/pi/.signalk/node_modules/@signalk/signalk-autopilot
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
+Environment="FLASK_APP=app.py"
 User=pi
 
 [Install]
