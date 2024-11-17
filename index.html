@@ -586,7 +586,7 @@
             data.updates.forEach(update => {
                 const path = update.path;
                 const value = update.value;
-                //console.log("i519 Update path:", path, "Value:", value); // Add this to verify value
+                console.log("i519 Update path:", path, "Value:", value); // Add this to verify value
                 if (path === 'performance.maxSpeedAngle') {
                     document.getElementById("performance_maxSpeedAngle").innerText =  radToDeg(value).toFixed() + "°";
                 } else if (path === 'performance.maxSpeed') {
