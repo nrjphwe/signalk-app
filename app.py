@@ -1,6 +1,5 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
-app = Flask(__name__)
 from flask_cors import CORS
 import asyncio
 import websockets
@@ -9,14 +8,16 @@ import time
 from threading import Thread
 import logging
 
+app = Flask(__name__)
+# Add CORS support to your Flask app
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 # Set up logging
 logging.basicConfig(
     filename='/home/pi/signalk-app/myapp.log',
     level=logging.DEBUG,
     format='%(asctime)s %(levelname)s: %(message)s'
 )
-# Add CORS support to your Flask app
-CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Add a global variable to track the last time autopilot data was received
 last_autopilot_time = time.time()
@@ -26,10 +27,10 @@ socketio = SocketIO(app, cors_allowed_origins=["http://192.168.0.4","http://fide
 #socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
-#@app.route('/index')
+@app.route('/index')
 def index():
     app.logger.info('a28 Home page accessed')
-    return render_template('index.html')
+    return render_template('templates/index.html')
 
 @socketio.on('connect')
 def on_connect():
