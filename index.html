@@ -567,8 +567,12 @@
             }
         }
 
-        const socket = io();
-        console.log("i511 Socket.IO loaded"); // Add this to verify loading
+        // const socket = io();
+        const socket = io('http://fidelibe.local:8001', {
+            transports: ['websocket'],
+        });
+        localStorage.debug = '*';
+        console.log("i576 Socket.IO loaded"); // Add this to verify loading
         // Listen for autopilot status updates
         socket.on('autopilot_status', (data) => {
             if (data.status === 'off') {
