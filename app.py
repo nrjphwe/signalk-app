@@ -1,16 +1,13 @@
-import logging
 from flask import Flask, render_template
-
 from flask_socketio import SocketIO
-from flask_cors import CORS
+app = Flask(__name__)
+
 import asyncio
 import websockets
 import json
 import time
 from threading import Thread
-from flask_cors import CORS
-app = Flask(__name__, template_folder='templates')
-CORS(app)
+import logging
 
 # Set up logging
 logging.basicConfig(
@@ -21,13 +18,11 @@ logging.basicConfig(
 # Add a global variable to track the last time autopilot data was received
 last_autopilot_time = time.time()
 
-#app = Flask(__name__)
-CORS(app)
-socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True)
+socketio = SocketIO(app, logger=True, engineio_logger=True)
 #socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
-@app.route('/index')
+#@app.route('/index')
 def index():
     app.logger.info('a28 Home page accessed')
     return render_template('index.html')
@@ -65,7 +60,7 @@ Thread(target=check_autopilot_status, daemon=True).start()
 async def signalk_listener():
     try:
         async with websockets.connect(SIGNALK_SERVER_URL) as websocket:
-            app.logger.info("A68 Connected to SignalK server")
+            app.logger.info("A63 Connected to SignalK server")
             global last_autopilot_time
             while True:
                 message = await websocket.recv()
@@ -100,7 +95,6 @@ async def signalk_listener():
                             if 'autopilot' in path:
                                 last_autopilot_time = time.time()
                             updates.append(value)
-
                         # other data
                         elif path in { # navigation 
                             'navigation.headingTrue', # pgn:127250 
@@ -111,7 +105,6 @@ async def signalk_listener():
                             'navigation.speedThroughWater', # VHW
                         }:
                             updates.append(value)
-
                         elif path in { # environment
                             'environment.wind.angleApparent', # pgn: 130306
                             'environment.wind.speedApparent', # pgn: 130306
@@ -124,9 +117,9 @@ async def signalk_listener():
                             updates.append(value)
                 if updates:
                     socketio.emit("update_data", {"updates": updates})
-                    app.logger.info(f"a112 Emitted data: {updates}")
+                    app.logger.info(f"a120 Emitted data: {updates}")
     except Exception as e:
-        app.logger.error(f"a129 WebSocket connection failed: {str(e)}")
+        app.logger.error(f"a122 WebSocket connection failed: {str(e)}")
 # Wrapper function to start the asyncio event loop
 def run_async_task():
     asyncio.run(signalk_listener())

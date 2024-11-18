@@ -9,6 +9,7 @@ Restart=always
 User=pi
 StandardOutput=journal
 StandardError=journal
+# export FLASK_APP=app.py
 Environment="FLASK_APP=app.py"
 
 [Install]
