@@ -15,7 +15,7 @@ CORS(app)
 # Set up logging
 logging.basicConfig(
     filename='/home/pi/signalk-app/myapp.log',
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='%(asctime)s %(levelname)s: %(message)s'
 )
 # Add a global variable to track the last time autopilot data was received
@@ -57,7 +57,7 @@ def check_autopilot_status():
         if time.time() - last_autopilot_time > 10:
             # Emit a message to the frontend that the autopilot is off
             socketio.emit('autopilot_status', {'status': 'off'})
-        time.sleep(1)  # Check every second
+        time.sleep(5)  # Check every second
 
 # Start the check in a separate thread
 Thread(target=check_autopilot_status, daemon=True).start()
@@ -65,7 +65,7 @@ Thread(target=check_autopilot_status, daemon=True).start()
 async def signalk_listener():
     try:
         async with websockets.connect(SIGNALK_SERVER_URL) as websocket:
-            app.logger.info("Connected to SignalK server")
+            app.logger.info("A68 Connected to SignalK server")
             global last_autopilot_time
             while True:
                 message = await websocket.recv()
@@ -126,7 +126,7 @@ async def signalk_listener():
                     socketio.emit("update_data", {"updates": updates})
                     app.logger.info(f"a112 Emitted data: {updates}")
     except Exception as e:
-        app.logger.error(f"WebSocket connection failed: {str(e)}")
+        app.logger.error(f"a129 WebSocket connection failed: {str(e)}")
 # Wrapper function to start the asyncio event loop
 def run_async_task():
     asyncio.run(signalk_listener())

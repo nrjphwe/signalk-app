@@ -11,6 +11,5 @@ StandardOutput=journal
 StandardError=journal
 Environment="FLASK_APP=app.py"
 
-
 [Install]
 WantedBy=multi-user.target
