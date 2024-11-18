@@ -12,13 +12,13 @@ import logging
 # Set up logging
 logging.basicConfig(
     filename='/home/pi/signalk-app/myapp.log',
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(asctime)s %(levelname)s: %(message)s'
 )
 # Add a global variable to track the last time autopilot data was received
 last_autopilot_time = time.time()
 
-socketio = SocketIO(app, cors_allowed_origins = "http://192.168.0.4", logger=True, engineio_logger=True)
+socketio = SocketIO(app, cors_allowed_origins = "*", logger=True, engineio_logger=True)
 #socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
