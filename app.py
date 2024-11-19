@@ -22,8 +22,8 @@ logging.basicConfig(
 # Add a global variable to track the last time autopilot data was received
 last_autopilot_time = time.time()
 
-socketio = SocketIO(app, cors_allowed_origins=["http://192.168.0.4","http://fidelibe.local:8001"], logger=True, engineio_logger=True)
-#socketio = SocketIO(app, cors_allowed_origins = "*", logger=True, engineio_logger=True)
+#socketio = SocketIO(app, cors_allowed_origins=["http://192.168.0.4","http://fidelibe.local:8001"], logger=True, engineio_logger=True)
+socketio = SocketIO(app, cors_allowed_origins = "*", logger=True, engineio_logger=True)
 #socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
@@ -70,7 +70,7 @@ async def signalk_listener():
             while True:
                 message = await websocket.recv()
                 data = json.loads(message) #https://www.geeksforgeeks.org/json-loads-in-python/
-
+                app.logger.info("a73 Received data:", data)  # Debugging line
                 updates = []
                 for update in data.get("updates", []):
                     for value in update.get("values", []):

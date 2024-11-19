@@ -572,6 +572,7 @@
             transports: ['websocket'],
         });
         localStorage.debug = '*';
+
         console.log("i576 Socket.IO loaded"); // Add this to verify loading
         // Listen for autopilot status updates
         socket.on('autopilot_status', (data) => {
@@ -590,7 +591,7 @@
             data.updates.forEach(update => {
                 const path = update.path;
                 const value = update.value;
-                console.log("i519 Update path:", path, "Value:", value); // Add this to verify value
+                console.log("i594 Update path:", path, "Value:", value); // Add this to verify value
                 if (path === 'performance.maxSpeedAngle') {
                     document.getElementById("performance_maxSpeedAngle").innerText =  radToDeg(value).toFixed() + "°";
                 } else if (path === 'performance.maxSpeed') {
