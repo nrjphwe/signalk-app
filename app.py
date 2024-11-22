@@ -22,20 +22,24 @@ logging.basicConfig(
 # Add a global variable to track the last time autopilot data was received
 last_autopilot_time = time.time()
 
-#socketio = SocketIO(app, cors_allowed_origins=["http://192.168.0.4","http://fidelibe.local:8001"], logger=True, engineio_logger=True)
 socketio = SocketIO(app, cors_allowed_origins = "*", logger=True, engineio_logger=True)
-#socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
-@app.route('/index')
+#@app.route('/index')
 def index():
-    app.logger.info('a28 Home page accessed')
-    return render_template('templates/index.html')
+    app.logger.info(f'a30 Home page accessed')
+    return render_template('index.html')
 
-@socketio.on('connect')
-def on_connect():
-    app.logger.info("a33 Client connected")
-    socketio.start_background_task(run_async_task)  # Start the async wrapper
+@socketio.on("connect")
+def handle_connect():
+    app.logger.info("a35 Client connected.")
+    #socketio.start_background_task(run_async_task)  # Start the async wrapper
+    #socketio.start_background_task(asyncio.ensure_future, signalk_listener())
+    socketio.start_background_task(signalk_listener)  # Direct coroutine
+
+@socketio.on("disconnect")
+def handle_disconnect():
+    app.logger.info("a41 Client disconnected")
 
 SIGNALK_SERVER_URL = "ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all"
 
@@ -65,12 +69,15 @@ Thread(target=check_autopilot_status, daemon=True).start()
 async def signalk_listener():
     try:
         async with websockets.connect(SIGNALK_SERVER_URL) as websocket:
-            app.logger.info("A63 Connected to SignalK server")
+            app.logger.info("a68 Connected to SignalK server")
             global last_autopilot_time
             while True:
                 message = await websocket.recv()
-                data = json.loads(message) #https://www.geeksforgeeks.org/json-loads-in-python/
-                app.logger.info("a73 Received data:", data)  # Debugging line
+                try:
+                    data = json.loads(message)  # Attempt to parse the message
+                    app.logger.debug(f"a74 Parsed data: {data}")  # Log parsed JSON
+                except json.JSONDecodeError as e:
+                    app.logger.error(f"JSON decode error: {e}, message: {message}")  # Log error
                 updates = []
                 for update in data.get("updates", []):
                     for value in update.get("values", []):
@@ -122,12 +129,10 @@ async def signalk_listener():
                             updates.append(value)
                 if updates:
                     socketio.emit("update_data", {"updates": updates})
-                    app.logger.info(f"a120 Emitted data: {updates}")
+                    app.logger.info(f"a135 Emitted data: {updates}")
     except Exception as e:
-        app.logger.error(f"a122 WebSocket connection failed: {str(e)}")
-# Wrapper function to start the asyncio event loop
-def run_async_task():
-    asyncio.run(signalk_listener())
+        app.logger.error(f"a127 WebSocket connection failed: {str(e)}")
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=8001, allow_unsafe_werkzeug=True)
+    socketio.run(app, host='0.0.0.0', port=8001)
+    #socketio.run(app, host='0.0.0.0', port=8001, allow_unsafe_werkzeug=True)
