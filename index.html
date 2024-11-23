@@ -438,16 +438,27 @@
         // Example: Generate a token against the user "pi" that is valid for 1 year.
         // in shell
         //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
-        const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzMxNDE4NDc1LCJleHAiOjE3NjI5NzYwNzV9.eHHvv28PDEdif1Ndn2GfL5QL4WUTuFAG5AapDa7d1pI';
-        // Determine the base URL based on the environment
-        const baseURL = (window.location.hostname === 'fidelibe.local')
-        ? 'http://fidelibe.local:3000' 
-        : 'http://2.70.47.188:8001';
+        const authToken = 'xx';
+        // Determine the base URL for Flask or SignalK based on the environment
+        const isLocal = (window.location.hostname === 'fidelibe.local');
+
+        // Get the hostname and protocol dynamically
+        const protocol = window.location.protocol; // e.g., "http:" or "https:"
+        const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
+        const port = window.location.port || '';   // e.g., "8001" (empty if default port)
+
+        // Construct URLs dynamically based on the hostname
+        const flaskBaseURL = `${protocol}//${hostname}:${port || '8001'}`;
+        const signalKBaseURL = `${protocol}//${hostname}:3000`; // SignalK server (assuming port 3000 is fixed)
+
+        // Example usage
+        console.log(`Flask Server URL: ${flaskBaseURL}`);
+        console.log(`SignalK Server URL: ${signalKBaseURL}`);
 
         // sends commands to adjust the autopilot settings, like changing the heading.
         function sendPutRequest(path, value) {
-            console.log('i448 PUT reques path:',path,'value:', value);
-            fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
+            console.log('PUT request path:',path,'value:', value);
+            fetch(`${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -459,14 +470,14 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    console.log('i444 PUT response:',response,);
+                    console.log('PUT response:',response,);
                     throw new Error('Network response was not ok');
                 }
-                console.log('i447 PUT request successful');
+                console.log('PUT request successful');
                 displayNotification('Course change accepted.');
             })
             .catch(error => {
-                console.error('i449 Error during PUT request:', error);
+                console.error('Error during PUT request:', error);
                 displayNotification('Error: Unable to change course.');
             });
         }
@@ -572,15 +583,15 @@
         localStorage.debug = '*';
 
         // Initialize Socket.IO connection
-        const socket = io('http://fidelibe.local:8001', {
+        const socket = io(flaskBaseURL, {
             transports: ['websocket'], // Use WebSocket transport explicitly
         });
 
-        console.log("i579 JavaScript is running.");
+        console.log("JavaScript is running.");
 
-        socket.on("connect", () => {
-            console.log("Socket ID:", socket.id); // This should print a valid socket ID.
-        });
+        //socket.on("connect", () => {
+            //console.log("Socket ID:", socket.id); // This should print a valid socket ID.
+        //});
 
         socket.on("connect_error", (error) => {
             console.error("Connection error:", error.message);
@@ -596,7 +607,7 @@
 
         // Listen for autopilot status updates
         socket.on('autopilot_status', (data) => {
-            console.log("i615 Autopilot status update:", data); // Log status updates
+            console.log(" Autopilot status update:", data); // Log status updates
             if (data.status === 'off') {
                 // If autopilot is off, set all buttons to red
                 document.querySelectorAll('.btnCircle').forEach(btn => {
@@ -604,17 +615,17 @@
                     btn.style.color = 'white';
                 });
             } else {
-                console.warn("i623 Unrecognized autopilot status:", data);
+                console.warn("Unrecognized autopilot status:", data);
             }
         });
 
         // Socket.IO listener for updates
         socket.on("update_data", (data) => {
-            // console.log("i515 Received update data:", data); // Confirm data reception
+            // console.log("Received update data:", data); // Confirm data reception
             data.updates.forEach(update => {
                 const path = update.path;
                 const value = update.value;
-                //console.log("i519 Update path:", path, "Value:", value); // Add this to verify value
+                //console.log("Update path:", path, "Value:", value); // Add this to verify value
                 if (path === 'performance.maxSpeedAngle') {
                     document.getElementById("performance_maxSpeedAngle").innerText =  radToDeg(value).toFixed() + "°";
                 } else if (path === 'performance.maxSpeed') {
