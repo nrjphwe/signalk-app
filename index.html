@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <title>FlaskApp</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="favicon.ico">
+    <!--link rel="icon" type="image/png" href="favicon.ico"-->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
     <style>
         body, html {
             margin: 0;
@@ -427,8 +430,7 @@
     </div>
     <div id="notificationArea"></div>
     <!-- Include Socket.IO -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
-    <button id="testButton">Test Socket.IO</button>
+    <!--button id="testButton">Test Socket.IO</button>-->
     <script>
         function radToDeg(rad) {
             return rad * (180 / Math.PI);
@@ -436,16 +438,27 @@
         // Example: Generate a token against the user "pi" that is valid for 1 year.
         // in shell
         //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
-        const authToken = 'xxxx';
-        // Determine the base URL based on the environment
-        const baseURL = (window.location.hostname === 'fidelibe.local')
-        ? 'http://fidelibe.local:3000' 
-        : 'http://2.70.47.188:8001';
+        const authToken = 'xx';
+        // Determine the base URL for Flask or SignalK based on the environment
+        const isLocal = (window.location.hostname === 'fidelibe.local');
+
+        // Get the hostname and protocol dynamically
+        const protocol = window.location.protocol; // e.g., "http:" or "https:"
+        const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
+        const port = window.location.port || '';   // e.g., "8001" (empty if default port)
+
+        // Construct URLs dynamically based on the hostname
+        const flaskBaseURL = `${protocol}//${hostname}:${port || '8001'}`;
+        const signalKBaseURL = `${protocol}//${hostname}:3000`; // SignalK server (assuming port 3000 is fixed)
+
+        // Example usage
+        console.log(`Flask Server URL: ${flaskBaseURL}`);
+        console.log(`SignalK Server URL: ${signalKBaseURL}`);
 
         // sends commands to adjust the autopilot settings, like changing the heading.
         function sendPutRequest(path, value) {
-            console.log('i448 PUT reques path:',path,'value:', value);
-            fetch(`${baseURL}/signalk/v1/api/vessels/self/${path}`, {
+            console.log('PUT request path:',path,'value:', value);
+            fetch(`${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -457,14 +470,14 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    console.log('i444 PUT response:',response,);
+                    console.log('PUT response:',response,);
                     throw new Error('Network response was not ok');
                 }
-                console.log('i447 PUT request successful');
+                console.log('PUT request successful');
                 displayNotification('Course change accepted.');
             })
             .catch(error => {
-                console.error('i449 Error during PUT request:', error);
+                console.error('Error during PUT request:', error);
                 displayNotification('Error: Unable to change course.');
             });
         }
@@ -567,26 +580,52 @@
             }
         }
 
-        const socket = io();
-        console.log("i511 Socket.IO loaded"); // Add this to verify loading
+        localStorage.debug = '*';
+
+        // Initialize Socket.IO connection
+        const socket = io(flaskBaseURL, {
+            transports: ['websocket'], // Use WebSocket transport explicitly
+        });
+
+        console.log("JavaScript is running.");
+
+        //socket.on("connect", () => {
+            //console.log("Socket ID:", socket.id); // This should print a valid socket ID.
+        //});
+
+        socket.on("connect_error", (error) => {
+            console.error("Connection error:", error.message);
+        });
+
+        socket.on("disconnect", (reason) => {
+            console.warn("Disconnected from server:", reason);
+        });
+
+        socket.on("test_event", (data) => {
+            console.log("Test event received:", data);
+        });
+
         // Listen for autopilot status updates
         socket.on('autopilot_status', (data) => {
+            console.log(" Autopilot status update:", data); // Log status updates
             if (data.status === 'off') {
                 // If autopilot is off, set all buttons to red
                 document.querySelectorAll('.btnCircle').forEach(btn => {
                     btn.style.backgroundColor = 'red';
                     btn.style.color = 'white';
                 });
+            } else {
+                console.warn("Unrecognized autopilot status:", data);
             }
         });
 
         // Socket.IO listener for updates
         socket.on("update_data", (data) => {
-            // console.log("i515 Received update data:", data); // Confirm data reception
+            // console.log("Received update data:", data); // Confirm data reception
             data.updates.forEach(update => {
                 const path = update.path;
                 const value = update.value;
-                //console.log("i519 Update path:", path, "Value:", value); // Add this to verify value
+                //console.log("Update path:", path, "Value:", value); // Add this to verify value
                 if (path === 'performance.maxSpeedAngle') {
                     document.getElementById("performance_maxSpeedAngle").innerText =  radToDeg(value).toFixed() + "°";
                 } else if (path === 'performance.maxSpeed') {
@@ -638,7 +677,21 @@
                 }
             });
         });
-        // Line 599 following code gives error 502
+
+        // Socket.IO listener for updates
+        //(socket.on("update_data", (data) => {
+        //    console.log("Received update data:", data); // Log entire data
+        //    if (data && data.updates) {
+        //        data.updates.forEach((update) => {
+        //            console.log(`Path: ${update.path}, Value: ${update.value}`);
+        //        });
+        //    }
+        //});
+
+        window.addEventListener("beforeunload", () => {
+            socket.disconnect(); // Ensure the socket is closed when the user leaves the page
+        });
+
         // Event listeners for your buttons
         document.getElementById('btnport').addEventListener('click', () => {
             sendPutRequest('steering/autopilot/actions/tack', 'port');
