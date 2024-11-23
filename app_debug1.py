@@ -26,22 +26,20 @@ def index():
     app.logger.info('aa25 Serving index page.')
     return render_template('index.html')
 
-@socketio.on("connect")
-def handle_connect():
-    global listener_started
-    app.logger.info("aa34 Client connected.")
-    if not listener_started:
-        listener_started = True
-        socketio.start_background_task(signalk_listener)
-
 @socketio.on("disconnect")
 def handle_disconnect():
     app.logger.info(f"aa41 Client disconnected. SID: {request.sid}")
 
 @socketio.on("connect")
 def test_connect():
-    print("Client connected")
+    app.logger.info("aa44 Client connected")
     socketio.emit("test_event", {"message": "Test event successful!"})
+
+    # Start the SignalK listener in the background
+    global listener_started
+    if not listener_started:
+        listener_started = True
+        socketio.start_background_task(signalk_listener)
 
 def signalk_listener():
     app.logger.info("aa41 signalk_listener started.")
