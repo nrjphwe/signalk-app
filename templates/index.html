@@ -9,6 +9,14 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
     <style>
+        @font-face {
+            font-family: 'alarm-clock';
+            src: url('/templates/alarm-clock.ttf') format('truetype');
+        }
+        .alarm-clock-font {
+            font-family: 'alarm-clock', sans-serif;
+            font-size: 8vw;
+        }
         body, html {
             margin: 0;
             padding: 0;
@@ -438,7 +446,7 @@
         // Example: Generate a token against the user "pi" that is valid for 1 year.
         // in shell
         //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
-        const authToken = 'xx';
+        const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzMxNDE4NDc1LCJleHAiOjE3NjI5NzYwNzV9.eHHvv28PDEdif1Ndn2GfL5QL4WUTuFAG5AapDa7d1pI';
         // Determine the base URL for Flask or SignalK based on the environment
         const isLocal = (window.location.hostname === 'fidelibe.local');
 
