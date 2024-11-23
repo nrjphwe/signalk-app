@@ -32,4 +32,4 @@ Check Logs: Review logs for more details
 - sudo journalctl -u myapp.service -f
 
 **To access the New GUI:**
-Open the web browser on your iPad/Iphone and navigate to the Raspberry Pi's IP address followed by the port number, e.g., http://hostname:8000.
+Open the web browser on your iPad/Iphone and navigate to the Raspberry Pi's IP address followed by the port number, e.g., http://hostname:8001.
