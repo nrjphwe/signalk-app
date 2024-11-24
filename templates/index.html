@@ -455,7 +455,7 @@
         // Example: Generate a token against the user "pi" that is valid for 1 year.
         // in shell
         //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
-        const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzMxNDE4NDc1LCJleHAiOjE3NjI5NzYwNzV9.eHHvv28PDEdif1Ndn2GfL5QL4WUTuFAG5AapDa7d1pI';
+        const authToken = 'xxxx';
         // Determine the base URL for Flask or SignalK based on the environment
         const isLocal = (window.location.hostname === 'fidelibe.local');
 
@@ -474,7 +474,7 @@
 
         // sends commands to adjust the autopilot settings, like changing the heading.
         function sendPutRequest(path, value) {
-            console.log('PUT request path:',path,'value:', value);
+            console.log('function sendPutrequest, path:',path,'and value:', value);
             fetch(`${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`, {
                 method: 'PUT',
                 headers: {
@@ -515,19 +515,19 @@
         function new_toggleSelection(element) {
             document.querySelectorAll('.btnBlack').forEach(btn => btn.classList.remove('selected'));
             element.classList.add('selected');
-            console.log('i471 element.classList = ',element.classList);
+            console.log('element.classList = ',element.classList);
 
             const command = (element.id.slice(3));
-            console.log('i476 command = ',command);
+            console.log('command = ',command);
             if (Number.isNaN(parseInt(command))) {
                 // If not a number, treat as a string command
                 sendPutRequest('steering/autopilot/actions/adjustHeading', command);
-                console.log('i479 command = ',command);
+                console.log('adjust heading command = ',command);
             }
             else {
                 // If a number, convert and use it
                 sendPutRequest('steering/autopilot/actions/tack', parseInt(command));
-                console.log('i483 command = ',parseInt(command));
+                console.log('tack command = ',parseInt(command));
             }
             // Remove the 'selected' class after 2 seconds
             setTimeout(() => {
@@ -564,7 +564,7 @@
 
         async function toggleSelection(button) {
             const selectedId = button.id;
-            console.log('Button ID:', selectedId);
+            console.log('toggle selection Button ID:', selectedId);
 
             // Map button IDs to autopilot states
             const stateMap = {
