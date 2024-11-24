@@ -10,8 +10,6 @@ import time
 from threading import Thread
 
 app = Flask(__name__)
-#socketio = SocketIO(app, cors_allowed_origins="*", debug=True)
-#socketio = SocketIO(app, async_mode="eventlet")
 #socketio = SocketIO(app, cors_allowed_origins="*", ping_timeout=60, ping_interval=25,logger=True, engineio_logger=True, async_mode='eventlet')
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
@@ -34,21 +32,10 @@ def index():
 def handle_disconnect():
     app.logger.info(f"aa35 Client disconnected. SID: {request.sid}")
 
-'''
-@socketio.on("connect")
-def handle_connect():
-    global listener_started
-    app.logger.info("aa32 Client connected.")
-    if not listener_started:
-        listener_started = True
-        socketio.start_background_task(signalk_listener)
-'''
-
 @socketio.on("connect")
 def test_connect():
-    app.logger.info("aa49 Client connected")
+    app.logger.info("aa37 Client connected")
     socketio.emit("test_event", {"message": "Test event successful!"})
-
     # Start the SignalK listener in the background
     global listener_started
     if not listener_started:
@@ -56,7 +43,7 @@ def test_connect():
         socketio.start_background_task(signalk_listener)
 
 def signalk_listener():
-    app.logger.debug("aa62 signalk_listener started.")
+    app.logger.debug("aa46 signalk_listener started.")
     url = "ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all"
     global last_autopilot_time
     try:
@@ -68,12 +55,12 @@ def signalk_listener():
                 message = ws.recv()  # Blocking call to receive messages
                 app.logger.debug(f"aa69 Received message: {message[:200]}")  # Log partial message
                 data = json.loads(message)  # Attempt to parse the message
-                app.logger.debug(f"aa71 Parsed data: {data}")  # Log parsed JSON
+                app.logger.debug(f"aa58 Parsed data: {data}")  # Log parsed JSON
                 updates = []
                 for update in data.get("updates", []):
                     for value in update.get("values", []):
                         path = value.get("path")
-                        app.logger.debug(f"aa76 path=: {path}")
+                        app.logger.debug(f"aa63 path=: {path}")
                         if path in {  # performance
                             'performance.maxSpeedAngle',
                             'performance.maxSpeed',
@@ -114,11 +101,11 @@ def signalk_listener():
                             updates.append(value)
                 if updates:
                     socketio.emit("update_data", {"updates": updates})
-                    app.logger.info(f"aa117 Emitted data: {updates}")
+                    app.logger.info(f"aa104 Emitted data: {updates}")
             except Exception as e:
-                app.logger.error(f"aa119 Error in signalk_listener: {e}")
+                app.logger.error(f"aa106 Error in signalk_listener: {e}")
     except Exception as e:
-        app.logger.error(f"aa121 Failed to connect to SignalK WebSocket: {e}")
+        app.logger.error(f"aa108 Failed to connect to SignalK WebSocket: {e}")
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=8001)

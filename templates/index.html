@@ -9,12 +9,20 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
     <style>
+        @font-face {
+            font-family: 'alarm-clock';
+            src: url('static/fonts/alarm-clock.ttf') format('truetype');
+        }
+        .alarm-clock-font {
+            font-family: 'alarm-clock', sans-serif;
+            font-size: 8vw;
+        }
         body, html {
             margin: 0;
             padding: 0;
             overflow: hidden;
             height: 100%;
-            font-family: sans-serif;
+            font-family: 'Trebuchet MS', sans-serif;
         }
         #main {
             margin: 0;
@@ -65,8 +73,8 @@
             background-color: #2A475C; 
             border-radius: 5px; /* Optional rounded corners */
         }
-        /* Style all elements with the class name "infocontainer" */
         .infoContainer {
+        /* Style all elements with the class name "infocontainer" */
             display: flex;
             flex-direction: row;
             flex-wrap: wrap; /* Allow wrapping */
@@ -138,8 +146,8 @@
             display: none;
             z-index: 1000;
         }
-        /* iPhone 14 (Portrait Mode) */
-        @media only screen and (min-width: 390px) and (max-width: 844px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3) {
+        /* iPhone 14 (Portrait Mode) red */
+        @media only screen and (width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) {
             body {background-color:red }
             .btnCircle {
                 font-size: 10vw; /* Much bigger font size */
@@ -150,6 +158,10 @@
                 font-size: 8vw; /* Slightly bigger font size */
                 padding: 3vw 4vw; /* Slightly increased padding */
                 margin: 1vw;
+            }
+            .tableField {
+                padding: 0.5vw 1vw; /* Adjust padding */
+                font-size: 6vw; /* Reduced font size */
             }
             .infoField {
                 font-size: 4vw; /* Reduced font size */
@@ -166,8 +178,8 @@
                 margin: 1vw;
             }
         }
-        /* iPhone 14 (Landscape Mode) */
-        @media only screen and (max-width: 844px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
+        /* iPhone 14 (Landscape Mode) green  */
+        @media only screen and (max-width: 390px) and (min-height: 602px) and (max-height: 844px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
             body {background-color:green }
             .btnCircle {
                 font-size: 4vw; /* Much bigger font size */
@@ -195,8 +207,8 @@
                 margin: 0.5vw;
             }
         }
-        /* iPad mini tablets (portrait Mode)*/
-        @media only screen and (max-width: 768px) and (max-height: 1024px) and (orientation: portrait) {
+        /* iPad mini tablets orange (portrait Mode)*/
+        @media only screen and (min-width: 480px) and (max-width: 768px) and (min-height: 602px) and (max-height: 1024px) and (orientation: portrait) {
             body {background-color:orange}
             .btnCircle {
                 font-size: 6vw; /* Much bigger font size */
@@ -232,21 +244,24 @@
                 padding-top: 5px; /* Adjust padding to fit content */
             }
         }
-        /* iPad mini tablets (landscape Mode)*/
-        @media only screen and (max-width: 1024px) and (max-height: 768px) and (orientation: landscape) {
+        /* iPad mini tablets pink (landscape Mode)*/
+        @media only screen and (min-width: 480px) and (max-height: 768px) and (orientation: landscape) {
             body {background-color:pink }
             .btnCircle {
-                font-size: 5vw; /* Much bigger font size */
+                font-size: 4vw; /* Much bigger font size */
                 padding: 1vw 4vw; /* Increased padding top right bottom left*/
             }
             .btnBlack {
-                font-size: 5vw; /* Reduced font size */
-                padding: 1vw 1vw; /* Reduced padding */
+                font-size: 3vw; /* Reduced font size */
+                padding: 0.5vw 1vw; /* Reduced padding */
                 margin: 0.5vw;
             }
+            .table th {
+                font-size: 1vw; /* Smaller font size for headers */
+            }
             .tableField {
-                padding: 0.5vw 1vw; /* Adjust padding */
-                font-size: 3vw; /* Reduced font size */
+                padding: 0.5vw 0.5vw; /* Adjust padding */
+                font-size: 1.5vw; /* Reduced font size */
             }
             .infoField {
                 font-size: 2.5vw; /* Reduced font size */
@@ -258,20 +273,22 @@
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
             }
             .largeInfoField {
-                font-size: 4vw; /* Adjust font size */
-                padding: 1vw 2vw; /* Adjust padding */
+                font-size-adjust: 2.5vw; /* Adjust font size */
+                padding: 1vw 1vw; /* Adjust padding */
                 margin: 1vw;
             }
+            .alarm-clock-font {
+                font-size: 3vw;
             #main {
-                padding-top: 5px; /* Adjust padding to fit content */
+                padding-top: 1px; /* Adjust padding to fit content */
             }
         }
-        /* Responsive styles for iPad Air 2 and similar tablets in portrait mode*/
-        @media only screen and  (max-width: 1280px) and (min-width: 768px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
+        /* Responsive styles for iPad Air 2, blue  and similar tablets in portrait mode*/
+        @media only screen and (min-width: 768px) and (min-height: 1024px)  and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
             body {background-color:blue }
             .btnCircle {
-                font-size: 5vw; /* Much bigger font size */
-                padding: 1vw 3vw; /* Increased padding top right bottom left*/
+                font-size: 6vw; /* Much bigger font size */
+                padding: 3vw 3.5vw; /* Increased padding top right bottom left*/
                 margin: 1vw;
             }
             .btnBlack {
@@ -280,33 +297,34 @@
                 margin: 0.5vw;
             }
             .tableField {
-                padding: 0.5vw 1vw; /* Adjust padding */
-                font-size: 3vw; /* Reduced font size */
+                padding: 1vw 1vw; /* Adjust padding */
+                font-size: 4vw; /* Reduced font size */
             }
             .infoField {
                 font-size: 4vw; /* Reduced font size */
-                padding: 0.5vw 1vw; /* Reduced padding */
+                padding: 1vw 1vw; /* Reduced padding */
                 margin: 1vw;
             }
             .btnContainer, .infoContainer {
                 display: flex;
                 flex-wrap: wrap; /* wrapping in portrait mode */
+                margin: 1vw;
             }
             .largeInfoField {
-                font-size: 5vw; /* Adjust font size */
+                font-size-adjust: 4vw;
                 padding: 1.5vw 2vw; /* Adjust padding */
-                margin: 1vw;
+                margin: 2vw;
             }
             #main {
                 padding-top: 4px; /* Adjust padding to fit content */
             }
         }
-        /* iPad Air 2 and similar tablets (Landscape Mode)*/
-        @media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
+        /* iPad Air 2 and similar tablets, yellow (Landscape Mode)*/
+        @media only screen and (min-width: 1024px) and (min-height: 768px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
             body {background-color:yellow }
             .btnCircle {
                 font-size: 5.5vw; /* Much bigger font size */
-                padding: 1vw 2vw; /* Increased padding top right bottom left*/
+                padding: 1.5vw 2.5vw; /* Increased padding top right bottom left*/
             }
             .btnBlack {
                 font-size: 4.5vw; /* Reduced font size */
@@ -319,8 +337,8 @@
                 font-size: 3vw; /* Reduced font size */
             }
             .infoField {
-                font-size: 3vw; /* Reduced font size */
-                padding: 0.5vw 0.5vw; /* Reduced padding */
+                font-size: 3.5vw; /* Reduced font size */
+                padding: 0.5vw 1vw; /* Reduced padding */
                 margin: 0.5vw;
             }
             .btnContainer, .infoContainer {
@@ -328,7 +346,7 @@
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
             }
             .largeInfoField {
-                font-size: 4vw; /* Adjust font size */
+                font-size-adjust: 4vw;
                 padding: 1vw 2vw; /* Adjust padding */
             }
             #main {
@@ -367,7 +385,6 @@
     </style>
 </head>
 <body>
-    <div id="beatAngle">Beat Angle: --</div>
     <div id="main">
         <div id="remoteMain">
             <table class="table">
@@ -438,7 +455,7 @@
         // Example: Generate a token against the user "pi" that is valid for 1 year.
         // in shell
         //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
-        const authToken = 'xx';
+        const authToken = 'xxxx';
         // Determine the base URL for Flask or SignalK based on the environment
         const isLocal = (window.location.hostname === 'fidelibe.local');
 
@@ -457,7 +474,7 @@
 
         // sends commands to adjust the autopilot settings, like changing the heading.
         function sendPutRequest(path, value) {
-            console.log('PUT request path:',path,'value:', value);
+            console.log('function sendPutrequest, path:',path,'and value:', value);
             fetch(`${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`, {
                 method: 'PUT',
                 headers: {
@@ -498,19 +515,19 @@
         function new_toggleSelection(element) {
             document.querySelectorAll('.btnBlack').forEach(btn => btn.classList.remove('selected'));
             element.classList.add('selected');
-            console.log('i471 element.classList = ',element.classList);
+            console.log('element.classList = ',element.classList);
 
             const command = (element.id.slice(3));
-            console.log('i476 command = ',command);
+            console.log('command = ',command);
             if (Number.isNaN(parseInt(command))) {
                 // If not a number, treat as a string command
                 sendPutRequest('steering/autopilot/actions/adjustHeading', command);
-                console.log('i479 command = ',command);
+                console.log('adjust heading command = ',command);
             }
             else {
                 // If a number, convert and use it
                 sendPutRequest('steering/autopilot/actions/tack', parseInt(command));
-                console.log('i483 command = ',parseInt(command));
+                console.log('tack command = ',parseInt(command));
             }
             // Remove the 'selected' class after 2 seconds
             setTimeout(() => {
@@ -547,7 +564,7 @@
 
         async function toggleSelection(button) {
             const selectedId = button.id;
-            console.log('Button ID:', selectedId);
+            console.log('toggle selection Button ID:', selectedId);
 
             // Map button IDs to autopilot states
             const stateMap = {
@@ -646,7 +663,11 @@
                 } else if (path === 'environment.wind.speedTrue') {
                     document.getElementById("environment_wind.speedTrue").innerText =  value.toFixed(1) + "";
                 } else if (path === 'environment.depth.belowKeel') {
-                    document.getElementById("environment_depth.belowKeel").innerText =  value.toFixed(1) + "";
+                    if (value <= 5) {
+                        document.getElementById("environment_depth.belowKeel").innerText =  value.toFixed(1) + "";
+                    } else {
+                        document.getElementById("environment_depth.belowKeel").innerText =  value.toFixed(0) + "";
+                    }
                 // navigation
                 } else if (path === "navigation.headingTrue") {
                     document.getElementById("navigation_headingTrue").innerText = radToDeg(value).toFixed() + "°";
