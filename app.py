@@ -55,12 +55,12 @@ def signalk_listener():
                 message = ws.recv()  # Blocking call to receive messages
                 app.logger.debug(f"aa69 Received message: {message[:200]}")  # Log partial message
                 data = json.loads(message)  # Attempt to parse the message
-                app.logger.debug(f"aa71 Parsed data: {data}")  # Log parsed JSON
+                app.logger.debug(f"aa58 Parsed data: {data}")  # Log parsed JSON
                 updates = []
                 for update in data.get("updates", []):
                     for value in update.get("values", []):
                         path = value.get("path")
-                        app.logger.debug(f"aa76 path=: {path}")
+                        app.logger.debug(f"aa63 path=: {path}")
                         if path in {  # performance
                             'performance.maxSpeedAngle',
                             'performance.maxSpeed',
