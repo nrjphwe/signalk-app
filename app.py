@@ -16,7 +16,7 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 # Set up logging
 logging.basicConfig(
     filename='/home/pi/signalk-app/myapp.log',
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='%(asctime)s %(levelname)s: %(message)s'
 )
 
