@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>FlaskApp</title>
+    <title>Control</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--link rel="icon" type="image/png" href="favicon.ico"-->
+    <!--link rel="icon" type="image/png" href="favicon.ico">-->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
     <style>
@@ -28,7 +31,7 @@
             margin: 0;
             width: 100vw;
             height: 100vh;
-            background-color: black;
+            /* background-color: black; */ 
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -60,7 +63,7 @@
             text-align: center;
             padding: 0.5, 1vw, 0.5, 1vw;
             color: #ddd; /* Slightly lighter color for headers */
-            background-color: #2A475C; 
+            background-color: #0e1820; 
             border: none; /* Remove any borders */
             border-radius: 5px; /* Optional rounded corners for data cells */
         }
@@ -73,34 +76,20 @@
             background-color: #2A475C; 
             border-radius: 5px; /* Optional rounded corners */
         }
-        .infoContainer {
-        /* Style all elements with the class name "infocontainer" */
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap; /* Allow wrapping */
-            justify-content: center;
-            margin-bottom: 0px; /* Add some margin to separate button groups */
-        }
-        .infoField {
-            margin-top: 5px;
-            background-color: #2A475C; 
-            color: white;
-            text-align: center;
-            border-radius: 10px;
-        }
+ 
         .btnContainer {
             display: flex;
             flex-direction: row;
             justify-content: center;
         }
         .btnCircle {
-                display: inline-block;
-                cursor: pointer;
-                border-radius: 25%;
-                color: white;
-                text-align: center;
-                background-color: blue; /* Default background color */
-                margin: 0.5vw;
+            display: inline-block;
+            cursor: pointer;
+            border-radius: 25%;
+            color: white;
+            text-align: center;
+            background-color: blue; /* Default background color */
+            margin: 0.5vw;
         }
         .btnCircle.selected {
             border: 2px solid #fff; /* Add a border to the selected button */
@@ -127,9 +116,23 @@
             color: white;
             border: 2px solid #2A475C; /* Example: darker border */
         }
+        /* Style all elements with the class name "infocontainer" */
+        .infoContainer {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap; /* Allow wrapping */
+            color: white;
+            justify-content: center;
+            margin-bottom: 0px; /* Add some margin to separate button groups */
+        }
+        .infoField {
+            margin-top: 5px;
+            background-color: #2A475C; 
+            text-align: center;
+            border-radius: 10%;
+        }
         .largeInfoField {
             background-color: #2A475C;
-            color: white;
             text-align: center;
             border-radius: 10%;
             margin: 1vw;
@@ -146,7 +149,7 @@
             display: none;
             z-index: 1000;
         }
-        /* iPhone 14 (Portrait Mode) red */
+        /* iPhone 14 (Portrait Mode)  red */
         @media only screen and (width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) {
             body {background-color:red }
             .btnCircle {
@@ -178,7 +181,7 @@
                 margin: 1vw;
             }
         }
-        /* iPhone 14 (Landscape Mode) green  */
+        /* iPhone 14 (Landscape Mode)  green  */
         @media only screen and (max-width: 390px) and (min-height: 602px) and (max-height: 844px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
             body {background-color:green }
             .btnCircle {
@@ -207,7 +210,7 @@
                 margin: 0.5vw;
             }
         }
-        /* iPad mini tablets orange (portrait Mode)*/
+        /* iPad mini tablets (portrait Mode) orange */
         @media only screen and (min-width: 480px) and (max-width: 768px) and (min-height: 602px) and (max-height: 1024px) and (orientation: portrait) {
             body {background-color:orange}
             .btnCircle {
@@ -244,7 +247,7 @@
                 padding-top: 5px; /* Adjust padding to fit content */
             }
         }
-        /* iPad mini tablets pink (landscape Mode)*/
+        /* iPad mini tablets(landscape Mode)   pink  */
         @media only screen and (min-width: 480px) and (max-height: 768px) and (orientation: landscape) {
             body {background-color:pink }
             .btnCircle {
@@ -279,11 +282,12 @@
             }
             .alarm-clock-font {
                 font-size: 3vw;
+            }
             #main {
                 padding-top: 1px; /* Adjust padding to fit content */
             }
         }
-        /* Responsive styles for iPad Air 2, blue  and similar tablets in portrait mode*/
+        /* iPad Air 2, (Portrait Mode), blue */
         @media only screen and (min-width: 768px) and (min-height: 1024px)  and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
             body {background-color:blue }
             .btnCircle {
@@ -319,7 +323,7 @@
                 padding-top: 4px; /* Adjust padding to fit content */
             }
         }
-        /* iPad Air 2 and similar tablets, yellow (Landscape Mode)*/
+        /* iPad Air 2 (Landscape Mode)  yellow   */
         @media only screen and (min-width: 1024px) and (min-height: 768px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
             body {background-color:yellow }
             .btnCircle {
@@ -353,7 +357,7 @@
                 padding-top: 2px; /* Adjust padding to fit content */
             }
         }
-        /* General styles for larger screens */
+        /* General styles for larger screens, purple  */
         @media only screen and (min-width: 1280px) {
             body {background-color:purple }
             .btnCircle {
@@ -393,7 +397,7 @@
                         <th class="tableField">MaxSpeedAngle</th>
                         <th class="tableField">MaxSpeed</th>
                         <th class="tableField">TargetSpeed</th>
-                        <!--<td class="tableField">TargetAngle</td> -->
+                        <th class="tableField">TargetAngle</th>
                         <th class="tableField">PolarSpeed</th>
                     </tr>
                 </thead>
@@ -402,7 +406,7 @@
                         <td class="tableField"><span id="performance_maxSpeedAngle">N/A</span></td>
                         <td class="tableField"><span id="performance_maxSpeed">N/A</span></td>
                         <td class="tableField"><span id="performance_targetSpeed">N/A</span></td>
-                        <!--<td class="tableField"><span id="performance_targetAngle">N/A</span></td> -->
+                        <td class="tableField"><span id="performance_targetAngle">N/A</span></td>
                         <td class="tableField"><span id="performance_polarSpeed">N/A</span></td>
                     </tr>
                 </tbody>
@@ -421,7 +425,6 @@
                 <div class="btnBlack" id="steering_autopilot.state">N/A</div> <!-- pgn:65379 -->
                 <div class="btnBlack" id="btnstarboard" onclick="new_toggleSelection(this)"> → </div>
             </div>
-
             <div class="btnContainer">
                 <div class="btnBlack" id="btn-1" onclick="new_toggleSelection(this)"> -1 </div>
                 <div class="btnBlack" id="btn-10" onclick="new_toggleSelection(this)"> -10 </div>
@@ -436,11 +439,12 @@
             </div>
             <div class="infoContainer">
                 <div class="largeInfoField">AWA: <span id="environment_wind.angleApparent" class="alarm-clock-font">N/A</span> </div>
-                <div class="largeInfoField">TargetWA: <span id="performance_targetAngle" class="alarm-clock-font">N/A</span> </div>
-                <div class="largeInfoField">DPTH: <span id="environment_depth.belowKeel" class="alarm-clock-font">N/A</span> m</div>
+                <div class="largeInfoField">TWD: <span id="environment_wind.angleTrueGround" class="alarm-clock-font">N/A</span> </div>
+                <div class="largeInfoField">TWA: <span id="environment_wind.angleTrue" class="alarm-clock-font">N/A</span> </div>
             </div>
             <div class="infoContainer">
                 <div class="infoField">Beat Angle: <span id="beatAngle">N/A</span> °</div>
+                <div class="largeInfoField">DPTH: <span id="environment_depth.belowKeel">N/A</span> m</div>
                 <div class="infoField">Gybe Angle <span id="gybeAngle">N/A</span> °</div>
             </div>
         </div>
@@ -455,7 +459,8 @@
         // Example: Generate a token against the user "pi" that is valid for 1 year.
         // in shell
         //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
-        const authToken = 'xxxx';
+        const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzMxNDE4NDc1LCJleHAiOjE3NjI5NzYwNzV9.eHHvv28PDEdif1Ndn2GfL5QL4WUTuFAG5AapDa7d1pI';
+        //const authToken = 'xxxx';
         // Determine the base URL for Flask or SignalK based on the environment
         const isLocal = (window.location.hostname === 'fidelibe.local');
 
@@ -660,8 +665,10 @@
                 // environment
                 } else if (path === 'environment.wind.angleApparent') {
                     document.getElementById("environment_wind.angleApparent").innerText =  radToDeg(value).toFixed(0) + "°";
-                } else if (path === 'environment.wind.speedTrue') {
-                    document.getElementById("environment_wind.speedTrue").innerText =  value.toFixed(1) + "";
+                } else if (path === 'environment.wind.angleTrueGround') {
+                    document.getElementById("environment_wind.angleTrueGround").innerText =  radToDeg(value).toFixed(0) + "°";
+                } else if (path === 'environment.wind.angleTrue') {
+                    document.getElementById("environment_wind.angleTrue").innerText =  radToDeg(value).toFixed(0) + "°";
                 } else if (path === 'environment.depth.belowKeel') {
                     if (value <= 5) {
                         document.getElementById("environment_depth.belowKeel").innerText =  value.toFixed(1) + "";
