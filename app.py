@@ -6,22 +6,20 @@ import eventlet
 from websocket import create_connection
 import logging
 import json
-import time
-from threading import Thread
 
 app = Flask(__name__)
-#socketio = SocketIO(app, cors_allowed_origins="*", ping_timeout=60, ping_interval=25,logger=True, engineio_logger=True, async_mode='eventlet')
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
 # Set up logging
 logging.basicConfig(
     filename='/home/pi/signalk-app/myapp.log',
-    level=logging.INFO,
+    level=logging.DEBUG,
     format='%(asctime)s %(levelname)s: %(message)s'
 )
 
 # Flag to ensure the listener starts only once
 listener_started = False
+
 
 @app.route("/")
 def index():
@@ -42,6 +40,7 @@ def test_connect():
         listener_started = True
         socketio.start_background_task(signalk_listener)
 
+
 def signalk_listener():
     app.logger.debug("aa46 signalk_listener started.")
     url = "ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all"
@@ -50,18 +49,34 @@ def signalk_listener():
         ws = create_connection(url)
         app.logger.info("aa67 Connected to SignalK WebSocket.")
         while True:
-            eventlet.sleep(1)  # Non-blocking sleep to prevent blocking other tasks
+            # Non-blocking sleep to prevent blocking other tasks
+            eventlet.sleep(1)
             try:
-                message = ws.recv()  # Blocking call to receive messages
-                app.logger.debug(f"aa69 Received message: {message[:200]}")  # Log partial message
-                data = json.loads(message)  # Attempt to parse the message
-                app.logger.debug(f"aa58 Parsed data: {data}")  # Log parsed JSON
+                # Blocking call to receive messages
+                message = ws.recv()
+                app.logger.debug(f"aa56 Received message: {message[:400]}")
+                try:
+                    data = json.loads(message)
+                    app.logger.debug(f"aa59 Parsed data: {data}")
+                except json.JSONDecodeError as e:
+                    app.logger.error(f"aa61 JSON parsing error: {e}")
+                    continue
                 updates = []
                 for update in data.get("updates", []):
                     for value in update.get("values", []):
                         path = value.get("path")
-                        app.logger.debug(f"aa63 path=: {path}")
-                        if path in {  # performance
+                        app.logger.debug(f"aa67 path=: {path}")
+
+                        if path in {  # navigation
+                            'navigation.speedThroughWater',
+                            'navigation.speedOverGround',
+                            'navigation.headingTrue',
+                            'navigation.headingMagnetic',
+                            'navigation.magneticVariation',
+                            'navigation.courseOverGroundTrue',
+                        }:
+                            updates.append(value)
+                        elif path in {  # performance
                             'performance.maxSpeedAngle',
                             'performance.maxSpeed',
                             'performance.targetSpeed',
@@ -81,15 +96,6 @@ def signalk_listener():
                             'steering.autopilot.actions.adjustHeading',
                         }:
                             updates.append(value)
-                        elif path in {  # navigation
-                            'navigation.headingTrue',
-                            'navigation.headingMagnetic',
-                            'navigation.magneticVariation',
-                            'navigation.courseOverGroundTrue',
-                            'navigation.speedOverGround',
-                            'navigation.speedThroughWater',
-                        }:
-                            updates.append(value)
                         elif path in {  # environment
                             'environment.wind.angleApparent',
                             'environment.wind.speedApparent',
@@ -103,9 +109,11 @@ def signalk_listener():
                     socketio.emit("update_data", {"updates": updates})
                     app.logger.info(f"aa104 Emitted data: {updates}")
             except Exception as e:
-                app.logger.error(f"aa106 Error in signalk_listener: {e}")
+                app.logger.error(f"aa110 Error in signalk_listener: {e}")
+                pass
     except Exception as e:
         app.logger.error(f"aa108 Failed to connect to SignalK WebSocket: {e}")
+
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=8001)
