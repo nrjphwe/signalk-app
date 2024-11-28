@@ -13,7 +13,7 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', ping_t
 # Set up logging
 logging.basicConfig(
     filename='/home/pi/signalk-app/myapp.log',
-    level=logging.DEBUG,
+    level=logging.ERROR,
     format='%(asctime)s %(levelname)s: %(message)s'
 )
 
@@ -66,7 +66,6 @@ def signalk_listener():
                     for value in update.get("values", []):
                         path = value.get("path")
                         app.logger.debug(f"aa67 path=: {path}")
-
                         if path in {  # navigation
                             'navigation.speedThroughWater',
                             'navigation.speedOverGround',
