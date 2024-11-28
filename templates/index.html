@@ -127,7 +127,8 @@
         }
         .infoField {
             margin-top: 1vw;
-            background-color: #2A475C; 
+            background-color: #2f648d;
+            /* background-color: #2A475C; */
             text-align: center;
             border-radius: 10%;
         }
@@ -183,7 +184,7 @@
         }
         /* iPhone 14 (Landscape Mode)  green  */
         @media only screen and (max-width: 390px) and (min-height: 602px) and (max-height: 844px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
-            body {background-color:green }
+            body {background-color:#06fb02 }
             .btnCircle {
                 font-size: 4vw; /* Much bigger font size */
                 padding: 1.5vw 3vw; /* Increased padding top right bottom left*/
@@ -341,7 +342,7 @@
                 font-size: 3vw; /* Reduced font size */
             }
             .infoField {
-                font-size: 3.5vw; /* Reduced font size */
+                font-size-adjust: 4vw; /* Reduced font size */
                 padding: 0.5vw 1vw; /* Reduced padding */
                 margin: 0.5vw;
             }
@@ -416,7 +417,7 @@
                 <div class="infoField">HDT: <span id="navigation_headingTrue">N/A</span> </div>
                 <div class="infoField">HDG: <span id="navigation_magneticVariation">N/A</span>°</div>
                 <div class="infoField">TWS: <span id="environment_wind.speedTrue">N/A </span><span style="font-size:1.5vw"> m/s</span></div>
-                <div class="infoField">SOG/VTG: <span id="navigation_speedOverGround">N/A </span><span style="font-size:1.5vw"> kn</span></div>
+                <div class="infoField">SOG/VTG: <span id="navigation_speedOverGround">N/A </span><span style="font-size:1.5vw"></span> kn</div>
                 <div class="infoField">Speed/VHW: <span id="navigation_speedThroughWater">N/A </span><span style="font-size:1.5vw"> kn</span></div>
                 <div class="infoField">Volt: <span id="electricalVoltage">N/A </span><span style="font-size:1.5vw"> V</span></div>
             </div>
@@ -456,9 +457,13 @@
         function radToDeg(rad) {
             return rad * (180 / Math.PI);
         }
+        function m_to_knots(met){
+            return (met * 1000/1852);
+        }
         // Example: Generate a token against the user "pi" that is valid for 1 year.
         // in shell
         //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
+        const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzMxNDE4NDc1LCJleHAiOjE3NjI5NzYwNzV9.eHHvv28PDEdif1Ndn2GfL5QL4WUTuFAG5AapDa7d1pI';
         //const authToken = 'xxxx';
         // Determine the base URL for Flask or SignalK based on the environment
         const isLocal = (window.location.hostname === 'fidelibe.local');
@@ -640,6 +645,10 @@
             }
         });
 
+        // Store the previous SOG & VHW value globally
+        let previousSpeedOverGround = null; 
+        let previousSpeedThroughWater = null; 
+
         // Socket.IO listener for updates
         socket.on("update_data", (data) => {
             // console.log("Received update data:", data); // Confirm data reception
@@ -650,13 +659,13 @@
                 if (path === 'performance.maxSpeedAngle') {
                     document.getElementById("performance_maxSpeedAngle").innerText =  radToDeg(value).toFixed() + "°";
                 } else if (path === 'performance.maxSpeed') {
-                    document.getElementById("performance_maxSpeed").innerText =  value.toFixed(1) + " kn";
+                    document.getElementById("performance_maxSpeed").innerText =  m_to_knots(value).toFixed(1) + " kn";
                 } else if (path === 'performance.targetSpeed') {
-                    document.getElementById("performance_targetSpeed").innerText =  value.toFixed(1) + " kn";
+                    document.getElementById("performance_targetSpeed").innerText =  m_to_knots(value).toFixed(1) + " kn";
                 } else if (path === "performance.targetAngle") {
                     document.getElementById("performance_targetAngle").innerText = radToDeg(value).toFixed() + "°";
                 } else if (path === 'performance.polarSpeed') {
-                    document.getElementById("performance_polarSpeed").innerText =  value.toFixed(1) + " kn";
+                    document.getElementById("performance_polarSpeed").innerText =  m_to_knots(value).toFixed(1) + " kn";
                 } else if (path === "performance.gybeAngle") {
                     document.getElementById("gybeAngle").innerText = radToDeg(value).toFixed(0) + "";
                 } else if (path === "performance.beatAngle") {
@@ -680,11 +689,44 @@
                 } else if (path === "navigation.magneticVariation") {
                     document.getElementById("navigation_magneticVariation").innerText = radToDeg(value).toFixed() + "";
                 } else if (path === 'navigation.speedOverGround') { // SOG VTG
-                    document.getElementById("navigation_speedOverGround").innerText =  value.toFixed(1) + "";
+                    const sogElement = document.getElementById("navigation_speedOverGround");
+                    const infoField = sogElement.closest('.infoField'); // Get the parent container
+                    console.log("Previous Speed:", previousSpeedOverGround);
+                    const newSpeed = value.toFixed(1);
+                    if (previousSpeedOverGround !== null) {
+                        if (newSpeed > previousSpeedOverGround) {
+                            infoField.style.color = "#06fb02"; // Bright lime green
+                        } else if (newSpeed < previousSpeedOverGround) {
+                            infoField.style.color = "red"; // Speed decreased
+                        } else {
+                            infoField.style.color = "white"; // Speed unchanged
+                        }
+                    }
+                    sogElement.innerText = newSpeed; // Update the text content
+                    previousSpeedOverGround = newSpeed; // Store the current speed
+                    console.log("New SpeedOverGround:", newSpeed);
+
+                } else if (path === 'navigation.speedThroughWater') { // VHW PGN 128259
+                        const sogElement = document.getElementById("navigation_speedThroughWater");
+                        const infoField = sogElement.closest('.infoField'); // Get the parent container
+                        console.log("Previous SpeedThroughWater:", previousSpeedThroughWater);
+
+                        const newSpeed = value.toFixed(1);
+                        if (previousSpeedThroughWater !== null) {
+                            if (newSpeed > previousSpeedThroughWater) {
+                                infoField.style.color = "#06fb02"; // Bright lime green
+                            } else if (newSpeed < previousSpeedThroughWater) {
+                                infoField.style.color = "red"; // Speed decreased
+                            } else {
+                                infoField.style.color = "white"; // Speed unchanged
+                            }
+                        }
+                        sogElement.innerText = newSpeed; // Update the text content
+                        previousSpeedThroughWater = newSpeed; // Store the current speed
+                        console.log("New SpeedThroughWater:", newSpeed);
+
                 } else if (path === "navigation.courseOverGroundTrue") {
                     document.getElementById("navigation_courseOverGroundTrue").innerText = radToDeg(value).toFixed() + "°";
-                } else if (path === 'navigation.speedThroughWater') { // VHW
-                    document.getElementById('navigation_speedThroughWater').innerText =  value.toFixed(1) + "";
                 // steering
                 } else if (path === "steering.autopilot.state") {
                     document.getElementById("steering_autopilot.state").innerText =  value;
@@ -704,16 +746,6 @@
                 }
             });
         });
-
-        // Socket.IO listener for updates
-        //(socket.on("update_data", (data) => {
-        //    console.log("Received update data:", data); // Log entire data
-        //    if (data && data.updates) {
-        //        data.updates.forEach((update) => {
-        //            console.log(`Path: ${update.path}, Value: ${update.value}`);
-        //        });
-        //    }
-        //});
 
         window.addEventListener("beforeunload", () => {
             socket.disconnect(); // Ensure the socket is closed when the user leaves the page
