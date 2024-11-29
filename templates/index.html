@@ -76,11 +76,23 @@
             background-color: #2A475C; 
             border-radius: 5px; /* Optional rounded corners */
         }
- 
+        /* Base styles for all btnContainers */
         .btnContainer {
             display: flex;
+            justify-content: center;
+            margin: 0.5vw 0 0.5vw 0;
+        }
+        /* Portrait Layout */
+        .portrait .btnContainer {
+            flex-direction: flex;
+            align-items: center;
+        }
+
+        /* Landscape Layout */
+        .landscape .btnContainer {
             flex-direction: row;
             justify-content: center;
+            align-items: stretch;
         }
         .btnCircle {
             display: inline-block;
@@ -99,8 +111,7 @@
         .btnCircle.Active {
             background-color: green; /* Background color when selected */
         }
-        /* Inactive (autopilot off) - Red */
-        .btnCircle.inactive {
+        .btnCircle.inactive {/* Inactive (autopilot off) - Red */
             background-color: red;
         }
         .btnBlack {
@@ -123,7 +134,7 @@
             flex-wrap: wrap; /* Allow wrapping */
             color: white;
             justify-content: center;
-            margin-bottom: 0px; /* Add some margin to separate button groups */
+            margin-bottom: 0; /* Add some margin to separate button groups */
         }
         .infoField {
             margin-top: 1vw;
@@ -151,8 +162,14 @@
             z-index: 1000;
         }
         /* iPhone 14 (Portrait Mode)  red */
-        @media only screen and (width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) {
+        @media only screen and (width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait){
             body {background-color:red }
+            .landscape {
+                display: none; /* Hide portrait-specific layout */
+            }
+            .portrait {
+                display: block; /* Show landscape-specific layout */
+            }
             .btnCircle {
                 font-size: 10vw; /* Much bigger font size */
                 padding: 3vw 4vw; /* Increased padding top right bottom left*/
@@ -160,7 +177,7 @@
             }
             .btnBlack {
                 font-size: 8vw; /* Slightly bigger font size */
-                padding: 3vw 4vw; /* Slightly increased padding */
+                padding: 2.5vw 4vw; /* Slightly increased padding */
                 margin: 1vw;
             }
             .tableField {
@@ -168,12 +185,11 @@
                 font-size: 6vw; /* Reduced font size */
             }
             .infoField {
-                font-size: 4vw; /* Reduced font size */
+                font-size: 5vw; /* Reduced font size */
                 padding: 0.5vw 1vw; /* Reduced padding */
                 margin: 1vw;
             }
-            .btnContainer, .infoContainer {
-                display: flex;
+            .btnContainer {
                 flex-wrap: wrap; /* Allow wrapping in portrait mode */
             }
             .largeInfoField {
@@ -185,24 +201,30 @@
         /* iPhone 14 (Landscape Mode)  green  */
         @media only screen and (max-width: 390px) and (min-height: 602px) and (max-height: 844px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
             body {background-color:#06fb02 }
+            .portrait {
+                display: none; /* Hide portrait-specific layout */
+            }
+            .landscape {
+                display: block; /* Show landscape-specific layout */
+            }
+            .btnBlack {
+                font-size: 3.5vw; /* Adjust font size */
+                padding: 1vw 2vw; /* Adjust padding */
+                margin-left: 5px;
+                margin-right: 5px;
+            }
             .btnCircle {
                 font-size: 4vw; /* Much bigger font size */
                 padding: 1.5vw 3vw; /* Increased padding top right bottom left*/
-            }
-            .btnBlack {
-                font-size: 2.5vw; /* Adjust font size */
-                padding: 1vw 2vw; /* Adjust padding */
-                margin: 0.5vw;
             }
             .tableField {
                 font-size: 2.0vw; /* Adjust font size */
             }
             .infoField {
                 font-size: 2vw; /* Adjust font size */
-                padding: 1vw 1vw; /* Adjust padding */
+                padding: 1vw 0.5vw; /* Adjust padding */
             }
             .btnContainer, .infoContainer {
-                display: flex;
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
             }
             .largeInfoField {
@@ -214,6 +236,12 @@
         /* iPad mini tablets (portrait Mode) orange */
         @media only screen and (min-width: 480px) and (max-width: 768px) and (min-height: 602px) and (max-height: 1024px) and (orientation: portrait) {
             body {background-color:orange}
+            .landscape {
+                display: none; /* Hide portrait-specific layout */
+            }
+            .portrait {
+                display: block; /* Show landscape-specific layout */
+            }
             .btnCircle {
                 font-size: 6vw; /* Much bigger font size */
                 padding: 1vw 2.5vw; /* Increased padding top right bottom left*/
@@ -235,7 +263,6 @@
                 margin: 0.5vw;
             }
             .btnContainer, .infoContainer {
-                display: flex;
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
             }
             .largeInfoField {
@@ -251,14 +278,23 @@
         /* iPad mini tablets(landscape Mode)   pink  */
         @media only screen and (min-width: 480px) and (max-height: 768px) and (orientation: landscape) {
             body {background-color:pink }
+            .portrait {
+                display: none; /* Hide portrait-specific layout */
+            }
+            .landscape {
+                display: block; /* Show landscape-specific layout */
+            }
             .btnCircle {
                 font-size: 4vw; /* Much bigger font size */
                 padding: 1vw 4vw; /* Increased padding top right bottom left*/
             }
             .btnBlack {
                 font-size: 3vw; /* Reduced font size */
-                padding: 0.5vw 1vw; /* Reduced padding */
-                margin: 0.5vw;
+                padding-top: 1vw;
+                padding-left: 2vw;
+                padding-right: 2vw; 
+                margin-left: 2vw ; /* Adjust margin for single-row layout */
+                margin-right: 2vw;
             }
             .table th {
                 font-size: 1vw; /* Smaller font size for headers */
@@ -269,11 +305,10 @@
             }
             .infoField {
                 font-size: 2.5vw; /* Reduced font size */
-                padding: 0.5vw 1vw; /* Reduced padding */
-                margin: 1vw;
+                padding: 0.5vw 0.5vw; /* Reduced padding */
+                margin: 0 0.5vw 0 0.5vw;
             }
             .btnContainer, .infoContainer {
-                display: flex;
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
             }
             .largeInfoField {
@@ -291,6 +326,12 @@
         /* iPad Air 2, (Portrait Mode), blue */
         @media only screen and (min-width: 768px) and (min-height: 1024px)  and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
             body {background-color:blue }
+            .landscape {
+                display: none; /* Hide portrait-specific layout */
+            }
+            .portrait {
+                display: block; /* Show landscape-specific layout */
+            }
             .btnCircle {
                 font-size: 6vw; /* Much bigger font size */
                 padding: 3vw 3.5vw; /* Increased padding top right bottom left*/
@@ -310,10 +351,8 @@
                 padding: 1vw 1vw; /* Reduced padding */
                 margin: 1vw;
             }
-            .btnContainer, .infoContainer {
-                display: flex;
+            .btnContainer {
                 flex-wrap: wrap; /* wrapping in portrait mode */
-                margin: 1vw;
             }
             .largeInfoField {
                 font-size-adjust: 4vw;
@@ -327,16 +366,22 @@
         /* iPad Air 2 (Landscape Mode)  yellow   */
         @media only screen and (min-width: 1024px) and (min-height: 768px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
             body {background-color:yellow }
-            .btnCircle {
-                font-size: 5.5vw; /* Much bigger font size */
-                padding: 1.5vw 2.5vw; /* Increased padding top right bottom left*/
+            .portrait {
+                display: none; /* Hide portrait-specific layout */
+            }
+            .landscape {
+                display: block; /* Show landscape-specific layout */
             }
             .btnBlack {
                 font-size: 4.5vw; /* Reduced font size */
                 padding: 1vw 2vw; /* Reduced padding */
-                margin: 0.5vw;
+                margin-left: 2vw ; /* Adjust margin for single-row layout */
+                margin-right: 2vw;
             }
-            /* Adjust padding */ 
+            .btnCircle {
+                font-size: 5.5vw; /* Much bigger font size */
+                padding: 1.5vw 2.5vw; /* Increased padding top right bottom left*/
+            }
             .tableField {
                 padding: 0.1px 0.1px;
                 font-size: 3vw; /* Reduced font size */
@@ -347,7 +392,6 @@
                 margin: 0.5vw;
             }
             .btnContainer, .infoContainer {
-                display: flex;
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
             }
             .largeInfoField {
@@ -359,8 +403,14 @@
             }
         }
         /* General styles for larger screens, purple  */
-        @media only screen and (min-width: 1280px) {
+        @media only screen and (min-width: 1280px) and (orientation: landscape) {
             body {background-color:purple }
+            .portrait {
+                display: none; /* Hide portrait-specific layout */
+            }
+            .landscape {
+                display: block; /* Show landscape-specific layout */
+            }
             .btnCircle {
                 font-size: 5vw; /* Much bigger font size */
                 padding: 1vw 2vw; /* Increased padding top right bottom left*/
@@ -421,16 +471,32 @@
                 <div class="infoField">Speed/VHW: <span id="navigation_speedThroughWater">N/A </span><span style="font-size:1.5vw"> kn</span></div>
                 <div class="infoField">Volt: <span id="electricalVoltage">N/A </span><span style="font-size:1.5vw"> V</span></div>
             </div>
-            <div class="btnContainer">
-                <div class="btnBlack" id="btnport" onclick="new_toggleSelection(this)"> ← </div>
-                <div class="btnBlack" id="steering_autopilot.state">N/A</div> <!-- pgn:65379 -->
-                <div class="btnBlack" id="btnstarboard" onclick="new_toggleSelection(this)"> → </div>
+            <!-- Portrait Layout -->
+            <div class="portrait">
+                <div class="btnContainer">
+                    <div class="btnBlack btnPort" onclick="new_toggleSelection(this)"> ← </div>
+                    <div class="btnBlack autopilotState" id="portraitState">N/A</div>
+                    <div class="btnBlack btnStarboard" onclick="new_toggleSelection(this)"> → </div>
+                </div>
+                <div class="btnContainer">
+                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> -1 </div>
+                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> -10 </div>
+                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> +10 </div>
+                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> +1 </div>
+                </div>
             </div>
-            <div class="btnContainer">
-                <div class="btnBlack" id="btn-1" onclick="new_toggleSelection(this)"> -1 </div>
-                <div class="btnBlack" id="btn-10" onclick="new_toggleSelection(this)"> -10 </div>
-                <div class="btnBlack" id="btn+10" onclick="new_toggleSelection(this)"> +10 </div>
-                <div class="btnBlack" id="btn+1" onclick="new_toggleSelection(this)"> +1 </div>
+
+            <!-- Landscape Layout -->
+            <div class="landscape">
+                <div class="btnContainer">
+                    <div class="btnBlack btnPort" onclick="new_toggleSelection(this)"> ← </div>
+                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> -1 </div>
+                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> -10 </div>
+                    <div class="btnBlack autopilotState" id="landscapeState">N/A</div>
+                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> +10 </div>
+                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> +1 </div>
+                    <div class="btnBlack btnStarboard" onclick="new_toggleSelection(this)"> → </div>
+                </div>
             </div>
             <div class="btnContainer">
                 <div class="btnCircle" id="steering_autopilot.state_standby" onclick="toggleSelection(this)">STBY</div>
