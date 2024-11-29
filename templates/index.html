@@ -342,7 +342,7 @@
                 font-size: 3vw; /* Reduced font size */
             }
             .infoField {
-                font-size-adjust: 4vw; /* Reduced font size */
+                font-size: 3.5vw; /* Reduced font size */
                 padding: 0.5vw 1vw; /* Reduced padding */
                 margin: 0.5vw;
             }
@@ -414,10 +414,10 @@
             </table>
             <div class="infoContainer">
                 <div class="infoField">COG: <span id="navigation_courseOverGroundTrue">N/A</span></div>
-                <div class="infoField">HDT: <span id="navigation_headingTrue">N/A</span> </div>
-                <div class="infoField">HDG: <span id="navigation_magneticVariation">N/A</span>°</div>
+                <div class="infoField">HDT: <span id="navigation_headingTrue">N/A</span></div>
+                <div class="infoField">HDG: <span id="navigation_magneticVariation">N/A</span></div>
                 <div class="infoField">TWS: <span id="environment_wind.speedTrue">N/A </span><span style="font-size:1.5vw"> m/s</span></div>
-                <div class="infoField">SOG/VTG: <span id="navigation_speedOverGround">N/A </span><span style="font-size:1.5vw"></span> kn</div>
+                <div class="infoField">SOG/VTG: <span id="navigation_speedOverGround">N/A </span><span style="font-size:1.5vw"> kn</span></div>
                 <div class="infoField">Speed/VHW: <span id="navigation_speedThroughWater">N/A </span><span style="font-size:1.5vw"> kn</span></div>
                 <div class="infoField">Volt: <span id="electricalVoltage">N/A </span><span style="font-size:1.5vw"> V</span></div>
             </div>
@@ -445,7 +445,7 @@
             </div>
             <div class="infoContainer">
                 <div class="infoField">Beat Angle: <span id="beatAngle">N/A</span> °</div>
-                <div class="infoField">DPTH: <span id="environment_depth.belowKeel">N/A</span> m</div>
+                <div class="infoField">DPTH: <span id="environment_depth.belowKeel">N/A</span><span style="font-size:1.5vw"> m</span></div>
                 <div class="infoField">Gybe Angle: <span id="gybeAngle">N/A</span> °</div>
             </div>
         </div>
@@ -665,7 +665,7 @@
                 } else if (path === "performance.targetAngle") {
                     document.getElementById("performance_targetAngle").innerText = radToDeg(value).toFixed() + "°";
                 } else if (path === 'performance.polarSpeed') {
-                    document.getElementById("performance_polarSpeed").innerText =  m_to_knots(value).toFixed(1) + " kn";
+                    document.getElementById("performance_polarSpeed").innerText =  m_to_knots.toFixed(1) + " kn";
                 } else if (path === "performance.gybeAngle") {
                     document.getElementById("gybeAngle").innerText = radToDeg(value).toFixed(0) + "";
                 } else if (path === "performance.beatAngle") {
@@ -684,10 +684,12 @@
                         document.getElementById("environment_depth.belowKeel").innerText =  value.toFixed(0) + "";
                     }
                 // navigation
+                } else if (path === "navigation.courseOverGroundTrue") {
+                    document.getElementById("navigation_courseOverGroundTrue").innerText = radToDeg(value).toFixed() + "°";
                 } else if (path === "navigation.headingTrue") {
                     document.getElementById("navigation_headingTrue").innerText = radToDeg(value).toFixed() + "°";
                 } else if (path === "navigation.magneticVariation") {
-                    document.getElementById("navigation_magneticVariation").innerText = radToDeg(value).toFixed() + "";
+                    document.getElementById("navigation_magneticVariation").innerText = radToDeg(value).toFixed() + "°";
                 } else if (path === 'navigation.speedOverGround') { // SOG VTG
                     const sogElement = document.getElementById("navigation_speedOverGround");
                     const infoField = sogElement.closest('.infoField'); // Get the parent container
@@ -725,8 +727,6 @@
                         previousSpeedThroughWater = newSpeed; // Store the current speed
                         console.log("New SpeedThroughWater:", newSpeed);
 
-                } else if (path === "navigation.courseOverGroundTrue") {
-                    document.getElementById("navigation_courseOverGroundTrue").innerText = radToDeg(value).toFixed() + "°";
                 // steering
                 } else if (path === "steering.autopilot.state") {
                     document.getElementById("steering_autopilot.state").innerText =  value;
