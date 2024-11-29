@@ -26,9 +26,11 @@ def index():
     app.logger.info('aa30 Serving index page.')
     return render_template('index.html')
 
+
 @socketio.on("disconnect")
 def handle_disconnect():
     app.logger.info(f"aa35 Client disconnected. SID: {request.sid}")
+
 
 @socketio.on("connect")
 def test_connect():
