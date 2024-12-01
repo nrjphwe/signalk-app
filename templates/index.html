@@ -28,7 +28,7 @@
             font-family: 'Trebuchet MS', sans-serif;
         }
         #main {
-            margin: 4;
+            margin: 4px;
             width: 100vw;
             height: 100vh;
             background-color: black;
@@ -61,7 +61,7 @@
             font-size: 2.5vw; /* Smaller font size for headers */
             font-weight: normal;
             text-align: center;
-            padding: 0.5, 1vw, 0.5, 1vw;
+            padding: 0.5 0.5vw 0.5 0.5vw;
             color: #ddd; /* Slightly lighter color for headers */
             background-color: #0e1820; 
             border: none; /* Remove any borders */
@@ -80,14 +80,13 @@
         .btnContainer {
             display: flex;
             justify-content: center;
-            margin: 0.5vw 0 0.5vw 0;
+            margin: 0.5vw;
         }
         /* Portrait Layout */
         .portrait .btnContainer {
             flex-direction: flex;
             align-items: center;
         }
-
         /* Landscape Layout */
         .landscape .btnContainer {
             flex-direction: row;
@@ -137,11 +136,12 @@
             margin-bottom: 0; /* Add some margin to separate button groups */
         }
         .infoField {
-            margin-top: 1vw;
             background-color: #2f648d;
             /* background-color: #2A475C; */
             text-align: center;
             border-radius: 10%;
+            padding: 1vw 1vw; /* Reduced padding */
+            margin: 0 0.5vw 0 0.5vw;
         }
         .largeInfoField {
             background-color: #2A475C;
@@ -173,7 +173,7 @@
             .btnCircle {
                 font-size: 10vw; /* Much bigger font size */
                 padding: 3vw 4vw; /* Increased padding top right bottom left*/
-                margin: 2vw;
+                margin: 1.5vw;
             }
             .btnBlack {
                 font-size: 8vw; /* Slightly bigger font size */
@@ -185,9 +185,8 @@
                 font-size: 6vw; /* Reduced font size */
             }
             .infoField {
-                font-size: 5vw; /* Reduced font size */
-                padding: 0.5vw 1vw; /* Reduced padding */
-                margin: 1vw;
+                font-size: 5vw;
+                margin: 0.5vw 0.5vw 0.5vw 0.5vw;
             }
             .btnContainer {
                 flex-wrap: wrap; /* Allow wrapping in portrait mode */
@@ -199,7 +198,7 @@
             }
         }
         /* iPhone 14 (Landscape Mode)  green  */
-        @media only screen and (max-width: 390px) and (min-height: 602px) and (max-height: 844px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
+        @media only screen and (min-width: 390px) and (max-width: 844px) and (min-height: 300px) and (max-height: 390px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
             body {background-color:#06fb02 }
             .portrait {
                 display: none; /* Hide portrait-specific layout */
@@ -209,28 +208,34 @@
             }
             .btnBlack {
                 font-size: 3.5vw; /* Adjust font size */
-                padding: 1vw 2vw; /* Adjust padding */
-                margin-left: 5px;
-                margin-right: 5px;
+                padding: 0.5vw 2vw; /* Adjust padding */
+                margin-left: 2vw;
+                margin-right: 2vw;
             }
             .btnCircle {
                 font-size: 4vw; /* Much bigger font size */
-                padding: 1.5vw 3vw; /* Increased padding top right bottom left*/
+                padding: 1vw 4vw; /* Increased padding top right bottom left*/
+            }
+            .table th {
+                font-size: 2vw; /* Smaller font size for headers */
+                padding: 0 0.5vw 0 0.5vw;
             }
             .tableField {
-                font-size: 2.0vw; /* Adjust font size */
+                font-size: 1.50vw; /* Adjust font size */
             }
             .infoField {
                 font-size: 2vw; /* Adjust font size */
-                padding: 1vw 0.5vw; /* Adjust padding */
             }
             .btnContainer, .infoContainer {
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
             }
             .largeInfoField {
-                font-size: 4vw; /* Adjust font size */
-                padding: 1vw 2vw; /* Adjust padding */
+                font-size-adjust: 2.5vw; /* Adjust font size */
+                padding: 1vw 1vw; /* Adjust padding */
                 margin: 0.5vw;
+            }
+            .alarm-clock-font {
+                font-size: 3vw;
             }
         }
         /* iPad mini tablets (portrait Mode) orange */
@@ -259,8 +264,7 @@
             }
             .infoField {
                 font-size: 3vw; /* Reduced font size */
-                padding: 0.5vw 1vw; /* Reduced padding */
-                margin: 0.5vw;
+                margin: 0.5vw 0.5vw 0.5vw 0.5vw;
             }
             .btnContainer, .infoContainer {
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
@@ -271,12 +275,9 @@
                 margin-top: 2vw;
                 margin-bottom: 2vw;
             }
-            #main {
-                padding-top: 5px; /* Adjust padding to fit content */
-            }
         }
-        /* iPad mini tablets(landscape Mode)   pink  */
-        @media only screen and (min-width: 480px) and (max-height: 768px) and (orientation: landscape) {
+        /* iPad mini tablets(landscape Mode) pink  */
+        @media only screen and (max-height:1024) and (min-width: 768px) and (orientation: landscape) {
             body {background-color:pink }
             .portrait {
                 display: none; /* Hide portrait-specific layout */
@@ -290,9 +291,7 @@
             }
             .btnBlack {
                 font-size: 3vw; /* Reduced font size */
-                padding-top: 1vw;
-                padding-left: 2vw;
-                padding-right: 2vw; 
+                padding: 1vw 2vw 1vw 2vw;
                 margin-left: 2vw ; /* Adjust margin for single-row layout */
                 margin-right: 2vw;
             }
@@ -305,8 +304,6 @@
             }
             .infoField {
                 font-size: 2.5vw; /* Reduced font size */
-                padding: 0.5vw 0.5vw; /* Reduced padding */
-                margin: 0 0.5vw 0 0.5vw;
             }
             .btnContainer, .infoContainer {
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
@@ -348,8 +345,7 @@
             }
             .infoField {
                 font-size: 3.5vw; /* Reduced font size */
-                padding: 1vw 1vw; /* Reduced padding */
-                margin: 1vw;
+                margin: 0.5vw 0.5vw 0.5vw 0.5vw;
             }
             .btnContainer {
                 flex-wrap: wrap; /* wrapping in portrait mode */
@@ -388,8 +384,6 @@
             }
             .infoField {
                 font-size: 3.5vw; /* Reduced font size */
-                padding: 0.5vw 1vw; /* Reduced padding */
-                margin: 0.5vw;
             }
             .btnContainer, .infoContainer {
                 flex-wrap: nowrap; /* No wrapping in landscape mode */
@@ -427,14 +421,16 @@
                 margin: 0.5vw
             }
             .infoField {
-                font-size: 2vw; /* Responsive font size */
+                font-size: 3.5vw; /* Responsive font size */
                 padding: 1vw 1vw; /* Responsive padding */
-                margin: 0.5vw
             }
             .largeInfoField {
                 font-size: 4vw; /* Adjust font size */
                 padding: 1vw 2vw; /* Adjust padding */
                 margin: 0.5vw;
+            }
+            #main {
+                padding-top: 5px; /* Adjust padding to fit content */
             }
         }
     </style>
