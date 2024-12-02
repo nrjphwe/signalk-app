@@ -1,0 +1,442 @@
+@font-face {
+  font-family: "alarm-clock";
+  src: url("/static/fonts/alarm-clock.ttf") format("truetype");
+}
+.alarm-clock-font {
+  font-family: "alarm-clock", sans-serif;
+  font-size: 8vw;
+}
+body,
+html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+  font-family: "Trebuchet MS", sans-serif;
+}
+#main {
+  margin: 4px;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align items at the start of the container */
+  padding-top: 5px; /* Add some padding at the top */
+}
+#remoteMain {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* Style all elements with the class name "table" */
+.table {
+  color: white;
+  width: 100%; /* Ensure the table spans the container */
+  border-spacing: 5px; /* Space between cells */
+  border-collapse: separate;
+  border: none; /* Remove any borders */
+  border-radius: 5px; /* Optional rounded corners for headers */
+}
+/* Style for table header cells */
+.table th {
+  font-size: 2.5vw; /* Smaller font size for headers */
+  font-weight: normal;
+  text-align: center;
+  padding: 0.5 0.5vw 0.5 0.5vw;
+  color: #ddd; /* Slightly lighter color for headers */
+  background-color: #0e1820;
+  border: none; /* Remove any borders */
+  border-radius: 5px; /* Optional rounded corners for data cells */
+}
+.tableField {
+  font-size: 4vw; /* Larger font size for numbers */
+  color: white;
+  text-align: center;
+  padding: 1vw;
+  border: 1px solid #555; /* Adds border to data cells */
+  background-color: #2a475c;
+  border-radius: 5px; /* Optional rounded corners */
+}
+/* Base styles for all btnContainers */
+.btnContainer {
+  display: flex;
+  justify-content: center;
+  margin: 0.5vw;
+}
+/* Portrait Layout */
+.portrait .btnContainer {
+  flex-direction: flex;
+  align-items: center;
+}
+/* Landscape Layout */
+.landscape .btnContainer {
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+}
+.btnCircle {
+  display: inline-block;
+  cursor: pointer;
+  border-radius: 25%;
+  color: white;
+  text-align: center;
+  background-color: blue; /* Default background color */
+  margin: 0.5vw;
+}
+.btnCircle.selected {
+  border: 2px solid #fff; /* Add a border to the selected button */
+  background-color: green; /* or any color to indicate the active state */
+  color: white; /* adjust text color if needed */
+}
+.btnCircle.Active {
+  background-color: green; /* Background color when selected */
+}
+.btnCircle.inactive {
+  /* Inactive (autopilot off) - Red */
+  background-color: red;
+}
+.btnBlack {
+  display: inline-block;
+  cursor: pointer;
+  color: white;
+  text-align: center;
+  border-radius: 20%;
+  background-color: #2a475c;
+}
+.btnBlack.selected {
+  background-color: #4caf50; /* Green background */
+  color: white;
+  border: 2px solid #2a475c; /* Optional darker border */
+  transition: background-color 0.3s ease; /* Smooth transition */
+}
+/* Style all elements with the class name "infocontainer" */
+.infoContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; /* Allow wrapping */
+  color: white;
+  justify-content: center;
+  margin-bottom: 0; /* Add some margin to separate button groups */
+}
+.infoField {
+  background-color: #2f648d;
+  /* background-color: #2A475C; */
+  text-align: center;
+  border-radius: 10%;
+  padding: 1vw 1vw; /* Reduced padding */
+  margin: 0 0.5vw 0 0.5vw;
+}
+.largeInfoField {
+  background-color: #2a475c;
+  text-align: center;
+  border-radius: 10%;
+  margin: 1vw;
+}
+#notificationArea {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #2a475c;
+  color: white;
+  font-size: 30px;
+  text-align: center;
+  padding: 10px;
+  display: none;
+  z-index: 1000;
+}
+/* iPhone 14 (Portrait Mode)  red */
+@media only screen and (width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait) {
+  body {
+    background-color: red;
+  }
+  .landscape {
+    display: none; /* Hide portrait-specific layout */
+  }
+  .portrait {
+    display: block; /* Show landscape-specific layout */
+  }
+  .btnCircle {
+    font-size: 10vw; /* Much bigger font size */
+    padding: 3vw 4vw; /* Increased padding top right bottom left*/
+    margin: 1.5vw;
+  }
+  .btnBlack {
+    font-size: 8vw; /* Slightly bigger font size */
+    padding: 2.5vw 4vw; /* Slightly increased padding */
+    margin: 1vw;
+  }
+  .tableField {
+    padding: 0.5vw 1vw; /* Adjust padding */
+    font-size: 6vw; /* Reduced font size */
+  }
+  .infoField {
+    font-size: 5vw;
+    margin: 0.5vw 0.5vw 0.5vw 0.5vw;
+  }
+  .btnContainer {
+    flex-wrap: wrap; /* Allow wrapping in portrait mode */
+  }
+  .largeInfoField {
+    font-size: 7vw; /* Adjust font size */
+    padding: 2vw 3vw; /* Adjust padding */
+    margin: 1vw;
+  }
+}
+/* iPhone 14 (Landscape Mode)  green  */
+@media only screen and (min-width: 390px) and (max-width: 844px) and (min-height: 300px) and (max-height: 390px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
+  body {
+    background-color: #06fb02;
+  }
+  .portrait {
+    display: none; /* Hide portrait-specific layout */
+  }
+  .landscape {
+    display: block; /* Show landscape-specific layout */
+  }
+  .btnBlack {
+    font-size: 3.5vw; /* Adjust font size */
+    padding: 0.5vw 2vw; /* Adjust padding */
+    margin-left: 2vw;
+    margin-right: 2vw;
+  }
+  .btnCircle {
+    font-size: 4vw; /* Much bigger font size */
+    padding: 1vw 4vw; /* Increased padding top right bottom left*/
+  }
+  .table th {
+    font-size: 2vw; /* Smaller font size for headers */
+    padding: 0 0.5vw 0 0.5vw;
+  }
+  .tableField {
+    font-size: 1.5vw; /* Adjust font size */
+  }
+  .infoField {
+    font-size: 2vw; /* Adjust font size */
+  }
+  .btnContainer,
+  .infoContainer {
+    flex-wrap: nowrap; /* No wrapping in landscape mode */
+  }
+  .largeInfoField {
+    font-size-adjust: 2.5vw; /* Adjust font size */
+    padding: 1vw 1vw; /* Adjust padding */
+    margin: 0.5vw;
+  }
+  .alarm-clock-font {
+    font-size: 3vw;
+  }
+}
+/* iPad mini tablets (portrait Mode) orange */
+@media only screen and (min-width: 480px) and (max-width: 768px) and (min-height: 602px) and (max-height: 1024px) and (orientation: portrait) {
+  body {
+    background-color: orange;
+  }
+  .landscape {
+    display: none; /* Hide portrait-specific layout */
+  }
+  .portrait {
+    display: block; /* Show landscape-specific layout */
+  }
+  .btnCircle {
+    font-size: 6vw; /* Much bigger font size */
+    padding: 1vw 2.5vw; /* Increased padding top right bottom left*/
+    margin-top: 2vw;
+    margin-bottom: 2vw;
+  }
+  .btnBlack {
+    font-size: 5vw; /* Reduced font size */
+    padding: 1vw 1vw; /* Reduced padding */
+    margin: 1vw;
+  }
+  .tableField {
+    padding: 0.5vw 1vw; /* Adjust padding */
+    font-size: 3.5vw; /* Reduced font size */
+  }
+  .infoField {
+    font-size: 3vw; /* Reduced font size */
+    margin: 0.5vw 0.5vw 0.5vw 0.5vw;
+  }
+  .btnContainer,
+  .infoContainer {
+    flex-wrap: nowrap; /* No wrapping in landscape mode */
+  }
+  .largeInfoField {
+    font-size: 5vw; /* Adjust font size */
+    padding: 1vw 1.5vw; /* Adjust padding */
+    margin-top: 2vw;
+    margin-bottom: 2vw;
+  }
+}
+/* iPad mini tablets(landscape Mode) pink  */
+@media only screen and (max-height: 1024px) and (min-width: 768px) and (orientation: landscape) {
+  body {
+    background-color: pink;
+  }
+  .portrait {
+    display: none; /* Hide portrait-specific layout */
+  }
+  .landscape {
+    display: block; /* Show landscape-specific layout */
+  }
+  .btnCircle {
+    font-size: 4vw; /* Much bigger font size */
+    padding: 1vw 4vw; /* Increased padding top right bottom left*/
+  }
+  .btnBlack {
+    font-size: 3vw; /* Reduced font size */
+    padding: 1vw 2vw 1vw 2vw;
+    margin-left: 2vw; /* Adjust margin for single-row layout */
+    margin-right: 2vw;
+  }
+  .table th {
+    font-size: 1vw; /* Smaller font size for headers */
+  }
+  .tableField {
+    padding: 0.5vw 0.5vw; /* Adjust padding */
+    font-size: 1.5vw; /* Reduced font size */
+  }
+  .infoField {
+    font-size: 2.5vw; /* Reduced font size */
+  }
+  .btnContainer,
+  .infoContainer {
+    flex-wrap: nowrap; /* No wrapping in landscape mode */
+  }
+  .largeInfoField {
+    font-size-adjust: 2.5vw; /* Adjust font size */
+    padding: 1vw 1vw; /* Adjust padding */
+    margin: 1vw;
+  }
+  .alarm-clock-font {
+    font-size: 3vw;
+  }
+  #main {
+    padding-top: 1px; /* Adjust padding to fit content */
+  }
+}
+/* iPad Air 2, (Portrait Mode), blue */
+@media only screen and (min-width: 768px) and (min-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
+  body {
+    background-color: blue;
+  }
+  .landscape {
+    display: none; /* Hide portrait-specific layout */
+  }
+  .portrait {
+    display: block; /* Show landscape-specific layout */
+  }
+  .btnCircle {
+    font-size: 6vw; /* Much bigger font size */
+    padding: 3vw 3.5vw; /* Increased padding top right bottom left*/
+    margin: 1vw;
+  }
+  .btnBlack {
+    font-size: 6vw; /* Reduced font size */
+    padding: 1vw 2vw; /* Reduced padding */
+    margin: 0.5vw;
+  }
+  .tableField {
+    padding: 1vw 1vw; /* Adjust padding */
+    font-size: 4vw; /* Reduced font size */
+  }
+  .infoField {
+    font-size: 3.5vw; /* Reduced font size */
+    margin: 0.5vw 0.5vw 0.5vw 0.5vw;
+  }
+  .btnContainer {
+    flex-wrap: wrap; /* wrapping in portrait mode */
+  }
+  .largeInfoField {
+    font-size-adjust: 4vw;
+    padding: 1.5vw 2vw; /* Adjust padding */
+    margin: 2vw;
+  }
+  #main {
+    padding-top: 4px; /* Adjust padding to fit content */
+  }
+}
+/* iPad Air 2 (Landscape Mode)  yellow   */
+@media only screen and (min-width: 1024px) and (min-height: 820px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
+  body {
+    background-color: yellow;
+  }
+  .portrait {
+    display: none; /* Hide portrait-specific layout */
+  }
+  .landscape {
+    display: block; /* Show landscape-specific layout */
+  }
+  .btnBlack {
+    font-size: 4.5vw; /* Reduced font size */
+    padding: 1vw 2vw; /* Reduced padding */
+    margin-left: 2vw; /* Adjust margin for single-row layout */
+    margin-right: 2vw;
+  }
+  .btnCircle {
+    font-size: 5.5vw; /* Much bigger font size */
+    padding: 1.5vw 2.5vw; /* Increased padding top right bottom left*/
+  }
+  .tableField {
+    padding: 0.1px 0.1px;
+    font-size: 3vw; /* Reduced font size */
+  }
+  .infoField {
+    font-size: 3.5vw; /* Reduced font size */
+  }
+  .btnContainer,
+  .infoContainer {
+    flex-wrap: nowrap; /* No wrapping in landscape mode */
+  }
+  .largeInfoField {
+    font-size-adjust: 4vw;
+    padding: 1vw 2vw; /* Adjust padding */
+  }
+  #main {
+    padding-top: 2px; /* Adjust padding to fit content */
+  }
+}
+/* General styles for larger screens, purple  */
+@media only screen and (min-width: 1280px) and (orientation: landscape) {
+  body {
+    background-color: purple;
+  }
+  .portrait {
+    display: none; /* Hide portrait-specific layout */
+  }
+  .landscape {
+    display: block; /* Show landscape-specific layout */
+  }
+  .btnCircle {
+    font-size: 5vw; /* Much bigger font size */
+    padding: 1vw 2vw; /* Increased padding top right bottom left*/
+    margin: 0.5vw;
+  }
+  .btnBlack {
+    font-size: 4vw; /* Responsive font size */
+    padding: 1vw 3vw; /* Responsive padding */
+    margin: 0.5vw;
+  }
+  .tableField {
+    font-size: 3vw; /* Adjust font size */
+    padding: 0.2vw 0.2vw; /* Adjust padding */
+    margin: 0.5vw;
+  }
+  .infoField {
+    font-size: 3.5vw; /* Responsive font size */
+    padding: 1vw 1vw; /* Responsive padding */
+  }
+  .largeInfoField {
+    font-size: 4vw; /* Adjust font size */
+    padding: 1vw 2vw; /* Adjust padding */
+    margin: 0.5vw;
+  }
+  #main {
+    padding-top: 5px; /* Adjust padding to fit content */
+  }
+}

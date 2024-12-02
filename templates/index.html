@@ -1,841 +1,517 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>Control</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--link rel="icon" type="image/png" href="favicon.ico">-->
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="apple-touch-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
-    <style>
-        @font-face {
-            font-family: 'alarm-clock';
-            src: url('static/fonts/alarm-clock.ttf') format('truetype');
-        }
-        .alarm-clock-font {
-            font-family: 'alarm-clock', sans-serif;
-            font-size: 8vw;
-        }
-        body, html {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            height: 100%;
-            font-family: 'Trebuchet MS', sans-serif;
-        }
-        #main {
-            margin: 4px;
-            width: 100vw;
-            height: 100vh;
-            background-color: black;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Align items at the start of the container */
-            padding-top: 5px; /* Add some padding at the top */
-        }
-        #remoteMain {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        /* Style all elements with the class name "table" */
-        .table {
-            color: white;
-            width: 100%; /* Ensure the table spans the container */
-            border-spacing: 5px; /* Space between cells */
-            border-collapse: separate;
-            border: none; /* Remove any borders */
-            border-radius: 5px; /* Optional rounded corners for headers */
-        }
-        /* Style for table header cells */
-        .table th {
-            font-size: 2.5vw; /* Smaller font size for headers */
-            font-weight: normal;
-            text-align: center;
-            padding: 0.5 0.5vw 0.5 0.5vw;
-            color: #ddd; /* Slightly lighter color for headers */
-            background-color: #0e1820; 
-            border: none; /* Remove any borders */
-            border-radius: 5px; /* Optional rounded corners for data cells */
-        }
-        .tableField {
-            font-size: 4vw; /* Larger font size for numbers */
-            color: white;
-            text-align: center;
-            padding: 1vw;
-            border: 1px solid #555; /* Adds border to data cells */
-            background-color: #2A475C; 
-            border-radius: 5px; /* Optional rounded corners */
-        }
-        /* Base styles for all btnContainers */
-        .btnContainer {
-            display: flex;
-            justify-content: center;
-            margin: 0.5vw;
-        }
-        /* Portrait Layout */
-        .portrait .btnContainer {
-            flex-direction: flex;
-            align-items: center;
-        }
-        /* Landscape Layout */
-        .landscape .btnContainer {
-            flex-direction: row;
-            justify-content: center;
-            align-items: stretch;
-        }
-        .btnCircle {
-            display: inline-block;
-            cursor: pointer;
-            border-radius: 25%;
-            color: white;
-            text-align: center;
-            background-color: blue; /* Default background color */
-            margin: 0.5vw;
-        }
-        .btnCircle.selected {
-            border: 2px solid #fff; /* Add a border to the selected button */
-            background-color: green; /* or any color to indicate the active state */
-            color: white; /* adjust text color if needed */
-        }
-        .btnCircle.Active {
-            background-color: green; /* Background color when selected */
-        }
-        .btnCircle.inactive {/* Inactive (autopilot off) - Red */
-            background-color: red;
-        }
-        .btnBlack {
-            display: inline-block;
-            cursor: pointer;
-            color: white;
-            text-align: center;
-            border-radius: 20%;
-            background-color: #2A475C;
-        }
-        .btnBlack.selected {
-            background-color: #4CAF50; /* Example: Green background */
-            color: white;
-            border: 2px solid #2A475C; /* Example: darker border */
-        }
-        /* Style all elements with the class name "infocontainer" */
-        .infoContainer {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap; /* Allow wrapping */
-            color: white;
-            justify-content: center;
-            margin-bottom: 0; /* Add some margin to separate button groups */
-        }
-        .infoField {
-            background-color: #2f648d;
-            /* background-color: #2A475C; */
-            text-align: center;
-            border-radius: 10%;
-            padding: 1vw 1vw; /* Reduced padding */
-            margin: 0 0.5vw 0 0.5vw;
-        }
-        .largeInfoField {
-            background-color: #2A475C;
-            text-align: center;
-            border-radius: 10%;
-            margin: 1vw;
-        }
-        #notificationArea {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color:#2A475C;
-            color: white;
-            font-size: 30px;
-            text-align: center;
-            padding: 10px;
-            display: none;
-            z-index: 1000;
-        }
-        /* iPhone 14 (Portrait Mode)  red */
-        @media only screen and (width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait){
-            body {background-color:red }
-            .landscape {
-                display: none; /* Hide portrait-specific layout */
-            }
-            .portrait {
-                display: block; /* Show landscape-specific layout */
-            }
-            .btnCircle {
-                font-size: 10vw; /* Much bigger font size */
-                padding: 3vw 4vw; /* Increased padding top right bottom left*/
-                margin: 1.5vw;
-            }
-            .btnBlack {
-                font-size: 8vw; /* Slightly bigger font size */
-                padding: 2.5vw 4vw; /* Slightly increased padding */
-                margin: 1vw;
-            }
-            .tableField {
-                padding: 0.5vw 1vw; /* Adjust padding */
-                font-size: 6vw; /* Reduced font size */
-            }
-            .infoField {
-                font-size: 5vw;
-                margin: 0.5vw 0.5vw 0.5vw 0.5vw;
-            }
-            .btnContainer {
-                flex-wrap: wrap; /* Allow wrapping in portrait mode */
-            }
-            .largeInfoField {
-                font-size: 7vw; /* Adjust font size */
-                padding: 2vw 3vw; /* Adjust padding */
-                margin: 1vw;
-            }
-        }
-        /* iPhone 14 (Landscape Mode)  green  */
-        @media only screen and (min-width: 390px) and (max-width: 844px) and (min-height: 300px) and (max-height: 390px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3) {
-            body {background-color:#06fb02 }
-            .portrait {
-                display: none; /* Hide portrait-specific layout */
-            }
-            .landscape {
-                display: block; /* Show landscape-specific layout */
-            }
-            .btnBlack {
-                font-size: 3.5vw; /* Adjust font size */
-                padding: 0.5vw 2vw; /* Adjust padding */
-                margin-left: 2vw;
-                margin-right: 2vw;
-            }
-            .btnCircle {
-                font-size: 4vw; /* Much bigger font size */
-                padding: 1vw 4vw; /* Increased padding top right bottom left*/
-            }
-            .table th {
-                font-size: 2vw; /* Smaller font size for headers */
-                padding: 0 0.5vw 0 0.5vw;
-            }
-            .tableField {
-                font-size: 1.50vw; /* Adjust font size */
-            }
-            .infoField {
-                font-size: 2vw; /* Adjust font size */
-            }
-            .btnContainer, .infoContainer {
-                flex-wrap: nowrap; /* No wrapping in landscape mode */
-            }
-            .largeInfoField {
-                font-size-adjust: 2.5vw; /* Adjust font size */
-                padding: 1vw 1vw; /* Adjust padding */
-                margin: 0.5vw;
-            }
-            .alarm-clock-font {
-                font-size: 3vw;
-            }
-        }
-        /* iPad mini tablets (portrait Mode) orange */
-        @media only screen and (min-width: 480px) and (max-width: 768px) and (min-height: 602px) and (max-height: 1024px) and (orientation: portrait) {
-            body {background-color:orange}
-            .landscape {
-                display: none; /* Hide portrait-specific layout */
-            }
-            .portrait {
-                display: block; /* Show landscape-specific layout */
-            }
-            .btnCircle {
-                font-size: 6vw; /* Much bigger font size */
-                padding: 1vw 2.5vw; /* Increased padding top right bottom left*/
-                margin-top: 2vw;
-                margin-bottom: 2vw;
-            }
-            .btnBlack {
-                font-size: 5vw; /* Reduced font size */
-                padding: 1vw 1vw; /* Reduced padding */
-                margin: 1vw;
-            }
-            .tableField {
-                padding: 0.5vw 1vw; /* Adjust padding */
-                font-size: 3.5vw; /* Reduced font size */
-            }
-            .infoField {
-                font-size: 3vw; /* Reduced font size */
-                margin: 0.5vw 0.5vw 0.5vw 0.5vw;
-            }
-            .btnContainer, .infoContainer {
-                flex-wrap: nowrap; /* No wrapping in landscape mode */
-            }
-            .largeInfoField {
-                font-size: 5vw; /* Adjust font size */
-                padding: 1vw 1.5vw; /* Adjust padding */
-                margin-top: 2vw;
-                margin-bottom: 2vw;
-            }
-        }
-        /* iPad mini tablets(landscape Mode) pink  */
-        @media only screen and (max-height:1024) and (min-width: 768px) and (orientation: landscape) {
-            body {background-color:pink }
-            .portrait {
-                display: none; /* Hide portrait-specific layout */
-            }
-            .landscape {
-                display: block; /* Show landscape-specific layout */
-            }
-            .btnCircle {
-                font-size: 4vw; /* Much bigger font size */
-                padding: 1vw 4vw; /* Increased padding top right bottom left*/
-            }
-            .btnBlack {
-                font-size: 3vw; /* Reduced font size */
-                padding: 1vw 2vw 1vw 2vw;
-                margin-left: 2vw ; /* Adjust margin for single-row layout */
-                margin-right: 2vw;
-            }
-            .table th {
-                font-size: 1vw; /* Smaller font size for headers */
-            }
-            .tableField {
-                padding: 0.5vw 0.5vw; /* Adjust padding */
-                font-size: 1.5vw; /* Reduced font size */
-            }
-            .infoField {
-                font-size: 2.5vw; /* Reduced font size */
-            }
-            .btnContainer, .infoContainer {
-                flex-wrap: nowrap; /* No wrapping in landscape mode */
-            }
-            .largeInfoField {
-                font-size-adjust: 2.5vw; /* Adjust font size */
-                padding: 1vw 1vw; /* Adjust padding */
-                margin: 1vw;
-            }
-            .alarm-clock-font {
-                font-size: 3vw;
-            }
-            #main {
-                padding-top: 1px; /* Adjust padding to fit content */
-            }
-        }
-        /* iPad Air 2, (Portrait Mode), blue */
-        @media only screen and (min-width: 768px) and (min-height: 1024px)  and (orientation: portrait) and (-webkit-device-pixel-ratio: 2) {
-            body {background-color:blue }
-            .landscape {
-                display: none; /* Hide portrait-specific layout */
-            }
-            .portrait {
-                display: block; /* Show landscape-specific layout */
-            }
-            .btnCircle {
-                font-size: 6vw; /* Much bigger font size */
-                padding: 3vw 3.5vw; /* Increased padding top right bottom left*/
-                margin: 1vw;
-            }
-            .btnBlack {
-                font-size: 6vw; /* Reduced font size */
-                padding: 1vw 2vw; /* Reduced padding */
-                margin: 0.5vw;
-            }
-            .tableField {
-                padding: 1vw 1vw; /* Adjust padding */
-                font-size: 4vw; /* Reduced font size */
-            }
-            .infoField {
-                font-size: 3.5vw; /* Reduced font size */
-                margin: 0.5vw 0.5vw 0.5vw 0.5vw;
-            }
-            .btnContainer {
-                flex-wrap: wrap; /* wrapping in portrait mode */
-            }
-            .largeInfoField {
-                font-size-adjust: 4vw;
-                padding: 1.5vw 2vw; /* Adjust padding */
-                margin: 2vw;
-            }
-            #main {
-                padding-top: 4px; /* Adjust padding to fit content */
-            }
-        }
-        /* iPad Air 2 (Landscape Mode)  yellow   */
-        @media only screen and (min-width: 1024px) and (min-height: 768px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2) {
-            body {background-color:yellow }
-            .portrait {
-                display: none; /* Hide portrait-specific layout */
-            }
-            .landscape {
-                display: block; /* Show landscape-specific layout */
-            }
-            .btnBlack {
-                font-size: 4.5vw; /* Reduced font size */
-                padding: 1vw 2vw; /* Reduced padding */
-                margin-left: 2vw ; /* Adjust margin for single-row layout */
-                margin-right: 2vw;
-            }
-            .btnCircle {
-                font-size: 5.5vw; /* Much bigger font size */
-                padding: 1.5vw 2.5vw; /* Increased padding top right bottom left*/
-            }
-            .tableField {
-                padding: 0.1px 0.1px;
-                font-size: 3vw; /* Reduced font size */
-            }
-            .infoField {
-                font-size: 3.5vw; /* Reduced font size */
-            }
-            .btnContainer, .infoContainer {
-                flex-wrap: nowrap; /* No wrapping in landscape mode */
-            }
-            .largeInfoField {
-                font-size-adjust: 4vw;
-                padding: 1vw 2vw; /* Adjust padding */
-            }
-            #main {
-                padding-top: 2px; /* Adjust padding to fit content */
-            }
-        }
-        /* General styles for larger screens, purple  */
-        @media only screen and (min-width: 1280px) and (orientation: landscape) {
-            body {background-color:purple }
-            .portrait {
-                display: none; /* Hide portrait-specific layout */
-            }
-            .landscape {
-                display: block; /* Show landscape-specific layout */
-            }
-            .btnCircle {
-                font-size: 5vw; /* Much bigger font size */
-                padding: 1vw 2vw; /* Increased padding top right bottom left*/
-                margin: 0.5vw;
-            }
-            .btnBlack {
-                font-size: 4vw; /* Responsive font size */
-                padding: 1vw 3vw; /* Responsive padding */
-                margin: 0.5vw;
-            }
-            .tableField {
-                font-size: 3vw; /* Adjust font size */
-                padding: 0.2vw 0.2vw; /* Adjust padding */
-                margin: 0.5vw
-            }
-            .infoField {
-                font-size: 3.5vw; /* Responsive font size */
-                padding: 1vw 1vw; /* Responsive padding */
-            }
-            .largeInfoField {
-                font-size: 4vw; /* Adjust font size */
-                padding: 1vw 2vw; /* Adjust padding */
-                margin: 0.5vw;
-            }
-            #main {
-                padding-top: 5px; /* Adjust padding to fit content */
-            }
-        }
-    </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="main">
-        <div id="remoteMain">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th class="tableField">MaxSpeedAngle</th>
-                        <th class="tableField">MaxSpeed</th>
-                        <th class="tableField">TargetSpeed</th>
-                        <th class="tableField">TargetAngle</th>
-                        <th class="tableField">PolarSpeed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="tableField"><span id="performance_maxSpeedAngle">N/A</span></td>
-                        <td class="tableField"><span id="performance_maxSpeed">N/A</span></td>
-                        <td class="tableField"><span id="performance_targetSpeed">N/A</span></td>
-                        <td class="tableField"><span id="performance_targetAngle">N/A</span></td>
-                        <td class="tableField"><span id="performance_polarSpeed">N/A</span></td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="infoContainer">
-                <div class="infoField">COG: <span id="navigation_courseOverGroundTrue">N/A</span></div>
-                <div class="infoField">HDT: <span id="navigation_headingTrue">N/A</span></div>
-                <div class="infoField">HDG: <span id="navigation_magneticVariation">N/A</span></div>
-                <div class="infoField">TWS: <span id="environment_wind.speedTrue">N/A </span><span style="font-size:1.5vw"> m/s</span></div>
-                <div class="infoField">SOG/VTG: <span id="navigation_speedOverGround">N/A </span><span style="font-size:1.5vw"> kn</span></div>
-                <div class="infoField">Speed/VHW: <span id="navigation_speedThroughWater">N/A </span><span style="font-size:1.5vw"> kn</span></div>
-                <div class="infoField">Volt: <span id="electricalVoltage">N/A </span><span style="font-size:1.5vw"> V</span></div>
-            </div>
-            <!-- Portrait Layout -->
-            <div class="portrait">
-                <div class="btnContainer">
-                    <div class="btnBlack btnPort" onclick="new_toggleSelection(this)"> ← </div>
-                    <div class="btnBlack autopilotState" id="portraitState">N/A</div>
-                    <div class="btnBlack btnStarboard" onclick="new_toggleSelection(this)"> → </div>
-                </div>
-                <div class="btnContainer">
-                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> -1 </div>
-                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> -10 </div>
-                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> +10 </div>
-                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> +1 </div>
-                </div>
-            </div>
-
-            <!-- Landscape Layout -->
-            <div class="landscape">
-                <div class="btnContainer">
-                    <div class="btnBlack btnPort" onclick="new_toggleSelection(this)"> ← </div>
-                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> -1 </div>
-                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> -10 </div>
-                    <div class="btnBlack autopilotState" id="landscapeState">N/A</div>
-                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> +10 </div>
-                    <div class="btnBlack btnAdjust" onclick="new_toggleSelection(this)"> +1 </div>
-                    <div class="btnBlack btnStarboard" onclick="new_toggleSelection(this)"> → </div>
-                </div>
-            </div>
-            <div class="btnContainer">
-                <div class="btnCircle" id="steering_autopilot.state_standby" onclick="toggleSelection(this)">STBY</div>
-                <div class="btnCircle" id="steering_autopilot.state_wind" onclick="toggleSelection(this)">WIND</div>
-                <div class="btnCircle" id="steering_autopilot.state_track" onclick="toggleSelection(this)">TRACK</div>
-                <div class="btnCircle" id="steering_autopilot.state_auto" onclick="toggleSelection(this)">AUTO</div>
-            </div>
-            <div class="infoContainer">
-                <div class="largeInfoField">AWA: <span id="environment_wind.angleApparent" class="alarm-clock-font">N/A</span> </div>
-                <div class="largeInfoField">TWD: <span id="environment_wind.angleTrueGround" class="alarm-clock-font">N/A</span> </div>
-                <div class="largeInfoField">TWA: <span id="environment_wind.angleTrue" class="alarm-clock-font">N/A</span> </div>
-            </div>
-            <div class="infoContainer">
-                <div class="infoField">Beat Angle: <span id="beatAngle">N/A</span> °</div>
-                <div class="infoField">DPTH: <span id="environment_depth.belowKeel">N/A</span><span style="font-size:1.5vw"> m</span></div>
-                <div class="infoField">Gybe Angle: <span id="gybeAngle">N/A</span> °</div>
-            </div>
+      <div id="remoteMain">
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="tableField">MaxSpeedAngle</th>
+              <th class="tableField">MaxSpeed</th>
+              <th class="tableField">TargetSpeed</th>
+              <th class="tableField">TargetAngle</th>
+              <th class="tableField">PolarSpeed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="tableField">
+                <span id="performance_maxSpeedAngle">N/A</span>
+              </td>
+              <td class="tableField">
+                <span id="performance_maxSpeed">N/A</span>
+              </td>
+              <td class="tableField">
+                <span id="performance_targetSpeed">N/A</span>
+              </td>
+              <td class="tableField">
+                <span id="performance_targetAngle">N/A</span>
+              </td>
+              <td class="tableField">
+                <span id="performance_polarSpeed">N/A</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="infoContainer">
+          <div class="infoField">
+            COG: <span id="navigation_courseOverGroundTrue">N/A</span>
+          </div>
+          <div class="infoField">
+            HDT: <span id="navigation_headingTrue">N/A</span>
+          </div>
+          <div class="infoField">
+            HDG: <span id="navigation_magneticVariation">N/A</span>
+          </div>
+          <div class="infoField">
+            TWS: <span id="environment_wind.speedTrue">N/A </span
+            ><span style="font-size: 1.5vw"> m/s</span>
+          </div>
+          <div class="infoField">
+            SOG/VTG: <span id="navigation_speedOverGround">N/A </span
+            ><span style="font-size: 1.5vw"> kn</span>
+          </div>
+          <div class="infoField">
+            Speed/VHW: <span id="navigation_speedThroughWater">N/A </span
+            ><span style="font-size: 1.5vw"> kn</span>
+          </div>
+          <div class="infoField">
+            Volt: <span id="electricalVoltage">N/A </span
+            ><span style="font-size: 1.5vw"> V</span>
+          </div>
         </div>
+        <!-- Portrait Layout -->
+        <div class="portrait">
+          <div class="btnContainer">
+            <div class="btnBlack btnPort">←</div>
+            <div class="btnBlack autopilotState" id="portraitState">N/A</div>
+            <div class="btnBlack btnStarboard">→</div>
+          </div>
+          <div class="btnContainer">
+            <div class="btnBlack btnAdjust">-1</div>
+            <div class="btnBlack btnAdjust">-10</div>
+            <div class="btnBlack btnAdjust">+10</div>
+            <div class="btnBlack btnAdjust">+1</div>
+          </div>
+        </div>
+
+        <!-- Landscape Layout -->
+        <div class="landscape">
+          <div class="btnContainer">
+            <div class="btnBlack btnPort">←</div>
+            <div class="btnBlack btnAdjust">-1</div>
+            <div class="btnBlack btnAdjust">-10</div>
+            <div class="btnBlack autopilotState" id="landscapeState">N/A</div>
+            <div class="btnBlack btnAdjust">+10</div>
+            <div class="btnBlack btnAdjust">+1</div>
+            <div class="btnBlack btnStarboard">→</div>
+          </div>
+        </div>
+        <div class="btnContainer">
+          <div
+            class="btnCircle"
+            id="steering_autopilot.state_standby"
+            onclick="toggleSelection(this)"
+          >
+            STBY
+          </div>
+          <div
+            class="btnCircle"
+            id="steering_autopilot.state_wind"
+            onclick="toggleSelection(this)"
+          >
+            WIND
+          </div>
+          <div
+            class="btnCircle"
+            id="steering_autopilot.state_track"
+            onclick="toggleSelection(this)"
+          >
+            TRACK
+          </div>
+          <div
+            class="btnCircle"
+            id="steering_autopilot.state_auto"
+            onclick="toggleSelection(this)"
+          >
+            AUTO
+          </div>
+        </div>
+        <div class="infoContainer">
+          <div class="largeInfoField">
+            AWA:
+            <span id="environment_wind.angleApparent" class="alarm-clock-font"
+              >N/A</span
+            >
+          </div>
+          <div class="largeInfoField">
+            TWD:
+            <span id="environment_wind.angleTrueGround" class="alarm-clock-font"
+              >N/A</span
+            >
+          </div>
+          <div class="largeInfoField">
+            TWA:
+            <span id="environment_wind.angleTrue" class="alarm-clock-font"
+              >N/A</span
+            >
+          </div>
+        </div>
+        <div class="infoContainer">
+          <div class="infoField">
+            Beat Angle: <span id="beatAngle">N/A</span> °
+          </div>
+          <div class="infoField">
+            DPTH: <span id="environment_depth.belowKeel">N/A</span
+            ><span style="font-size: 1.5vw"> m</span>
+          </div>
+          <div class="infoField">
+            Gybe Angle: <span id="gybeAngle">N/A</span> °
+          </div>
+        </div>
+      </div>
     </div>
     <div id="notificationArea"></div>
     <!-- Include Socket.IO -->
     <!--button id="testButton">Test Socket.IO</button>-->
     <script>
-        function radToDeg(rad) {
-            return rad * (180 / Math.PI);
+      function radToDeg(rad) {
+        return rad * (180 / Math.PI);
+      }
+      function m_to_knots(met) {
+        return (met * 1000) / 1852;
+      }
+      // Example: Generate a token against the user "pi" that is valid for 1 year.
+      // in shell
+      //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
+      const authToken = "xxxx"; // Determine the base URL for Flask or SignalK based on the environment
+      // Get the hostname and protocol dynamically
+      const protocol = window.location.protocol; // e.g., "http:" or "https:"
+      const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
+      const port = window.location.port || ""; // e.g., "8001" (empty if default port)
+
+      // Construct URLs dynamically based on the hostname
+      const flaskBaseURL = `${protocol}//${hostname}:${port || "8001"}`;
+      const signalKBaseURL = `${protocol}//${hostname}:3000`; // SignalK server (assuming port 3000 is fixed)
+
+      // Example usage
+      console.log(`Flask Server URL: ${flaskBaseURL}`);
+      console.log(`SignalK Server URL: ${signalKBaseURL}`);
+
+      // sends commands to adjust the autopilot settings, like changing the heading.
+      function sendPutRequest(path, value) {
+        console.log(
+          "function sendPutrequest, path:",
+          path,
+          "and value:",
+          value
+        );
+        fetch(`${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + authToken, // Include the token in the Authorization header
+          },
+          body: JSON.stringify({
+            value: value,
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              console.log("PUT response:", response);
+              throw new Error("Network response was not ok");
+            }
+            console.log("PUT request successful");
+            displayNotification("Course change accepted.");
+          })
+          .catch((error) => {
+            console.error("Error during PUT request:", error);
+            displayNotification("Error: Unable to change course.");
+          });
+      }
+
+      function displayNotification(text) {
+        const notificationArea = document.getElementById("notificationArea");
+        if (notificationArea) {
+          notificationArea.innerText = text;
+          notificationArea.style.display = "block";
+          setTimeout(() => {
+            notificationArea.style.display = "none";
+          }, 5000); // Hide the notification after 5 seconds
+        } else {
+          console.error("Notification area element not found");
         }
-        function m_to_knots(met){
-            return (met * 1000/1852);
+      }
+
+      // Function to update the button colors based on autopilot state
+      function updateButtonStates(currentState) {
+        // List all the buttons
+        const buttons = document.querySelectorAll(".btnCircle");
+
+        // Reset all buttons to blue (inactive state)
+        buttons.forEach((button) => {
+          button.style.backgroundColor = "blue";
+          button.style.color = "white";
+        });
+
+        // Check if autopilot is off, and color buttons red if it is
+        if (currentState === "off") {
+          buttons.forEach((button) => {
+            button.style.backgroundColor = "red";
+            button.style.color = "white";
+          });
+        } else {
+          // Set the button corresponding to the current autopilot state to green
+          const activeButton = document.getElementById(
+            "steering_autopilot.state_" + currentState
+          );
+          if (activeButton) {
+            activeButton.style.backgroundColor = "green";
+            activeButton.style.color = "white";
+          }
         }
-        // Example: Generate a token against the user "pi" that is valid for 1 year.
-        // in shell
-        //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
-        const authToken = 'xxxx';
-        // Determine the base URL for Flask or SignalK based on the environment
-        const isLocal = (window.location.hostname === 'fidelibe.local');
+      }
 
-        // Get the hostname and protocol dynamically
-        const protocol = window.location.protocol; // e.g., "http:" or "https:"
-        const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
-        const port = window.location.port || '';   // e.g., "8001" (empty if default port)
+      async function toggleSelection(button) {
+        const selectedId = button.id;
+        console.log("toggle selection Button ID:", selectedId);
 
-        // Construct URLs dynamically based on the hostname
-        const flaskBaseURL = `${protocol}//${hostname}:${port || '8001'}`;
-        const signalKBaseURL = `${protocol}//${hostname}:3000`; // SignalK server (assuming port 3000 is fixed)
+        // Map button IDs to autopilot states
+        const stateMap = {
+          "steering_autopilot.state_standby": "standby",
+          "steering_autopilot.state_wind": "wind",
+          "steering_autopilot.state_track": "route",
+          "steering_autopilot.state_auto": "auto",
+        };
 
-        // Example usage
-        console.log(`Flask Server URL: ${flaskBaseURL}`);
-        console.log(`SignalK Server URL: ${signalKBaseURL}`);
+        const selectedState = stateMap[selectedId];
+        if (selectedState) {
+          // Send PUT request to update autopilot state
+          await sendPutRequest("steering/autopilot/state", selectedState);
 
-        // sends commands to adjust the autopilot settings, like changing the heading.
-        function sendPutRequest(path, value) {
-            console.log('function sendPutrequest, path:',path,'and value:', value);
-            fetch(`${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + authToken // Include the token in the Authorization header
-                },
-                body: JSON.stringify({
-                    value: value
-                })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    console.log('PUT response:',response,);
-                    throw new Error('Network response was not ok');
-                }
-                console.log('PUT request successful');
-                displayNotification('Course change accepted.');
-            })
-            .catch(error => {
-                console.error('Error during PUT request:', error);
-                displayNotification('Error: Unable to change course.');
-            });
+          // Reset all buttons to blue (inactive)
+          document.querySelectorAll(".btnCircle").forEach((btn) => {
+            btn.style.backgroundColor = "blue";
+            btn.classList.remove("selected");
+          });
+
+          // Set the clicked button to green (active)
+          button.style.backgroundColor = "green";
+          button.classList.add("selected");
+
+          // Update all button states based on the autopilot state
+          updateButtonStates(selectedState);
+        } else {
+          console.error("Invalid button ID or state");
         }
+      }
 
-        function displayNotification(text) {
-            const notificationArea = document.getElementById('notificationArea');
-            if (notificationArea) {
-                notificationArea.innerText = text;
-                notificationArea.style.display = 'block';
-                setTimeout(() => {
-                    notificationArea.style.display = 'none';
-                }, 5000); // Hide the notification after 5 seconds
+      localStorage.debug = "*";
+
+      // Initialize Socket.IO connection
+      const socket = io(flaskBaseURL, {
+        transports: ["websocket"], // Use WebSocket transport explicitly
+      });
+
+      console.log("JavaScript is running.");
+
+      socket.on("connect_error", (error) => {
+        console.error("Connection error:", error.message);
+      });
+
+      socket.on("disconnect", (reason) => {
+        console.warn("Disconnected from server:", reason);
+      });
+
+      socket.on("test_event", (data) => {
+        console.log("Test event received:", data);
+      });
+
+      // Listen for autopilot status updates
+      socket.on("autopilot_status", (data) => {
+        console.log(" Autopilot status update:", data); // Log status updates
+        if (data.status === "off") {
+          // If autopilot is off, set all buttons to red
+          document.querySelectorAll(".btnCircle").forEach((btn) => {
+            btn.style.backgroundColor = "red";
+            btn.style.color = "white";
+          });
+        } else {
+          console.warn("Unrecognized autopilot status:", data);
+        }
+      });
+
+      // Store the previous SOG & VHW value globally
+      let previousSpeedOverGround = null;
+      let previousSpeedThroughWater = null;
+
+      // Socket.IO listener for updates
+      socket.on("update_data", (data) => {
+        // console.log("Received update data:", data); // Confirm data reception
+        data.updates.forEach((update) => {
+          const path = update.path;
+          const value = update.value;
+          //console.log("Update path:", path, "Value:", value); // Add this to verify value
+          if (path === "performance.maxSpeedAngle") {
+            document.getElementById("performance_maxSpeedAngle").innerText =
+              radToDeg(value).toFixed() + "°";
+          } else if (path === "performance.maxSpeed") {
+            document.getElementById("performance_maxSpeed").innerText =
+              m_to_knots(value).toFixed(1) + " kn";
+          } else if (path === "performance.targetSpeed") {
+            document.getElementById("performance_targetSpeed").innerText =
+              m_to_knots(value).toFixed(1) + " kn";
+          } else if (path === "performance.targetAngle") {
+            document.getElementById("performance_targetAngle").innerText =
+              radToDeg(value).toFixed() + "°";
+          } else if (path === "performance.polarSpeed") {
+            document.getElementById("performance_polarSpeed").innerText =
+              m_to_knots.toFixed(1) + " kn";
+          } else if (path === "performance.gybeAngle") {
+            document.getElementById("gybeAngle").innerText =
+              radToDeg(value).toFixed(0) + "";
+          } else if (path === "performance.beatAngle") {
+            document.getElementById("beatAngle").innerText =
+              radToDeg(value).toFixed(0) + "";
+            // environment
+          } else if (path === "environment.wind.angleApparent") {
+            document.getElementById(
+              "environment_wind.angleApparent"
+            ).innerText = radToDeg(value).toFixed(0) + "°";
+          } else if (path === "environment.wind.angleTrueGround") {
+            document.getElementById(
+              "environment_wind.angleTrueGround"
+            ).innerText = radToDeg(value).toFixed(0) + "°";
+          } else if (path === "environment.wind.angleTrue") {
+            document.getElementById("environment_wind.angleTrue").innerText =
+              radToDeg(value).toFixed(0) + "°";
+          } else if (path === "environment.depth.belowKeel") {
+            if (value <= 5) {
+              document.getElementById("environment_depth.belowKeel").innerText =
+                value.toFixed(1) + "";
             } else {
-                console.error('Notification area element not found');
+              document.getElementById("environment_depth.belowKeel").innerText =
+                value.toFixed(0) + "";
             }
-        }
+            // navigation
+          } else if (path === "navigation.courseOverGroundTrue") {
+            document.getElementById(
+              "navigation_courseOverGroundTrue"
+            ).innerText = radToDeg(value).toFixed() + "°";
+          } else if (path === "navigation.headingTrue") {
+            document.getElementById("navigation_headingTrue").innerText =
+              radToDeg(value).toFixed() + "°";
+          } else if (path === "navigation.magneticVariation") {
+            document.getElementById("navigation_magneticVariation").innerText =
+              radToDeg(value).toFixed() + "°";
+          } else if (path === "navigation.speedOverGround") {
+            // SOG VTG
+            const sogElement = document.getElementById(
+              "navigation_speedOverGround"
+            );
+            const infoField = sogElement.closest(".infoField"); // Get the parent container
+            console.log("Previous Speed:", previousSpeedOverGround);
+            const newSpeed = value.toFixed(1);
+            if (previousSpeedOverGround !== null) {
+              if (newSpeed > previousSpeedOverGround) {
+                infoField.style.color = "#06fb02"; // Bright lime green
+              } else if (newSpeed < previousSpeedOverGround) {
+                infoField.style.color = "red"; // Speed decreased
+              } else {
+                infoField.style.color = "white"; // Speed unchanged
+              }
+            }
+            sogElement.innerText = newSpeed; // Update the text content
+            previousSpeedOverGround = newSpeed; // Store the current speed
+            console.log("New SpeedOverGround:", newSpeed);
+          } else if (path === "navigation.speedThroughWater") {
+            // VHW PGN 128259
+            const sogElement = document.getElementById(
+              "navigation_speedThroughWater"
+            );
+            const infoField = sogElement.closest(".infoField"); // Get the parent container
+            console.log(
+              "Previous SpeedThroughWater:",
+              previousSpeedThroughWater
+            );
 
-        function new_toggleSelection(element) {
-            document.querySelectorAll('.btnBlack').forEach(btn => btn.classList.remove('selected'));
-            element.classList.add('selected');
-            console.log('element.classList = ',element.classList);
+            const newSpeed = value.toFixed(1);
+            if (previousSpeedThroughWater !== null) {
+              if (newSpeed > previousSpeedThroughWater) {
+                infoField.style.color = "#06fb02"; // Bright lime green
+              } else if (newSpeed < previousSpeedThroughWater) {
+                infoField.style.color = "red"; // Speed decreased
+              } else {
+                infoField.style.color = "white"; // Speed unchanged
+              }
+            }
+            sogElement.innerText = newSpeed; // Update the text content
+            previousSpeedThroughWater = newSpeed; // Store the current speed
+            console.log("New SpeedThroughWater:", newSpeed);
 
-            const command = (element.id.slice(3));
-            console.log('command = ',command);
-            if (Number.isNaN(parseInt(command))) {
-                // If not a number, treat as a string command
-                sendPutRequest('steering/autopilot/actions/adjustHeading', command);
-                console.log('adjust heading command = ',command);
+            // steering
+          } else if (path === "steering.autopilot.state") {
+            document.getElementById("steering_autopilot.state").innerText =
+              value;
+            if (value == "standby") {
+              document.getElementById(
+                "steering_autopilot.state_standby"
+              ).innerText = value;
+            } else if (value == "wind") {
+              document.getElementById(
+                "steering_autopilot.state_wind"
+              ).innerText = value;
+            } else if (value == "tack") {
+              document.getElementById(
+                "steering_autopilot.state_tack"
+              ).innerText = value;
+            } else if (value == "auto") {
+              document.getElementById(
+                "steering_autopilot.state_auto"
+              ).innerText = value;
             }
-            else {
-                // If a number, convert and use it
-                sendPutRequest('steering/autopilot/actions/tack', parseInt(command));
-                console.log('tack command = ',parseInt(command));
+          } else if (path === "steering.autopilot.target.windAngleApparent") {
+            document.getElementById("APwindAngle").innerText =
+              radToDeg(value).toFixed() + "°";
+          } else if (path === "steering.autopilot.target.headingMagnetic") {
+            document.getElementById("AP_headingMagnetic").innerText =
+              radToDeg(value).toFixed() + "°";
+          }
+        });
+      });
+
+      window.addEventListener("beforeunload", () => {
+        socket.disconnect(); // Ensure the socket is closed when the user leaves the page
+      });
+
+      // Handle the button clicks
+      document
+        .querySelectorAll(".btnPort, .btnAdjust,.btnStarboard")
+        .forEach((button) => {
+          button.addEventListener("click", async () => {
+            if (button.classList.contains("btnPort")) {
+              console.log("Send port command to autopilot");
+              await sendPutRequest("steering/autopilot/actions/tack", "port");
+            } else if (button.classList.contains("btnStarboard")) {
+              console.log("Send starboard command to autopilot");
+              await sendPutRequest(
+                "steering/autopilot/actions/tack",
+                "starboard"
+              );
+            } else if (button.classList.contains("btnAdjust")) {
+              const adjustment = parseInt(button.textContent.trim());
+              console.log(`Send adjustment: ${adjustment} to autopilot`);
+              await sendPutRequest(
+                "steering/autopilot/actions/adjustHeading",
+                adjustment
+              );
             }
-            // Remove the 'selected' class after 2 seconds
+
+            // Visual feedback: Add `selected` class temporarily
+            button.classList.add("selected");
             setTimeout(() => {
-                element.classList.remove('selected');
-            }, 2000); // 3000 milliseconds = 2 seconds
-        }
-
-        // Function to update the button colors based on autopilot state
-        function updateButtonStates(currentState) {
-            // List all the buttons
-            const buttons = document.querySelectorAll('.btnCircle');
-
-            // Reset all buttons to blue (inactive state)
-            buttons.forEach(button => {
-                button.style.backgroundColor = 'blue';
-                button.style.color = 'white';
-            });
-
-            // Check if autopilot is off, and color buttons red if it is
-            if (currentState === 'off') {
-                buttons.forEach(button => {
-                    button.style.backgroundColor = 'red';
-                    button.style.color = 'white';
-                });
-            } else {
-                // Set the button corresponding to the current autopilot state to green
-                const activeButton = document.getElementById('steering_autopilot.state_' + currentState);
-                if (activeButton) {
-                    activeButton.style.backgroundColor = 'green';
-                    activeButton.style.color = 'white';
-                }
-            }
-        }
-
-        async function toggleSelection(button) {
-            const selectedId = button.id;
-            console.log('toggle selection Button ID:', selectedId);
-
-            // Map button IDs to autopilot states
-            const stateMap = {
-                'steering_autopilot.state_standby': 'standby',
-                'steering_autopilot.state_wind': 'wind',
-                'steering_autopilot.state_track': 'route',
-                'steering_autopilot.state_auto': 'auto'
-            };
-
-            const selectedState = stateMap[selectedId];
-            if (selectedState) {
-                // Send PUT request to update autopilot state
-                await sendPutRequest('steering/autopilot/state', selectedState);
-
-                // Reset all buttons to blue (inactive)
-                document.querySelectorAll('.btnCircle').forEach(btn => {
-                    btn.style.backgroundColor = 'blue';
-                    btn.classList.remove('selected');
-                });
-
-                // Set the clicked button to green (active)
-                button.style.backgroundColor = 'green';
-                button.classList.add('selected');
-
-                // Update all button states based on the autopilot state
-                updateButtonStates(selectedState);
-
-            } else {
-                console.error('Invalid button ID or state');
-            }
-        }
-
-        localStorage.debug = '*';
-
-        // Initialize Socket.IO connection
-        const socket = io(flaskBaseURL, {
-            transports: ['websocket'], // Use WebSocket transport explicitly
-        });
-
-        console.log("JavaScript is running.");
-
-        //socket.on("connect", () => {
-            //console.log("Socket ID:", socket.id); // This should print a valid socket ID.
-        //});
-
-        socket.on("connect_error", (error) => {
-            console.error("Connection error:", error.message);
-        });
-
-        socket.on("disconnect", (reason) => {
-            console.warn("Disconnected from server:", reason);
-        });
-
-        socket.on("test_event", (data) => {
-            console.log("Test event received:", data);
-        });
-
-        // Listen for autopilot status updates
-        socket.on('autopilot_status', (data) => {
-            console.log(" Autopilot status update:", data); // Log status updates
-            if (data.status === 'off') {
-                // If autopilot is off, set all buttons to red
-                document.querySelectorAll('.btnCircle').forEach(btn => {
-                    btn.style.backgroundColor = 'red';
-                    btn.style.color = 'white';
-                });
-            } else {
-                console.warn("Unrecognized autopilot status:", data);
-            }
-        });
-
-        // Store the previous SOG & VHW value globally
-        let previousSpeedOverGround = null; 
-        let previousSpeedThroughWater = null; 
-
-        // Socket.IO listener for updates
-        socket.on("update_data", (data) => {
-            // console.log("Received update data:", data); // Confirm data reception
-            data.updates.forEach(update => {
-                const path = update.path;
-                const value = update.value;
-                //console.log("Update path:", path, "Value:", value); // Add this to verify value
-                if (path === 'performance.maxSpeedAngle') {
-                    document.getElementById("performance_maxSpeedAngle").innerText =  radToDeg(value).toFixed() + "°";
-                } else if (path === 'performance.maxSpeed') {
-                    document.getElementById("performance_maxSpeed").innerText =  m_to_knots(value).toFixed(1) + " kn";
-                } else if (path === 'performance.targetSpeed') {
-                    document.getElementById("performance_targetSpeed").innerText =  m_to_knots(value).toFixed(1) + " kn";
-                } else if (path === "performance.targetAngle") {
-                    document.getElementById("performance_targetAngle").innerText = radToDeg(value).toFixed() + "°";
-                } else if (path === 'performance.polarSpeed') {
-                    document.getElementById("performance_polarSpeed").innerText =  m_to_knots.toFixed(1) + " kn";
-                } else if (path === "performance.gybeAngle") {
-                    document.getElementById("gybeAngle").innerText = radToDeg(value).toFixed(0) + "";
-                } else if (path === "performance.beatAngle") {
-                    document.getElementById("beatAngle").innerText = radToDeg(value).toFixed(0) + "";
-                // environment
-                } else if (path === 'environment.wind.angleApparent') {
-                    document.getElementById("environment_wind.angleApparent").innerText =  radToDeg(value).toFixed(0) + "°";
-                } else if (path === 'environment.wind.angleTrueGround') {
-                    document.getElementById("environment_wind.angleTrueGround").innerText =  radToDeg(value).toFixed(0) + "°";
-                } else if (path === 'environment.wind.angleTrue') {
-                    document.getElementById("environment_wind.angleTrue").innerText =  radToDeg(value).toFixed(0) + "°";
-                } else if (path === 'environment.depth.belowKeel') {
-                    if (value <= 5) {
-                        document.getElementById("environment_depth.belowKeel").innerText =  value.toFixed(1) + "";
-                    } else {
-                        document.getElementById("environment_depth.belowKeel").innerText =  value.toFixed(0) + "";
-                    }
-                // navigation
-                } else if (path === "navigation.courseOverGroundTrue") {
-                    document.getElementById("navigation_courseOverGroundTrue").innerText = radToDeg(value).toFixed() + "°";
-                } else if (path === "navigation.headingTrue") {
-                    document.getElementById("navigation_headingTrue").innerText = radToDeg(value).toFixed() + "°";
-                } else if (path === "navigation.magneticVariation") {
-                    document.getElementById("navigation_magneticVariation").innerText = radToDeg(value).toFixed() + "°";
-                } else if (path === 'navigation.speedOverGround') { // SOG VTG
-                    const sogElement = document.getElementById("navigation_speedOverGround");
-                    const infoField = sogElement.closest('.infoField'); // Get the parent container
-                    console.log("Previous Speed:", previousSpeedOverGround);
-                    const newSpeed = value.toFixed(1);
-                    if (previousSpeedOverGround !== null) {
-                        if (newSpeed > previousSpeedOverGround) {
-                            infoField.style.color = "#06fb02"; // Bright lime green
-                        } else if (newSpeed < previousSpeedOverGround) {
-                            infoField.style.color = "red"; // Speed decreased
-                        } else {
-                            infoField.style.color = "white"; // Speed unchanged
-                        }
-                    }
-                    sogElement.innerText = newSpeed; // Update the text content
-                    previousSpeedOverGround = newSpeed; // Store the current speed
-                    console.log("New SpeedOverGround:", newSpeed);
-
-                } else if (path === 'navigation.speedThroughWater') { // VHW PGN 128259
-                        const sogElement = document.getElementById("navigation_speedThroughWater");
-                        const infoField = sogElement.closest('.infoField'); // Get the parent container
-                        console.log("Previous SpeedThroughWater:", previousSpeedThroughWater);
-
-                        const newSpeed = value.toFixed(1);
-                        if (previousSpeedThroughWater !== null) {
-                            if (newSpeed > previousSpeedThroughWater) {
-                                infoField.style.color = "#06fb02"; // Bright lime green
-                            } else if (newSpeed < previousSpeedThroughWater) {
-                                infoField.style.color = "red"; // Speed decreased
-                            } else {
-                                infoField.style.color = "white"; // Speed unchanged
-                            }
-                        }
-                        sogElement.innerText = newSpeed; // Update the text content
-                        previousSpeedThroughWater = newSpeed; // Store the current speed
-                        console.log("New SpeedThroughWater:", newSpeed);
-
-                // steering
-                } else if (path === "steering.autopilot.state") {
-                    document.getElementById("steering_autopilot.state").innerText =  value;
-                    if (value == "standby") {
-                        document.getElementById("steering_autopilot.state_standby").innerText =  value; 
-                    } else if (value == "wind") {
-                        document.getElementById("steering_autopilot.state_wind").innerText =  value; 
-                    } else if (value == "tack") {
-                        document.getElementById("steering_autopilot.state_tack").innerText =  value; 
-                    } else if (value == "auto") {
-                        document.getElementById("steering_autopilot.state_auto").innerText =  value; 
-                    }
-                } else if (path === 'steering.autopilot.target.windAngleApparent') {
-                    document.getElementById("APwindAngle").innerText = radToDeg(value).toFixed() + "°";
-                } else if (path === "steering.autopilot.target.headingMagnetic") {
-                    document.getElementById("AP_headingMagnetic").innerText = radToDeg(value).toFixed() + "°";
-                }
-            });
-        });
-
-        window.addEventListener("beforeunload", () => {
-            socket.disconnect(); // Ensure the socket is closed when the user leaves the page
-        });
-
-        // Event listeners for your buttons
-        document.getElementById('btnport').addEventListener('click', () => {
-            sendPutRequest('steering/autopilot/actions/tack', 'port');
-        });
-        //document.getElementById('btn-80').addEventListener('click', () => {
-        //    sendPutRequest('steering/autopilot/actions/adjustHeading', -80);
-        //});
-        document.getElementById('btnstarboard').addEventListener('click', () => {
-            sendPutRequest('steering/autopilot/actions/adjustHeading', 80,);
-            //sendPutRequest('steering/autopilot/actions/tack', 'starboard');
-        });
-        document.getElementById('btn-1').addEventListener('click', () => {
-            console.log('i577 send -1 to autopilot:');
-            sendPutRequest('steering/autopilot/actions/adjustHeading', -1);
-        });
-        document.getElementById('btn-10').addEventListener('click', () => {
-            sendPutRequest('steering/autopilot/actions/adjustHeading', -10);
-        });
-        document.getElementById('btn+10').addEventListener('click', () => {
-            sendPutRequest('steering/autopilot/actions/adjustHeading', +10);
-        });
-        document.getElementById('btn+1').addEventListener('click', () => {
-            sendPutRequest('steering/autopilot/actions/adjustHeading', +1);
+              button.classList.remove("selected");
+            }, 1000); // 1000 milliseconds = 1 second
+          });
         });
     </script>
-</body>
+  </body>
 </html>
