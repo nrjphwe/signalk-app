@@ -182,7 +182,8 @@
       // Example: Generate a token against the user "pi" that is valid for 1 year.
       // in shell
       //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
-      const authToken = "xxxx"; // Determine the base URL for Flask or SignalK based on the environment
+      const authToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzMxNDE4NDc1LCJleHAiOjE3NjI5NzYwNzV9.eHHvv28PDEdif1Ndn2GfL5QL4WUTuFAG5AapDa7d1pI";
       // Get the hostname and protocol dynamically
       const protocol = window.location.protocol; // e.g., "http:" or "https:"
       const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
