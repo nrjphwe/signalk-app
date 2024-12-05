@@ -365,7 +365,7 @@
               radToDeg(value).toFixed() + "°";
           } else if (path === "performance.polarSpeed") {
             document.getElementById("performance_polarSpeed").innerText =
-              m_to_knots.toFixed(1) + " kn";
+              m_to_knots(value).toFixed(1) + " kn";
           } else if (path === "performance.gybeAngle") {
             document.getElementById("gybeAngle").innerText =
               radToDeg(value).toFixed(0) + "";
