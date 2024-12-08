@@ -137,20 +137,23 @@
         </div>
         <div class="infoContainer">
           <div class="largeInfoField">
-            AWA:
-            <span id="environment_wind.angleApparent" class="alarm-clock-font"
+            AWA:<span
+              id="environment_wind.angleApparent"
+              class="alarm-clock-font"
               >N/A</span
             >
           </div>
           <div class="largeInfoField">
-            TWD:
-            <span id="environment_wind.angleTrueGround" class="alarm-clock-font"
+            TWD:<span
+              id="environment_wind.angleTrueGround"
+              class="alarm-clock-font"
               >N/A</span
             >
           </div>
           <div class="largeInfoField">
-            TWA:
-            <span id="environment_wind.angleTrue" class="alarm-clock-font"
+            TWA:<span
+              id="environment_wind.angleTrueWater"
+              class="alarm-clock-font"
               >N/A</span
             >
           </div>
@@ -170,20 +173,20 @@
       </div>
     </div>
     <div id="notificationArea"></div>
-    <!-- Include Socket.IO -->
-    <!--button id="testButton">Test Socket.IO</button>-->
     <script>
       function radToDeg(rad) {
-        return rad * (180 / Math.PI);
+        var pi = Math.PI;
+        var degree = rad * (180 / pi);
+        //  console.log("rad", rad, "Degree", degree);
+        return degree;
       }
       function m_to_knots(met) {
-        return (met * 1000) / 1852;
+        return met * 1.943844;
       }
       // Example: Generate a token against the user "pi" that is valid for 1 year.
       // in shell
       //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
-      const authToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzMxNDE4NDc1LCJleHAiOjE3NjI5NzYwNzV9.eHHvv28PDEdif1Ndn2GfL5QL4WUTuFAG5AapDa7d1pI";
+      const authToken = "xxx";
       // Get the hostname and protocol dynamically
       const protocol = window.location.protocol; // e.g., "http:" or "https:"
       const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
@@ -328,7 +331,7 @@
 
       // Listen for autopilot status updates
       socket.on("autopilot_status", (data) => {
-        console.log(" Autopilot status update:", data); // Log status updates
+        //console.log(" Autopilot status update:", data); // Log status updates
         if (data.status === "off") {
           // If autopilot is off, set all buttons to red
           document.querySelectorAll(".btnCircle").forEach((btn) => {
@@ -362,7 +365,7 @@
               m_to_knots(value).toFixed(1) + " kn";
           } else if (path === "performance.targetAngle") {
             document.getElementById("performance_targetAngle").innerText =
-              radToDeg(value).toFixed() + "°";
+              radToDeg(value).toFixed(0) + "°";
           } else if (path === "performance.polarSpeed") {
             document.getElementById("performance_polarSpeed").innerText =
               m_to_knots(value).toFixed(1) + " kn";
@@ -381,9 +384,18 @@
             document.getElementById(
               "environment_wind.angleTrueGround"
             ).innerText = radToDeg(value).toFixed(0) + "°";
-          } else if (path === "environment.wind.angleTrue") {
-            document.getElementById("environment_wind.angleTrue").innerText =
-              radToDeg(value).toFixed(0) + "°";
+          } else if (path === "environment.wind.angleTrueWater") {
+            document.getElementById(
+              "environment_wind.angleTrueWater"
+            ).innerText = radToDeg(value).toFixed(0) + "°";
+          } else if (path === "environment.wind.speedTrue") {
+            if (value <= 5) {
+              document.getElementById("environment_wind.speedTrue").innerText =
+                value.toFixed(1) + "";
+            } else {
+              document.getElementById("environment_wind.speedTrue").innerText =
+                value.toFixed(0) + "";
+            }
           } else if (path === "environment.depth.belowKeel") {
             if (value <= 5) {
               document.getElementById("environment_depth.belowKeel").innerText =
@@ -409,8 +421,8 @@
               "navigation_speedOverGround"
             );
             const infoField = sogElement.closest(".infoField"); // Get the parent container
-            console.log("Previous Speed:", previousSpeedOverGround);
-            const newSpeed = value.toFixed(1);
+            //console.log("Previous Speed:", previousSpeedOverGround);
+            const newSpeed = m_to_knots(value).toFixed(1);
             if (previousSpeedOverGround !== null) {
               if (newSpeed > previousSpeedOverGround) {
                 infoField.style.color = "#06fb02"; // Bright lime green
@@ -419,22 +431,18 @@
               } else {
                 infoField.style.color = "white"; // Speed unchanged
               }
+              //console.log("New SpeedOverGround:", newSpeed);
             }
             sogElement.innerText = newSpeed; // Update the text content
             previousSpeedOverGround = newSpeed; // Store the current speed
-            console.log("New SpeedOverGround:", newSpeed);
           } else if (path === "navigation.speedThroughWater") {
             // VHW PGN 128259
             const sogElement = document.getElementById(
               "navigation_speedThroughWater"
             );
             const infoField = sogElement.closest(".infoField"); // Get the parent container
-            console.log(
-              "Previous SpeedThroughWater:",
-              previousSpeedThroughWater
-            );
-
-            const newSpeed = value.toFixed(1);
+            //console.log("PrevSpeedThroughWater:",previousSpeedThroughWater);
+            const newSpeed = m_to_knots(value).toFixed(1);
             if (previousSpeedThroughWater !== null) {
               if (newSpeed > previousSpeedThroughWater) {
                 infoField.style.color = "#06fb02"; // Bright lime green
@@ -443,10 +451,10 @@
               } else {
                 infoField.style.color = "white"; // Speed unchanged
               }
+              //console.log("New SpeedThroughWater:", newSpeed);
             }
             sogElement.innerText = newSpeed; // Update the text content
             previousSpeedThroughWater = newSpeed; // Store the current speed
-            console.log("New SpeedThroughWater:", newSpeed);
 
             // steering
           } else if (path === "steering.autopilot.state") {
