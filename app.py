@@ -57,7 +57,7 @@ def signalk_listener():
     while True:   # Loop to handle reconnections
         ws = None
         try:
-            app.logger.info("aa60 Attempting to connect to SignalK WebSocket...")
+            app.logger.info("aa60 Attempting to connect to SK WebSocket..")
             ws = create_connection(url)
             app.logger.info("aa62 Connected to SignalK WebSocket.")
 
