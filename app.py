@@ -20,7 +20,7 @@ socketio = SocketIO(
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s %(levelname)s: %(message)s',
-    handlers=logging.FileHandler("/home/pi/signalk-app/myapp.log", mode='a')
+    handlers=[logging.FileHandler("/home/pi/signalk-app/myapp.log", mode='a')]
     )
 
 
