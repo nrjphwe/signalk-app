@@ -11,10 +11,7 @@
       type="image/x-icon"
       href="{{ url_for('static', filename='favicon.ico') }}"
     />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/styles.css') }}"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
   </head>
@@ -55,12 +52,8 @@
           <div class="infoField">
             COG: <span id="navigation_courseOverGroundTrue">N/A</span>
           </div>
-          <div class="infoField">
-            HDT: <span id="navigation_headingTrue">N/A</span>
-          </div>
-          <div class="infoField">
-            HDG: <span id="navigation_magneticVariation">N/A</span>
-          </div>
+          <div class="infoField">HDT: <span id="navigation_headingTrue">N/A</span></div>
+          <div class="infoField">HDG: <span id="navigation_magneticVariation">N/A</span></div>
           <div class="infoField">
             TWS: <span id="environment_wind.speedTrue">N/A </span
             ><span style="font-size: 1.5vw"> m/s</span>
@@ -137,38 +130,22 @@
         </div>
         <div class="infoContainer">
           <div class="largeInfoField">
-            AWA:<span
-              id="environment_wind.angleApparent"
-              class="alarm-clock-font"
-              >N/A</span
-            >
+            AWA:<span id="environment_wind.angleApparent" class="alarm-clock-font">N/A</span>
           </div>
           <div class="largeInfoField">
-            TWD:<span
-              id="environment_wind.angleTrueGround"
-              class="alarm-clock-font"
-              >N/A</span
-            >
+            TWD:<span id="environment_wind.angleTrueGround" class="alarm-clock-font">N/A</span>
           </div>
           <div class="largeInfoField">
-            TWA:<span
-              id="environment_wind.angleTrueWater"
-              class="alarm-clock-font"
-              >N/A</span
-            >
+            TWA:<span id="environment_wind.angleTrueWater" class="alarm-clock-font">N/A</span>
           </div>
         </div>
         <div class="infoContainer">
-          <div class="infoField">
-            Beat Angle: <span id="beatAngle">N/A</span> °
-          </div>
+          <div class="infoField">Beat Angle: <span id="beatAngle">N/A</span> °</div>
           <div class="infoField">
             DPTH: <span id="environment_depth.belowKeel">N/A</span
             ><span style="font-size: 1.5vw"> m</span>
           </div>
-          <div class="infoField">
-            Gybe Angle: <span id="gybeAngle">N/A</span> °
-          </div>
+          <div class="infoField">Gybe Angle: <span id="gybeAngle">N/A</span> °</div>
         </div>
       </div>
     </div>
@@ -187,7 +164,8 @@
       // in shell
       //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
       const authToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzMxNDE4NDc1LCJleHAiOjE3NjI5NzYwNzV9.eHHvv28PDEdif1Ndn2GfL5QL4WUTuFAG5AapDa7d1pI";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzQ2MTk3ODYyLCJleHAiOjE3Nzc3NTU0NjJ9.U3PD-7kCpcvJToGjZJ-ELGTD7Cy3eCxgZttLEfHtxnA";
+
       // Get the hostname and protocol dynamically
       const protocol = window.location.protocol; // e.g., "http:" or "https:"
       const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
@@ -203,12 +181,7 @@
 
       // sends commands to adjust the autopilot settings, like changing the heading.
       function sendPutRequest(path, value) {
-        console.log(
-          "function sendPutrequest, path:",
-          path,
-          "and value:",
-          value
-        );
+        console.log("function sendPutrequest, path:", path, "and value:", value);
         fetch(`${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`, {
           method: "PUT",
           headers: {
@@ -371,24 +344,19 @@
             document.getElementById("performance_polarSpeed").innerText =
               m_to_knots(value).toFixed(1) + " kn";
           } else if (path === "performance.gybeAngle") {
-            document.getElementById("gybeAngle").innerText =
-              radToDeg(value).toFixed(0) + "";
+            document.getElementById("gybeAngle").innerText = radToDeg(value).toFixed(0) + "";
           } else if (path === "performance.beatAngle") {
-            document.getElementById("beatAngle").innerText =
-              radToDeg(value).toFixed(0) + "";
+            document.getElementById("beatAngle").innerText = radToDeg(value).toFixed(0) + "";
             // environment
           } else if (path === "environment.wind.angleApparent") {
-            document.getElementById(
-              "environment_wind.angleApparent"
-            ).innerText = radToDeg(value).toFixed(0) + "°";
+            document.getElementById("environment_wind.angleApparent").innerText =
+              radToDeg(value).toFixed(0) + "°";
           } else if (path === "environment.wind.angleTrueGround") {
-            document.getElementById(
-              "environment_wind.angleTrueGround"
-            ).innerText = radToDeg(value).toFixed(0) + "°";
+            document.getElementById("environment_wind.angleTrueGround").innerText =
+              radToDeg(value).toFixed(0) + "°";
           } else if (path === "environment.wind.angleTrueWater") {
-            document.getElementById(
-              "environment_wind.angleTrueWater"
-            ).innerText = radToDeg(value).toFixed(0) + "°";
+            document.getElementById("environment_wind.angleTrueWater").innerText =
+              radToDeg(value).toFixed(0) + "°";
           } else if (path === "environment.wind.speedTrue") {
             if (value <= 5) {
               document.getElementById("environment_wind.speedTrue").innerText =
@@ -407,9 +375,8 @@
             }
             // navigation
           } else if (path === "navigation.courseOverGroundTrue") {
-            document.getElementById(
-              "navigation_courseOverGroundTrue"
-            ).innerText = radToDeg(value).toFixed() + "°";
+            document.getElementById("navigation_courseOverGroundTrue").innerText =
+              radToDeg(value).toFixed() + "°";
           } else if (path === "navigation.headingTrue") {
             document.getElementById("navigation_headingTrue").innerText =
               radToDeg(value).toFixed() + "°";
@@ -418,9 +385,7 @@
               radToDeg(value).toFixed() + "°";
           } else if (path === "navigation.speedOverGround") {
             // SOG VTG
-            const sogElement = document.getElementById(
-              "navigation_speedOverGround"
-            );
+            const sogElement = document.getElementById("navigation_speedOverGround");
             const infoField = sogElement.closest(".infoField"); // Get the parent container
             //console.log("Previous Speed:", previousSpeedOverGround);
             const newSpeed = m_to_knots(value).toFixed(1);
@@ -438,9 +403,7 @@
             previousSpeedOverGround = newSpeed; // Store the current speed
           } else if (path === "navigation.speedThroughWater") {
             // VHW PGN 128259
-            const sogElement = document.getElementById(
-              "navigation_speedThroughWater"
-            );
+            const sogElement = document.getElementById("navigation_speedThroughWater");
             const infoField = sogElement.closest(".infoField"); // Get the parent container
             //console.log("PrevSpeedThroughWater:",previousSpeedThroughWater);
             const newSpeed = m_to_knots(value).toFixed(1);
@@ -459,28 +422,18 @@
 
             // steering
           } else if (path === "steering.autopilot.state") {
-            document.getElementById("steering_autopilot.state").innerText =
-              value;
+            document.getElementById("steering_autopilot.state").innerText = value;
             if (value == "standby") {
-              document.getElementById(
-                "steering_autopilot.state_standby"
-              ).innerText = value;
+              document.getElementById("steering_autopilot.state_standby").innerText = value;
             } else if (value == "wind") {
-              document.getElementById(
-                "steering_autopilot.state_wind"
-              ).innerText = value;
+              document.getElementById("steering_autopilot.state_wind").innerText = value;
             } else if (value == "tack") {
-              document.getElementById(
-                "steering_autopilot.state_tack"
-              ).innerText = value;
+              document.getElementById("steering_autopilot.state_tack").innerText = value;
             } else if (value == "auto") {
-              document.getElementById(
-                "steering_autopilot.state_auto"
-              ).innerText = value;
+              document.getElementById("steering_autopilot.state_auto").innerText = value;
             }
           } else if (path === "steering.autopilot.target.windAngleApparent") {
-            document.getElementById("APwindAngle").innerText =
-              radToDeg(value).toFixed() + "°";
+            document.getElementById("APwindAngle").innerText = radToDeg(value).toFixed() + "°";
           } else if (path === "steering.autopilot.target.headingMagnetic") {
             document.getElementById("AP_headingMagnetic").innerText =
               radToDeg(value).toFixed() + "°";
@@ -493,35 +446,27 @@
       });
 
       // Handle the button clicks
-      document
-        .querySelectorAll(".btnPort, .btnAdjust,.btnStarboard")
-        .forEach((button) => {
-          button.addEventListener("click", async () => {
-            if (button.classList.contains("btnPort")) {
-              console.log("Send port command to autopilot");
-              await sendPutRequest("steering/autopilot/actions/tack", "port");
-            } else if (button.classList.contains("btnStarboard")) {
-              console.log("Send starboard command to autopilot");
-              await sendPutRequest(
-                "steering/autopilot/actions/tack",
-                "starboard"
-              );
-            } else if (button.classList.contains("btnAdjust")) {
-              const adjustment = parseInt(button.textContent.trim());
-              console.log(`Send adjustment: ${adjustment} to autopilot`);
-              await sendPutRequest(
-                "steering/autopilot/actions/adjustHeading",
-                adjustment
-              );
-            }
+      document.querySelectorAll(".btnPort, .btnAdjust,.btnStarboard").forEach((button) => {
+        button.addEventListener("click", async () => {
+          if (button.classList.contains("btnPort")) {
+            console.log("Send port command to autopilot");
+            await sendPutRequest("steering/autopilot/actions/tack", "port");
+          } else if (button.classList.contains("btnStarboard")) {
+            console.log("Send starboard command to autopilot");
+            await sendPutRequest("steering/autopilot/actions/tack", "starboard");
+          } else if (button.classList.contains("btnAdjust")) {
+            const adjustment = parseInt(button.textContent.trim());
+            console.log(`Send adjustment: ${adjustment} to autopilot`);
+            await sendPutRequest("steering/autopilot/actions/adjustHeading", adjustment);
+          }
 
-            // Visual feedback: Add `selected` class temporarily
-            button.classList.add("selected");
-            setTimeout(() => {
-              button.classList.remove("selected");
-            }, 1000); // 1000 milliseconds = 1 second
-          });
+          // Visual feedback: Add `selected` class temporarily
+          button.classList.add("selected");
+          setTimeout(() => {
+            button.classList.remove("selected");
+          }, 1000); // 1000 milliseconds = 1 second
         });
+      });
     </script>
   </body>
 </html>
