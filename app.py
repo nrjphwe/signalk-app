@@ -18,7 +18,7 @@ socketio = SocketIO(
 
 # Set up logging
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.ERROR,
     format='%(asctime)s %(levelname)s: %(message)s',
     handlers=[logging.FileHandler("/home/pi/signalk-app/myapp.log", mode='a')]
     )
