@@ -122,6 +122,10 @@ def signalk_listener():
                                 'environment.wind.speedTrue',
                             }:
                                 updates.append(value)
+                            elif path in {  # electrical 
+                                'electrical.solar.SmartSolar.voltage',
+                            }:
+                                updates.append(value)
                     if updates:
                         socketio.emit("update_data", {"updates": updates})
                         app.logger.info(f"aa125 Emitted data: {updates}")
