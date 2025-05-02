@@ -10,18 +10,19 @@ import json
 app = Flask(__name__)
 socketio = SocketIO(
     app,
-    cors_allowed_origins="*", 
-    async_mode='eventlet', 
-    ping_timeout=60, 
+    cors_allowed_origins="*",
+    async_mode='eventlet',
+    ping_timeout=60,
     ping_interval=25
     )
 
 # Set up logging
 logging.basicConfig(
-    filename='/home/pi/signalk-app/myapp.log',
-    level=logging.ERROR,
-    format='%(asctime)s %(levelname)s: %(message)s'
-)
+    level=logging.DEBUG,
+    format='%(asctime)s %(levelname)s: %(message)s',
+    handlers=logging.FileHandler("/home/pi/signalk-app/myapp.log", mode='a')
+    )
+
 
 # Flag to ensure the listener starts only once
 listener_started = False
