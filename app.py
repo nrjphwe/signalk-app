@@ -151,5 +151,5 @@ def signalk_listener():
 
 
 if __name__ == "__main__":
-    # socketio.run(app, host="0.0.0.0", port=8001)
-    socketio.run(app, host="2.66.96.221", port=8080)
+    socketio.run(app, host="0.0.0.0", port=8001)
+    #socketio.run(app, host="2.66.96.221", port=8080)
