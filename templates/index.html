@@ -328,7 +328,9 @@
           const path = update.path;
           const value = update.value;
           //console.log("Update path:", path, "Value:", value); // Add this to verify value
-          if (path === "performance.maxSpeedAngle") {
+          if (path === "electrical.solar.SmartSolar.voltage") {
+            document.getElementById("electricalVoltage").innerText = value.toFixed(1) + " V";
+          } else if (path === "performance.maxSpeedAngle") {
             document.getElementById("performance_maxSpeedAngle").innerText =
               radToDeg(value).toFixed() + "°";
           } else if (path === "performance.maxSpeed") {
