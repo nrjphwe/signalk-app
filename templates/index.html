@@ -68,7 +68,7 @@
           </div>
           <div class="infoField">
             Volt: <span id="electricalVoltage">N/A </span
-            ><span style="font-size: 1.5vw"></span>
+            ><span style="font-size: 1.3vw"> V</span>
           </div>
         </div>
         <!-- Portrait Layout -->
@@ -329,7 +329,7 @@
           const value = update.value;
           //console.log("Update path:", path, "Value:", value); // Add this to verify value
           if (path === "electrical.solar.SmartSolar.voltage") {
-            document.getElementById("electricalVoltage").innerText = value.toFixed(1) + " V";
+            document.getElementById("electricalVoltage").innerText = value.toFixed(2);
           } else if (path === "performance.maxSpeedAngle") {
             document.getElementById("performance_maxSpeedAngle").innerText =
               radToDeg(value).toFixed() + "°";
