@@ -123,7 +123,7 @@ def signalk_listener():
                                 'environment.wind.speedTrue',
                             }:
                                 updates.append(value)
-                            elif path in {  # electrical 
+                            elif path in {  # electrical
                                 'electrical.solar.SmartSolar.voltage',
                             }:
                                 updates.append(value)
