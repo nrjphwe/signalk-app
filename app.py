@@ -52,8 +52,8 @@ def test_connect():
 
 def signalk_listener():
     app.logger.debug("aa46 signalk_listener started.")
-    # url = "ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all"
-    url = "ws://2.66.96.221:8081/signalk/v1/stream?subscribe=all"
+    url = "ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all"
+    # url = "ws://2.66.96.221:8081/signalk/v1/stream?subscribe=all"
     global last_autopilot_time
 
     while True:   # Loop to handle reconnections
