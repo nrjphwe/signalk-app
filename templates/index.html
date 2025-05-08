@@ -16,6 +16,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
   </head>
   <body>
+    <div id="loginContainer">
+      <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required />
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+        <button type="submit">Login</button>
+      </form>
+      <div id="loginError" style="color: red; display: none">
+        Login failed. Please try again.
+      </div>
+    </div>
     <div id="main">
       <div id="remoteMain">
         <table class="table">
@@ -160,16 +172,88 @@
       function m_to_knots(met) {
         return met * 1.943844;
       }
-      // Example: Generate a token against the user "pi" that is valid for 1 year.
-      // in shell
-      //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
-      const authToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzQ2MTk3ODYyLCJleHAiOjE3Nzc3NTU0NjJ9.U3PD-7kCpcvJToGjZJ-ELGTD7Cy3eCxgZttLEfHtxnA";
+
+      // new
+      const signalKAuthURL = `${protocol}//${hostname}:3000/signalk/v1/auth/login`; // SignalK login endpoint
+      let authToken = null; // Store the token globally
+
+      // Handle login form submission
+      document.getElementById("loginForm").addEventListener("submit", async (event) => {
+        event.preventDefault(); // Prevent form from reloading the page
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          const response = await fetch(signalKAuthURL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Login failed");
+          }
+
+          const data = await response.json();
+          authToken = data.token; // Save the token
+          console.log("Login successful. Token:", authToken);
+
+          // Hide the login form and show the main app
+          document.getElementById("loginContainer").style.display = "none";
+          document.getElementById("main").style.display = "block";
+        } catch (error) {
+          console.error("Error during login:", error);
+          document.getElementById("loginError").style.display = "block";
+        }
+      });
+
+      // Update the sendPutRequest function to use the dynamically obtained token
+      async function sendPutRequest(path, value) {
+        if (!authToken) {
+          console.error("No authentication token available. Please log in.");
+          displayNotification("Error: Not authenticated.");
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${authToken}`, // Use the token
+              },
+              body: JSON.stringify({ value }),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          console.log("PUT request successful");
+          displayNotification("Course change accepted.");
+        } catch (error) {
+          console.error("Error during PUT request:", error);
+          displayNotification("Error: Unable to change course.");
+        }
+      }
+      // end new
 
       // Get the hostname and protocol dynamically
       const protocol = window.location.protocol; // e.g., "http:" or "https:"
       const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
       const port = window.location.port || ""; // e.g., "8001" (empty if default port)
+
+      // Example: Generate a token against the user "pi" that is valid for 1 year.
+      // in shell
+      //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
+      // const authToken =
+      // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzQ2MTk3ODYyLCJleHAiOjE3Nzc3NTU0NjJ9.U3PD-7kCpcvJToGjZJ-ELGTD7Cy3eCxgZttLEfHtxnA";
 
       // Construct URLs dynamically based on the hostname
       const flaskBaseURL = `${protocol}//${hostname}:${port || "8001"}`;
@@ -180,30 +264,35 @@
       console.log(`SignalK Server URL: ${signalKBaseURL}`);
 
       // sends commands to adjust the autopilot settings, like changing the heading.
-      function sendPutRequest(path, value) {
-        console.log("function sendPutrequest, path:", path, "and value:", value);
-        fetch(`${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + authToken, // Include the token in the Authorization header
-          },
-          body: JSON.stringify({
-            value: value,
-          }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              console.log("PUT response:", response);
-              throw new Error("Network response was not ok");
+      async function sendPutRequest(path, value) {
+        if (!authToken) {
+          console.error("No authentication token available. Please log in.");
+          displayNotification("Error: Not authenticated.");
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${authToken}`, // Use the token
+              },
+              body: JSON.stringify({ value }),
             }
-            console.log("PUT request successful");
-            displayNotification("Course change accepted.");
-          })
-          .catch((error) => {
-            console.error("Error during PUT request:", error);
-            displayNotification("Error: Unable to change course.");
-          });
+          );
+          if (!response.ok) {
+            console.log("PUT response:", response);
+            throw new Error("Network response was not ok");
+          }
+          console.log("PUT request successful");
+          displayNotification("Course change accepted.");
+        } catch (error) {
+          console.error("Error during PUT request:", error);
+          displayNotification("Error: Unable to change course.");
+        }
       }
 
       function displayNotification(text) {
