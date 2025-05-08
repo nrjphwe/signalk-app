@@ -173,6 +173,11 @@
         return met * 1.943844;
       }
 
+      // Get the hostname and protocol dynamically
+      const protocol = window.location.protocol; // e.g., "http:" or "https:"
+      const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
+      const port = window.location.port || ""; // e.g., "8001" (empty if default port)
+
       // new
       const signalKAuthURL = `${protocol}//${hostname}:3000/signalk/v1/auth/login`; // SignalK login endpoint
       let authToken = null; // Store the token globally
@@ -243,11 +248,6 @@
         }
       }
       // end new
-
-      // Get the hostname and protocol dynamically
-      const protocol = window.location.protocol; // e.g., "http:" or "https:"
-      const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
-      const port = window.location.port || ""; // e.g., "8001" (empty if default port)
 
       // Example: Generate a token against the user "pi" that is valid for 1 year.
       // in shell
