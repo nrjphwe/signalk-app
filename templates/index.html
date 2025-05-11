@@ -254,15 +254,7 @@
           document.getElementById("loginError").style.display = "block";
         }
       });
-
-      // Construct URLs dynamically based on the hostname
-      const flaskBaseURL = `${protocol}//${hostname}:${port || "8001"}`;
-      const signalKBaseURL = `${protocol}//${hostname}:3000`; // SignalK server (assuming port 3000 is fixed)
-
-      // Example usage
-      console.log(`Flask Server URL: ${flaskBaseURL}`);
-      console.log(`SignalK Server URL: ${signalKBaseURL}`);
-
+      // Function to send PUT requests to the SignalK server
       // sends commands to adjust the autopilot settings, like changing the heading.
       async function sendPutRequest(path, value) {
         if (!authToken) {
