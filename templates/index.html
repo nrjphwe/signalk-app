@@ -16,14 +16,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
   </head>
   <body>
-    <form id="loginForm" style="max-width: 300px; margin: auto">
+    <form id="loginForm" style="max-width: 90%; margin: auto; text-align: center">
       <label for="username" style="display: block; margin-bottom: 5px">Username:</label>
       <input
         type="text"
         id="username"
         name="username"
         required
-        style="width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box"
+        style="
+          width: 100%;
+          max-width: 250px;
+          padding: 8px;
+          margin-bottom: 10px;
+          box-sizing: border-box;
+        "
       />
       <label for="password" style="display: block; margin-bottom: 5px">Password:</label>
       <input
@@ -31,12 +37,19 @@
         id="password"
         name="password"
         required
-        style="width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box"
+        style="
+          width: 100%;
+          max-width: 250px;
+          padding: 8px;
+          margin-bottom: 10px;
+          box-sizing: border-box;
+        "
       />
       <button
         type="submit"
         style="
           width: 100%;
+          max-width: 250px;
           padding: 10px;
           background-color: #007bff;
           color: white;
@@ -225,7 +238,7 @@
           console.log("Login successful. Token:", authToken);
 
           // Hide the login form and show the main app
-          document.getElementById("loginContainer").style.display = "none";
+          document.getElementById("loginForm").style.display = "none";
           document.getElementById("main").style.display = "block";
         } catch (error) {
           console.error("Error during login:", error);
