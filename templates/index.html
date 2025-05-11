@@ -246,46 +246,6 @@
         }
       });
 
-      // Update the sendPutRequest function to use the dynamically obtained token
-      async function sendPutRequest(path, value) {
-        if (!authToken) {
-          console.error("No authentication token available. Please log in.");
-          displayNotification("Error: Not authenticated.");
-          return;
-        }
-
-        try {
-          const response = await fetch(
-            `${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${authToken}`, // Use the token
-              },
-              body: JSON.stringify({ value }),
-            }
-          );
-
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-
-          console.log("PUT request successful");
-          displayNotification("Course change accepted.");
-        } catch (error) {
-          console.error("Error during PUT request:", error);
-          displayNotification("Error: Unable to change course.");
-        }
-      }
-      // end new
-
-      // Example: Generate a token against the user "pi" that is valid for 1 year.
-      // in shell
-      //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
-      // const authToken =
-      // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InBpIiwiaWF0IjoxNzQ2MTk3ODYyLCJleHAiOjE3Nzc3NTU0NjJ9.U3PD-7kCpcvJToGjZJ-ELGTD7Cy3eCxgZttLEfHtxnA";
-
       // Construct URLs dynamically based on the hostname
       const flaskBaseURL = `${protocol}//${hostname}:${port || "8001"}`;
       const signalKBaseURL = `${protocol}//${hostname}:3000`; // SignalK server (assuming port 3000 is fixed)
