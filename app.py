@@ -66,16 +66,16 @@ def signalk_listener():
     if is_host_reachable("fidelibe.local", 3000):
         url = "ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all"
     else:
-        url = "ws://myboat.ddns.net:8081/signalk/v1/stream?subscribe=all"  # Use DDNS hostname
+        url = "ws://fidelibe.duckdns.org:8081/signalk/v1/stream?subscribe=all"  # Use DDNS hostname
     app.logger.info(f"Using WebSocket URL: {url}")
     global last_autopilot_time
 
     while True:   # Loop to handle reconnections
         ws = None
         try:
-            app.logger.info("aa60 Attempting to connect to SK WebSocket..")
+            app.logger.info("Attempting to connect to SK WebSocket..")
             ws = create_connection(url)
-            app.logger.info("aa62 Connected to SignalK WebSocket.")
+            app.logger.info("Connected to SignalK WebSocket.")
 
             while True:  # Inner loop for receiving messages
                 eventlet.sleep(1)  # Non-blocking sleep
