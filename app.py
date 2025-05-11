@@ -6,6 +6,8 @@ import eventlet
 from websocket import create_connection, WebSocketConnectionClosedException
 import logging
 import json
+import os
+import socket
 
 app = Flask(__name__)
 socketio = SocketIO(
@@ -50,10 +52,22 @@ def test_connect():
         socketio.start_background_task(signalk_listener)
 
 
+def is_host_reachable(host, port):
+    try:
+        with socket.create_connection((host, port), timeout=2):
+            return True
+    except Exception:
+        return False
+
+
 def signalk_listener():
     app.logger.debug("signalk_listener started.")
-    # url = "ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all"
-    url = "ws://2.65.197.130:8081/signalk/v1/stream?subscribe=all"
+    # Check if fidelibe.local is reachable
+    if is_host_reachable("fidelibe.local", 3000):
+        url = "ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all"
+    else:
+        url = "ws://<public-ip>:8081/signalk/v1/stream?subscribe=all"  # Replace <public-ip> with your actual public IP
+    app.logger.info(f"Using WebSocket URL: {url}")
     global last_autopilot_time
 
     while True:   # Loop to handle reconnections
