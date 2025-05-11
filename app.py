@@ -66,7 +66,7 @@ def signalk_listener():
     if is_host_reachable("fidelibe.local", 3000):
         url = "ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all"
     else:
-        url = "ws://<public-ip>:8081/signalk/v1/stream?subscribe=all"  # Replace <public-ip> with your actual public IP
+        url = "ws://myboat.ddns.net:8081/signalk/v1/stream?subscribe=all"  # Use DDNS hostname
     app.logger.info(f"Using WebSocket URL: {url}")
     global last_autopilot_time
 
