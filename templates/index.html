@@ -208,10 +208,19 @@
       // Get the hostname and protocol dynamically
       const protocol = window.location.protocol; // e.g., "http:" or "https:"
       const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
-      const port = window.location.port || ""; // e.g., "8001" (empty if default port)
 
-      const signalKAuthURL = `${protocol}//${hostname}:3000/signalk/v1/auth/login`; // SignalK login endpoint
+      // Use port 8080 for the Flask app and 8081 for the SignalK server
+      const flaskBaseURL = `${protocol}//${hostname}:8080`; // Flask app (forwarded to 8001)
+      const signalKBaseURL = `${protocol}//${hostname}:8081`; // SignalK server (forwarded to 3000)
+
+      //const port = window.location.port || ""; // e.g., "8001" (empty if default port)
+
+      const signalKAuthURL = `${signalKBaseURL}/signalk/v1/auth/login`; // SignalK login endpoint
       let authToken = null; // Store the token globally
+
+      console.log(`Flask Server URL: ${flaskBaseURL}`);
+      console.log(`SignalK Server URL: ${signalKBaseURL}`);
+      console.log(`SignalK Auth URL: ${signalKAuthURL}`);
 
       // Handle login form submission
       document.getElementById("loginForm").addEventListener("submit", async (event) => {
