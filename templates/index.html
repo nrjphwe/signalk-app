@@ -177,8 +177,7 @@
       const protocol = window.location.protocol; // e.g., "http:" or "https:"
       const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
       const port = window.location.port || ""; // e.g., "8001" (empty if default port)
-
-      // new
+      
       const signalKAuthURL = `${protocol}//${hostname}:3000/signalk/v1/auth/login`; // SignalK login endpoint
       let authToken = null; // Store the token globally
 
@@ -224,17 +223,14 @@
         }
 
         try {
-          const response = await fetch(
-            `${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`,
-            {
+          const response = await fetch(`${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`,{
               method: "PUT",
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${authToken}`, // Use the token
               },
               body: JSON.stringify({ value }),
-            }
-          );
+          });
 
           if (!response.ok) {
             throw new Error("Network response was not ok");
@@ -270,7 +266,6 @@
           displayNotification("Error: Not authenticated.");
           return;
         }
-
         try {
           const response = await fetch(
             `${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`,
@@ -288,6 +283,7 @@
             throw new Error("Network response was not ok");
           }
           console.log("PUT request successful");
+          
           displayNotification("Course change accepted.");
         } catch (error) {
           console.error("Error during PUT request:", error);
