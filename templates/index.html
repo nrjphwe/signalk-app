@@ -145,28 +145,28 @@
         <div class="btnContainer">
           <div
             class="btnCircle"
-            id="steering_autopilot.state_standby"
+            id="steering_autopilot_state_standby"
             onclick="toggleSelection(this)"
           >
             STBY
           </div>
           <div
             class="btnCircle"
-            id="steering_autopilot.state_wind"
+            id="steering_autopilot_state_wind"
             onclick="toggleSelection(this)"
           >
             WIND
           </div>
           <div
             class="btnCircle"
-            id="steering_autopilot.state_track"
+            id="steering_autopilot_state_track"
             onclick="toggleSelection(this)"
           >
             TRACK
           </div>
           <div
             class="btnCircle"
-            id="steering_autopilot.state_auto"
+            id="steering_autopilot_state_auto"
             onclick="toggleSelection(this)"
           >
             AUTO
@@ -321,7 +321,7 @@
         } else {
           // Set the button corresponding to the current autopilot state to green
           const activeButton = document.getElementById(
-            "steering_autopilot.state_" + currentState
+            "steering_autopilot_state_" + currentState
           );
           if (activeButton) {
             activeButton.style.backgroundColor = "green";
@@ -336,10 +336,10 @@
 
         // Map button IDs to autopilot states
         const stateMap = {
-          "steering_autopilot.state_standby": "standby",
-          "steering_autopilot.state_wind": "wind",
-          "steering_autopilot.state_track": "route",
-          "steering_autopilot.state_auto": "auto",
+          "steering_autopilot_state_standby": "standby",
+          "steering_autopilot_state_wind": "wind",
+          "steering_autopilot_state_track": "route",
+          "steering_autopilot_state_auto": "auto",
         };
 
         const selectedState = stateMap[selectedId];
@@ -506,16 +506,18 @@
 
             // steering
           } else if (path === "steering.autopilot.state") {
-            document.getElementById("steering_autopilot.state").innerText = value;
-            if (value == "standby") {
-              document.getElementById("steering_autopilot.state_standby").innerText = value;
-            } else if (value == "wind") {
-              document.getElementById("steering_autopilot.state_wind").innerText = value;
-            } else if (value == "tack") {
-              document.getElementById("steering_autopilot.state_tack").innerText = value;
-            } else if (value == "auto") {
-              document.getElementById("steering_autopilot.state_auto").innerText = value;
-            }
+            const autopilotStateElement = document.getElementById("steering_autopilot_state");
+            if (autopilotStateElement) {
+              autopilotStateElement.innerText = value;
+              if (value == "standby") {
+                document.getElementById("steering_autopilot_state_standby").innerText = value;
+              } else if (value == "wind") {
+                document.getElementById("steering_autopilot_state_wind").innerText = value;
+              } else if (value == "tack") {
+                document.getElementById("steering_autopilot_state_tack").innerText = value;
+              } else if (value == "auto") {
+                document.getElementById("steering_autopilot_state_auto").innerText = value;
+              }
           } else if (path === "steering.autopilot.target.windAngleApparent") {
             document.getElementById("APwindAngle").innerText = radToDeg(value).toFixed() + "°";
           } else if (path === "steering.autopilot.target.headingMagnetic") {
