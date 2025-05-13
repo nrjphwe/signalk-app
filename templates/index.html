@@ -433,6 +433,7 @@
           //console.log("Update path:", path, "Value:", value); // Add this to verify value
           if (path === "electrical.solar.SmartSolar.voltage") {
             document.getElementById("electricalVoltage").innerText = value.toFixed(2);
+            console.log("Voltage:", value.toFixed(2));
           } else if (path === "performance.maxSpeedAngle") {
             document.getElementById("performance_maxSpeedAngle").innerText =
               radToDeg(value).toFixed() + "°";
