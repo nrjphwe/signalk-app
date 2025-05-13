@@ -270,7 +270,7 @@
               document.getElementById("loginError").style.display = "block";
           }
       });
-      function isTokenExpired(token) {
+        function isTokenExpired(token) {
           const payload = JSON.parse(atob(token.split(".")[1]));
           const now = Math.floor(Date.now() / 1000);
           return payload.exp < now;
@@ -522,6 +522,7 @@
                 }
                 //console.log("New SpeedThroughWater:", newSpeed);
               }
+
               sogElement.innerText = newSpeed; // Update the text content
               previousSpeedThroughWater = newSpeed; // Store the current speed
 
@@ -555,25 +556,25 @@
         // Handle the button clicks
         document.querySelectorAll(".btnPort, .btnAdjust,.btnStarboard").forEach((button) => {
           button.addEventListener("click", async () => {
-            if (button.classList.contains("btnPort")) {
-              console.log("Send port command to autopilot");
-              await sendPutRequest("steering/autopilot/actions/tack", "port");
-            } else if (button.classList.contains("btnStarboard")) {
-              console.log("Send starboard command to autopilot");
-              await sendPutRequest("steering/autopilot/actions/tack", "starboard");
-            } else if (button.classList.contains("btnAdjust")) {
-              const adjustment = parseInt(button.textContent.trim());
-              console.log(`Send adjustment: ${adjustment} to autopilot`);
-              await sendPutRequest("steering/autopilot/actions/adjustHeading", adjustment);
-            }
+              if (button.classList.contains("btnPort")) {
+                console.log("Send port command to autopilot");
+                await sendPutRequest("steering/autopilot/actions/tack", "port");
+              } else if (button.classList.contains("btnStarboard")) {
+                console.log("Send starboard command to autopilot");
+                await sendPutRequest("steering/autopilot/actions/tack", "starboard");
+              } else if (button.classList.contains("btnAdjust")) {
+                const adjustment = parseInt(button.textContent.trim());
+                console.log(`Send adjustment: ${adjustment} to autopilot`);
+                await sendPutRequest("steering/autopilot/actions/adjustHeading", adjustment);
+              }
 
-            // Visual feedback: Add `selected` class temporarily
-            button.classList.add("selected");
-            setTimeout(() => {
-              button.classList.remove("selected");
-            }, 1000); // 1000 milliseconds = 1 second
+              // Visual feedback: Add `selected` class temporarily
+              button.classList.add("selected");
+              setTimeout(() => {
+                  button.classList.remove("selected");
+              }, 1000); // 1000 milliseconds = 1 second
+          });
         });
-      });
     </script>
   </body>
 </html>
