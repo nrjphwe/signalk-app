@@ -11,14 +11,55 @@
       type="image/x-icon"
       href="{{ url_for('static', filename='favicon.ico') }}"
     />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/styles.css') }}"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.min.js"></script>
   </head>
   <body>
+    <form id="loginForm" style="max-width: 90%; margin: auto; text-align: center">
+      <label for="username" style="display: block; margin-bottom: 5px">Username:</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        required
+        style="
+          width: 100%;
+          max-width: 250px;
+          padding: 8px;
+          margin-bottom: 10px;
+          box-sizing: border-box;
+        "
+      />
+      <label for="password" style="display: block; margin-bottom: 5px">Password:</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        required
+        style="
+          width: 100%;
+          max-width: 250px;
+          padding: 8px;
+          margin-bottom: 10px;
+          box-sizing: border-box;
+        "
+      />
+      <button
+        type="submit"
+        style="
+          width: 100%;
+          max-width: 250px;
+          padding: 10px;
+          background-color: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+        "
+      >
+        Login
+      </button>
+    </form>
     <div id="main">
       <div id="remoteMain">
         <table class="table">
@@ -55,12 +96,8 @@
           <div class="infoField">
             COG: <span id="navigation_courseOverGroundTrue">N/A</span>
           </div>
-          <div class="infoField">
-            HDT: <span id="navigation_headingTrue">N/A</span>
-          </div>
-          <div class="infoField">
-            HDG: <span id="navigation_magneticVariation">N/A</span>
-          </div>
+          <div class="infoField">HDT: <span id="navigation_headingTrue">N/A</span></div>
+          <div class="infoField">HDG: <span id="navigation_magneticVariation">N/A</span></div>
           <div class="infoField">
             TWS: <span id="environment_wind.speedTrue">N/A </span
             ><span style="font-size: 1.5vw"> m/s</span>
@@ -75,7 +112,7 @@
           </div>
           <div class="infoField">
             Volt: <span id="electricalVoltage">N/A </span
-            ><span style="font-size: 1.5vw"> V</span>
+            ><span style="font-size: 1.3vw"> V</span>
           </div>
         </div>
         <!-- Portrait Layout -->
@@ -108,28 +145,28 @@
         <div class="btnContainer">
           <div
             class="btnCircle"
-            id="steering_autopilot.state_standby"
+            id="steering_autopilot_state_standby"
             onclick="toggleSelection(this)"
           >
             STBY
           </div>
           <div
             class="btnCircle"
-            id="steering_autopilot.state_wind"
+            id="steering_autopilot_state_wind"
             onclick="toggleSelection(this)"
           >
             WIND
           </div>
           <div
             class="btnCircle"
-            id="steering_autopilot.state_track"
+            id="steering_autopilot_state_track"
             onclick="toggleSelection(this)"
           >
             TRACK
           </div>
           <div
             class="btnCircle"
-            id="steering_autopilot.state_auto"
+            id="steering_autopilot_state_auto"
             onclick="toggleSelection(this)"
           >
             AUTO
@@ -137,38 +174,22 @@
         </div>
         <div class="infoContainer">
           <div class="largeInfoField">
-            AWA:<span
-              id="environment_wind.angleApparent"
-              class="alarm-clock-font"
-              >N/A</span
-            >
+            AWA:<span id="environment_wind.angleApparent" class="alarm-clock-font">N/A</span>
           </div>
           <div class="largeInfoField">
-            TWD:<span
-              id="environment_wind.angleTrueGround"
-              class="alarm-clock-font"
-              >N/A</span
-            >
+            TWD:<span id="environment_wind.angleTrueGround" class="alarm-clock-font">N/A</span>
           </div>
           <div class="largeInfoField">
-            TWA:<span
-              id="environment_wind.angleTrueWater"
-              class="alarm-clock-font"
-              >N/A</span
-            >
+            TWA:<span id="environment_wind.angleTrueWater" class="alarm-clock-font">N/A</span>
           </div>
         </div>
         <div class="infoContainer">
-          <div class="infoField">
-            Beat Angle: <span id="beatAngle">N/A</span> °
-          </div>
+          <div class="infoField">Beat Angle: <span id="beatAngle">N/A</span> °</div>
           <div class="infoField">
             DPTH: <span id="environment_depth.belowKeel">N/A</span
             ><span style="font-size: 1.5vw"> m</span>
           </div>
-          <div class="infoField">
-            Gybe Angle: <span id="gybeAngle">N/A</span> °
-          </div>
+          <div class="infoField">Gybe Angle: <span id="gybeAngle">N/A</span> °</div>
         </div>
       </div>
     </div>
@@ -183,54 +204,109 @@
       function m_to_knots(met) {
         return met * 1.943844;
       }
-      // Example: Generate a token against the user "pi" that is valid for 1 year.
-      // in shell
-      //signalk-generate-token -u pi -e 1y -s ~/.signalk/security.json
-      const authToken = "xxx" ;
-      
+
       // Get the hostname and protocol dynamically
       const protocol = window.location.protocol; // e.g., "http:" or "https:"
       const hostname = window.location.hostname; // e.g., "fidelibe.local" or "2.70.50.190"
-      const port = window.location.port || ""; // e.g., "8001" (empty if default port)
 
-      // Construct URLs dynamically based on the hostname
-      const flaskBaseURL = `${protocol}//${hostname}:${port || "8001"}`;
-      const signalKBaseURL = `${protocol}//${hostname}:3000`; // SignalK server (assuming port 3000 is fixed)
+      // Use port 8080 for the Flask app and 8081 for the SignalK server
+      //const flaskBaseURL = `${protocol}//${hostname}:${port || "8001"}`;
+      const flaskBaseURL = `${protocol}//${hostname}:8080`; // Flask app (forwarded to 8001)
+      const signalKBaseURL = `${protocol}//${hostname}:8081`; // SignalK server (forwarded to 3000)
 
-      // Example usage
+      //const port = window.location.port || ""; // e.g., "8001" (empty if default port)
+
+      const signalKAuthURL = `${signalKBaseURL}/signalk/v1/auth/login`; // SignalK login endpoint
+      let authToken = null; // Store the token globally
+
       console.log(`Flask Server URL: ${flaskBaseURL}`);
       console.log(`SignalK Server URL: ${signalKBaseURL}`);
+      console.log(`SignalK Auth URL: ${signalKAuthURL}`);
 
-      // sends commands to adjust the autopilot settings, like changing the heading.
-      function sendPutRequest(path, value) {
-        console.log(
-          "function sendPutrequest, path:",
-          path,
-          "and value:",
-          value
-        );
-        fetch(`${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + authToken, // Include the token in the Authorization header
-          },
-          body: JSON.stringify({
-            value: value,
-          }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              console.log("PUT response:", response);
-              throw new Error("Network response was not ok");
-            }
-            console.log("PUT request successful");
-            displayNotification("Course change accepted.");
-          })
-          .catch((error) => {
-            console.error("Error during PUT request:", error);
-            displayNotification("Error: Unable to change course.");
+      // Handle login form submission
+      document.addEventListener("DOMContentLoaded", () => {
+        const savedToken = localStorage.getItem("authToken");
+        if (savedToken && !isTokenExpired(savedToken)) {
+          authToken = savedToken;
+          console.log("Using saved token:", authToken);
+          document.getElementById("loginForm").style.display = "none";
+          document.getElementById("main").style.display = "block";
+        } else {
+          console.log("Token expired or not found. Please log in.");
+          localStorage.removeItem("authToken");
+        }
+      });
+      document.getElementById("loginForm").addEventListener("submit", async (event) => {
+        event.preventDefault(); // Prevent form from reloading the page
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          const response = await fetch(signalKAuthURL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
           });
+
+          if (!response.ok) {
+            throw new Error("Login failed");
+          }
+
+          const data = await response.json();
+          authToken = data.token; // Save the token
+          console.log("Login successful. Token:", authToken);
+
+          // Save the token in localStorage
+          localStorage.setItem("authToken", authToken);
+
+          // Hide the login form and show the main app
+          document.getElementById("loginForm").style.display = "none";
+          document.getElementById("main").style.display = "block";
+        } catch (error) {
+          console.error("Error during login:", error);
+          document.getElementById("loginError").style.display = "block";
+        }
+      });
+      function isTokenExpired(token) {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const now = Math.floor(Date.now() / 1000);
+        return payload.exp < now;
+      }
+
+      // Function to send PUT requests to the SignalK server
+      // sends commands to adjust the autopilot settings, like changing the heading.
+      async function sendPutRequest(path, value) {
+        if (!authToken) {
+          console.error("No authentication token available. Please log in.");
+          displayNotification("Error: Not authenticated.");
+          return;
+        }
+        try {
+          const response = await fetch(
+            `${signalKBaseURL}/signalk/v1/api/vessels/self/${path}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${authToken}`, // Use the token
+              },
+              body: JSON.stringify({ value }),
+            }
+          );
+          if (!response.ok) {
+            console.log("PUT response:", response);
+            throw new Error("Network response was not ok");
+          }
+          console.log("PUT request successful");
+
+          displayNotification("Course change accepted.");
+        } catch (error) {
+          console.error("Error during PUT request:", error);
+          displayNotification("Error: Unable to change course.");
+        }
       }
 
       function displayNotification(text) {
@@ -266,7 +342,7 @@
         } else {
           // Set the button corresponding to the current autopilot state to green
           const activeButton = document.getElementById(
-            "steering_autopilot.state_" + currentState
+            "steering_autopilot_state_" + currentState
           );
           if (activeButton) {
             activeButton.style.backgroundColor = "green";
@@ -281,10 +357,10 @@
 
         // Map button IDs to autopilot states
         const stateMap = {
-          "steering_autopilot.state_standby": "standby",
-          "steering_autopilot.state_wind": "wind",
-          "steering_autopilot.state_track": "route",
-          "steering_autopilot.state_auto": "auto",
+          steering_autopilot_state_standby: "standby",
+          steering_autopilot_state_wind: "wind",
+          steering_autopilot_state_track: "route",
+          steering_autopilot_state_auto: "auto",
         };
 
         const selectedState = stateMap[selectedId];
@@ -355,7 +431,9 @@
           const path = update.path;
           const value = update.value;
           //console.log("Update path:", path, "Value:", value); // Add this to verify value
-          if (path === "performance.maxSpeedAngle") {
+          if (path === "electrical.solar.SmartSolar.voltage") {
+            document.getElementById("electricalVoltage").innerText = value.toFixed(2);
+          } else if (path === "performance.maxSpeedAngle") {
             document.getElementById("performance_maxSpeedAngle").innerText =
               radToDeg(value).toFixed() + "°";
           } else if (path === "performance.maxSpeed") {
@@ -371,24 +449,19 @@
             document.getElementById("performance_polarSpeed").innerText =
               m_to_knots(value).toFixed(1) + " kn";
           } else if (path === "performance.gybeAngle") {
-            document.getElementById("gybeAngle").innerText =
-              radToDeg(value).toFixed(0) + "";
+            document.getElementById("gybeAngle").innerText = radToDeg(value).toFixed(0) + "";
           } else if (path === "performance.beatAngle") {
-            document.getElementById("beatAngle").innerText =
-              radToDeg(value).toFixed(0) + "";
+            document.getElementById("beatAngle").innerText = radToDeg(value).toFixed(0) + "";
             // environment
           } else if (path === "environment.wind.angleApparent") {
-            document.getElementById(
-              "environment_wind.angleApparent"
-            ).innerText = radToDeg(value).toFixed(0) + "°";
+            document.getElementById("environment_wind.angleApparent").innerText =
+              radToDeg(value).toFixed(0) + "°";
           } else if (path === "environment.wind.angleTrueGround") {
-            document.getElementById(
-              "environment_wind.angleTrueGround"
-            ).innerText = radToDeg(value).toFixed(0) + "°";
+            document.getElementById("environment_wind.angleTrueGround").innerText =
+              radToDeg(value).toFixed(0) + "°";
           } else if (path === "environment.wind.angleTrueWater") {
-            document.getElementById(
-              "environment_wind.angleTrueWater"
-            ).innerText = radToDeg(value).toFixed(0) + "°";
+            document.getElementById("environment_wind.angleTrueWater").innerText =
+              radToDeg(value).toFixed(0) + "°";
           } else if (path === "environment.wind.speedTrue") {
             if (value <= 5) {
               document.getElementById("environment_wind.speedTrue").innerText =
@@ -407,9 +480,8 @@
             }
             // navigation
           } else if (path === "navigation.courseOverGroundTrue") {
-            document.getElementById(
-              "navigation_courseOverGroundTrue"
-            ).innerText = radToDeg(value).toFixed() + "°";
+            document.getElementById("navigation_courseOverGroundTrue").innerText =
+              radToDeg(value).toFixed() + "°";
           } else if (path === "navigation.headingTrue") {
             document.getElementById("navigation_headingTrue").innerText =
               radToDeg(value).toFixed() + "°";
@@ -418,9 +490,7 @@
               radToDeg(value).toFixed() + "°";
           } else if (path === "navigation.speedOverGround") {
             // SOG VTG
-            const sogElement = document.getElementById(
-              "navigation_speedOverGround"
-            );
+            const sogElement = document.getElementById("navigation_speedOverGround");
             const infoField = sogElement.closest(".infoField"); // Get the parent container
             //console.log("Previous Speed:", previousSpeedOverGround);
             const newSpeed = m_to_knots(value).toFixed(1);
@@ -438,9 +508,7 @@
             previousSpeedOverGround = newSpeed; // Store the current speed
           } else if (path === "navigation.speedThroughWater") {
             // VHW PGN 128259
-            const sogElement = document.getElementById(
-              "navigation_speedThroughWater"
-            );
+            const sogElement = document.getElementById("navigation_speedThroughWater");
             const infoField = sogElement.closest(".infoField"); // Get the parent container
             //console.log("PrevSpeedThroughWater:",previousSpeedThroughWater);
             const newSpeed = m_to_knots(value).toFixed(1);
@@ -454,36 +522,31 @@
               }
               //console.log("New SpeedThroughWater:", newSpeed);
             }
+
             sogElement.innerText = newSpeed; // Update the text content
             previousSpeedThroughWater = newSpeed; // Store the current speed
 
             // steering
           } else if (path === "steering.autopilot.state") {
-            document.getElementById("steering_autopilot.state").innerText =
-              value;
-            if (value == "standby") {
-              document.getElementById(
-                "steering_autopilot.state_standby"
-              ).innerText = value;
-            } else if (value == "wind") {
-              document.getElementById(
-                "steering_autopilot.state_wind"
-              ).innerText = value;
-            } else if (value == "tack") {
-              document.getElementById(
-                "steering_autopilot.state_tack"
-              ).innerText = value;
-            } else if (value == "auto") {
-              document.getElementById(
-                "steering_autopilot.state_auto"
-              ).innerText = value;
+            const autopilotStateElement = document.getElementById("steering_autopilot_state");
+            if (autopilotStateElement) {
+              autopilotStateElement.innerText = value;
+              if (value == "standby") {
+                document.getElementById("steering_autopilot_state_standby").innerText = value;
+              } else if (value == "wind") {
+                document.getElementById("steering_autopilot_state_wind").innerText = value;
+              } else if (value == "tack") {
+                document.getElementById("steering_autopilot_state_tack").innerText = value;
+              } else if (value == "auto") {
+                document.getElementById("steering_autopilot_state_auto").innerText = value;
+              }
+            } else if (path === "steering.autopilot.target.windAngleApparent") {
+              document.getElementById("APwindAngle").innerText =
+                radToDeg(value).toFixed() + "°";
+            } else if (path === "steering.autopilot.target.headingMagnetic") {
+              document.getElementById("AP_headingMagnetic").innerText =
+                radToDeg(value).toFixed() + "°";
             }
-          } else if (path === "steering.autopilot.target.windAngleApparent") {
-            document.getElementById("APwindAngle").innerText =
-              radToDeg(value).toFixed() + "°";
-          } else if (path === "steering.autopilot.target.headingMagnetic") {
-            document.getElementById("AP_headingMagnetic").innerText =
-              radToDeg(value).toFixed() + "°";
           }
         });
       });
@@ -493,35 +556,27 @@
       });
 
       // Handle the button clicks
-      document
-        .querySelectorAll(".btnPort, .btnAdjust,.btnStarboard")
-        .forEach((button) => {
-          button.addEventListener("click", async () => {
-            if (button.classList.contains("btnPort")) {
-              console.log("Send port command to autopilot");
-              await sendPutRequest("steering/autopilot/actions/tack", "port");
-            } else if (button.classList.contains("btnStarboard")) {
-              console.log("Send starboard command to autopilot");
-              await sendPutRequest(
-                "steering/autopilot/actions/tack",
-                "starboard"
-              );
-            } else if (button.classList.contains("btnAdjust")) {
-              const adjustment = parseInt(button.textContent.trim());
-              console.log(`Send adjustment: ${adjustment} to autopilot`);
-              await sendPutRequest(
-                "steering/autopilot/actions/adjustHeading",
-                adjustment
-              );
-            }
+      document.querySelectorAll(".btnPort, .btnAdjust,.btnStarboard").forEach((button) => {
+        button.addEventListener("click", async () => {
+          if (button.classList.contains("btnPort")) {
+            console.log("Send port command to autopilot");
+            await sendPutRequest("steering/autopilot/actions/tack", "port");
+          } else if (button.classList.contains("btnStarboard")) {
+            console.log("Send starboard command to autopilot");
+            await sendPutRequest("steering/autopilot/actions/tack", "starboard");
+          } else if (button.classList.contains("btnAdjust")) {
+            const adjustment = parseInt(button.textContent.trim());
+            console.log(`Send adjustment: ${adjustment} to autopilot`);
+            await sendPutRequest("steering/autopilot/actions/adjustHeading", adjustment);
+          }
 
-            // Visual feedback: Add `selected` class temporarily
-            button.classList.add("selected");
-            setTimeout(() => {
-              button.classList.remove("selected");
-            }, 1000); // 1000 milliseconds = 1 second
-          });
+          // Visual feedback: Add `selected` class temporarily
+          button.classList.add("selected");
+          setTimeout(() => {
+            button.classList.remove("selected");
+          }, 1000); // 1000 milliseconds = 1 second
         });
+      });
     </script>
   </body>
 </html>

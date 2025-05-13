@@ -6,22 +6,25 @@ import eventlet
 from websocket import create_connection, WebSocketConnectionClosedException
 import logging
 import json
+import os
+import socket
 
 app = Flask(__name__)
 socketio = SocketIO(
     app,
-    cors_allowed_origins="*", 
-    async_mode='eventlet', 
-    ping_timeout=60, 
+    cors_allowed_origins="*",
+    async_mode='eventlet',
+    ping_timeout=60,
     ping_interval=25
     )
 
 # Set up logging
 logging.basicConfig(
-    filename='/home/pi/signalk-app/myapp.log',
     level=logging.ERROR,
-    format='%(asctime)s %(levelname)s: %(message)s'
-)
+    format='%(asctime)s %(levelname)s: %(message)s',
+    handlers=[logging.FileHandler("/home/pi/signalk-app/myapp.log", mode='a')]
+    )
+
 
 # Flag to ensure the listener starts only once
 listener_started = False
@@ -49,17 +52,30 @@ def test_connect():
         socketio.start_background_task(signalk_listener)
 
 
+def is_host_reachable(host, port):
+    try:
+        with socket.create_connection((host, port), timeout=2):
+            return True
+    except Exception:
+        return False
+
+
 def signalk_listener():
-    app.logger.debug("aa46 signalk_listener started.")
-    url = "ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all"
+    app.logger.debug("signalk_listener started.")
+    # Check if fidelibe.local is reachable
+    if is_host_reachable("fidelibe.local", 3000):
+        url = "ws://fidelibe.local:3000/signalk/v1/stream?subscribe=all"
+    else:
+        url = "ws://fidelibe.duckdns.org:8081/signalk/v1/stream?subscribe=all"  # Use DDNS hostname
+    app.logger.info(f"Using WebSocket URL: {url}")
     global last_autopilot_time
 
     while True:   # Loop to handle reconnections
         ws = None
         try:
-            app.logger.info("aa60 Attempting to connect to SignalK WebSocket...")
+            app.logger.info("Attempting to connect to SK WebSocket..")
             ws = create_connection(url)
-            app.logger.info("aa62 Connected to SignalK WebSocket.")
+            app.logger.info("Connected to SignalK WebSocket.")
 
             while True:  # Inner loop for receiving messages
                 eventlet.sleep(1)  # Non-blocking sleep
@@ -121,6 +137,10 @@ def signalk_listener():
                                 'environment.wind.speedTrue',
                             }:
                                 updates.append(value)
+                            elif path in {  # electrical
+                                'electrical.solar.SmartSolar.voltage',
+                            }:
+                                updates.append(value)
                     if updates:
                         socketio.emit("update_data", {"updates": updates})
                         app.logger.info(f"aa125 Emitted data: {updates}")
@@ -147,3 +167,4 @@ def signalk_listener():
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=8001)
+    #socketio.run(app, host="2.66.96.221", port=8080)

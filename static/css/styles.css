@@ -14,6 +14,20 @@ html {
   height: 100%;
   font-family: "Trebuchet MS", sans-serif;
 }
+#loginForm {
+  max-width: 90%;
+  margin: auto;
+  text-align: center;
+}
+
+#loginForm input,
+#loginForm button {
+  width: 100%;
+  max-width: 250px;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
 #main {
   margin: 4px;
   width: 100vw;
@@ -163,17 +177,17 @@ html {
   }
   .btnCircle {
     font-size: 10vw; /* Much bigger font size */
-    padding: 3vw 4vw; /* Increased padding top right bottom left*/
-    margin: 1.5vw;
+    padding: 2vw 3vw; /* Increased padding top right bottom left*/
+    margin: 1.2vw;
   }
   .btnBlack {
     font-size: 8vw; /* Slightly bigger font size */
-    padding: 2.5vw 4vw; /* Slightly increased padding */
+    padding: 2vw 3vw; /* Slightly increased padding */
     margin: 1vw;
   }
   .tableField {
     padding: 0.5vw 1vw; /* Adjust padding */
-    font-size: 6vw; /* Reduced font size */
+    font-size: 5vw; /* Reduced font size */
   }
   .infoField {
     font-size: 5vw;
@@ -183,7 +197,7 @@ html {
     flex-wrap: wrap; /* Allow wrapping in portrait mode */
   }
   .largeInfoField {
-    font-size: 7vw; /* Adjust font size */
+    font-size: 6vw; /* Adjust font size */
     padding: 2vw 3vw; /* Adjust padding */
     margin: 1vw;
   }
