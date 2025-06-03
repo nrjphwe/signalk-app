@@ -212,7 +212,7 @@
       // Use port 8080 for the Flask app and 8081 for the SignalK server
       //const flaskBaseURL = `${protocol}//${hostname}:${port || "8001"}`;
       const defaultFlaskPort =
-        hostname === "fidelibe" || hostname.endsWith(".local") ? "8001" : "8080";
+        hostname === "fidelibe.local" || hostname.endsWith(".local") ? "8001" : "8080";
       const flaskBaseURL = `${protocol}//${hostname}:${defaultFlaskPort}`;
       const signalKBaseURL = `${protocol}//${hostname}:8081`; // SignalK server (forwarded to 3000)
 
